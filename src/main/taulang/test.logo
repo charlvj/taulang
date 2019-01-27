@@ -1,0 +1,86 @@
+print [ "In test.logo" newline ]
+
+import "stdlib.logo" "system"
+
+make :code [ printline "yay" ]
+call code []
+
+make :n 5
+printline inc n
+
+times 3 [ printline "Yadda" ]
+
+print [ "Current context: " system.memory.currentcontext newline ]
+
+printline "Doing a printline"
+
+print [ "Current context: " system.memory.currentcontext newline ]
+
+
+call :printline [ "Hello World from a call!" ]
+
+calllist [ print 1 print 2 print newline ]
+
+call 
+    lambda [ :message ] 
+           [ printline [ "[Lambda] " message ] ] 
+    [ "Hello World!" ]
+
+make :myprintline lambda [ :message ] [ printline [ "[MyPrintLine] " message ] ]
+call myprintline [ "Hello World!" ]
+
+call [ print $0 print $1 print $2 print newline ] [ "Een" "twee" "drie" ]
+
+print [ true false ]
+
+if true [ printline "Yes!" ] [ printline "No!" ]
+if false [ printline "Yes!" ] [ printline "No!" ]
+
+to :then [:code] [code]
+to :else [:code] [code]
+to :elseif [:condition :thencode :elsecode]
+  [ if condition thencode elsecode ]
+
+if false then [ printline "in then" ] else [ printline "in else" ]
+
+
+
+printline "What is your name?"
+make :name readline
+if 
+    eq "Charl" name 
+    [printline "So glad to see you!"]
+elseif 
+    eq "Lynelle" name
+    [ printline "Hello, good looking." ]
+else [ printline [ "Hello, " name ". Please take me to your master."] ]
+
+
+
+to :fac
+    [ :n ]
+    [ if eq 1 n
+        [1]
+        [ mult n fac dec n ]
+    ]
+make :n 6
+printline [ n "! = " fac n ]
+
+
+/*
+to :fib
+    [:n]
+    [
+        if eq n 1
+            then [1]
+            elseif eq n 2
+            then [1]
+            else [
+                plus
+                    fib minus n 1
+                    fib minus n 2
+            ]
+    ]
+printline [ "fib(" n ") = " fib n ]
+print "Done."
+*/

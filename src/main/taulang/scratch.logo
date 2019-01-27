@@ -1,0 +1,16 @@
+/* Lambda variable and call */
+make myprintline lambda [ :message ] [ printline [ "[Me] " message ]
+call myprintline [ "Hello World!" ]
+
+/* lambda and call */
+call 
+    lambda [ :message ] 
+           [ printline [ "[Me] " message ] ] 
+    [ "Hello World!" ]
+
+/* calling a function */
+call :printline [ "Hello World!" ]
+
+/* calling a list */
+run [ something somethingelse ]
+

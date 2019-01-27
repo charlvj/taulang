@@ -1,0 +1,27 @@
+to :printline
+    [ :msg ] 
+    [ print [ msg newline ] ]
+expose :printline
+
+to :calllist
+    [ :list ]
+    [ call [ ] list ]
+expose :calllist
+
+to :times
+    [ :i :code ]
+    [ print [ "i=" i " " ]
+      if eq i 1 
+        [ call code [] ]
+        [ call code []
+          times dec i code ]
+    ]
+expose :times
+
+
+/* Math Function */
+to :dec [:n] [minus n 1]
+expose :dec
+
+to :inc [:n] [plus n 1]
+expose :inc
