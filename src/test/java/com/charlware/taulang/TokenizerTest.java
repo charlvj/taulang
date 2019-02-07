@@ -8,6 +8,7 @@ package com.charlware.taulang;
 import com.charlware.taulang.Tokenizer;
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.language.TokenType;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -131,7 +132,7 @@ public class TokenizerTest extends Tokenizer {
      * Test of parseTokens method, of class Tokenizer.
      */
     @Test
-    public void testParseTokens() {
+    public void testParseTokens() throws IOException {
         System.out.println("parseTokens");
         String code = "test 1 2.0 \"blah\" [ end ]";
         parseTokens(code);
@@ -141,7 +142,7 @@ public class TokenizerTest extends Tokenizer {
         assertEquals(TokenType.IDENTIFIER, t.getType());
         
         t = tokens[1];
-        assertEquals("1", t.getSource());
+        assertEquals("1.0", t.getSource());
         assertEquals(TokenType.NUMBER, t.getType());
         
         t = tokens[2];

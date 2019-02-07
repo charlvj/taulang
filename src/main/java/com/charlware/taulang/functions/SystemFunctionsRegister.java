@@ -6,11 +6,11 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
-import com.charlware.taulang.values.ListValue;
+import com.charlware.taulang.Memory;
+import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -38,6 +38,31 @@ public class SystemFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute() throws Exception {
                 return new StringValue(runtime.getMemory().getCurrentContext());
+            }
+        });
+        
+        reg(new GenericFunction0("system.memory.dump") {
+            @Override
+            public Value execute() throws Exception {
+                Memory memory = runtime.getMemory();
+                for(Map<String,Function> hash: memory) {
+                    for(Map.Entry entry: hash.entrySet()) {
+                        System.out.print(entry.getKey() + "  ");
+                    }
+                    System.out.println();
+                }
+                return null;
+            }
+            
+        });
+        
+        reg(new GenericFunction2("alias", "aliasName", "existingFunction") {
+            @Override
+            public Value execute(Value aliasName, Value existingFunc) throws Exception {
+                Memory memory = runtime.getMemory();
+                Function func = memory.get(existingFunc.asString());
+                memory.put(aliasName.asString(), func);
+                return aliasName;
             }
         });
 //        reg(new GenericFunction2("getelem", "list", "index") {

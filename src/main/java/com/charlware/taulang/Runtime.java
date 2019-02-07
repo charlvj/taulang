@@ -35,53 +35,71 @@ import java.util.logging.Logger;
  * @author charlvj
  */
 public class Runtime {
-    protected Interpreter interpreter = null;
-    
-    protected Memory memory = new Memory();
-    
-    public PrintStream stdout = System.out;
-    public InputStream stdin  = System.in;
 
+    protected Interpreter interpreter = null;
+
+    protected Memory memory = new Memory();
+
+    public PrintStream stdout = System.out;
+    public InputStream stdin = System.in;
+
+    protected List<AbstractRegister> registers = new ArrayList<>();
     protected List<Value> searchPath = new ArrayList<>();
-    
+
     public CallFunction callFunction = null;
-    
+
+    public Runtime() {
+        addRegister(new SystemFunctionsRegister());
+        addRegister(new ListableFunctionsRegister());
+        addRegister(new MathFunctionsRegister());
+        addRegister(new LogicalFunctionsRegister());
+    }
+
+    public void addRegister(AbstractRegister register) {
+        register.setRuntime(this);
+        registers.add(register);
+    }
+
     public Memory getMemory() {
         return memory;
     }
-    
+
     public void setInterpreter(Interpreter interpreter) {
         this.interpreter = interpreter;
     }
-    
+
     public Interpreter getInterpreter() {
         return interpreter;
     }
-    
+
     public List<Value> getSearchPath() {
         return searchPath;
     }
-    
+
     public void register(String name, Function function) {
         memory.put(name, function);
         function.setRuntime(this);
     }
-    
+
     public void register(Function function) {
         memory.put(function.getName(), function);
         function.setRuntime(this);
     }
-    
+
     public void register(String name, Value value) {
         Function function = new ValueFunction(name, value);
         memory.put(name, function);
         function.setRuntime(this);
     }
-    
+
     public void initialize() {
         initializeStreams();
+        initializeMemory();
+    }
+
+    public void initializeMemory() {
         register("system.searchpath", new ListValue(searchPath));
-        
+
         register("?", new NullValue());
         register(new PrintFunction());
         register("newline", new StringValue("\n"));
@@ -90,31 +108,21 @@ public class Runtime {
         register(new RepeatFunction());
         register(new ToFunction());
         register(new ImportFunction());
-        
+
         runRegisters();
-        
+
         getQuickAccessFunctions();
     }
     
-    private void runRegisters() {
-        Arrays.asList(SystemFunctionsRegister.class,
-                      ListableFunctionsRegister.class,
-                      MathFunctionsRegister.class,
-                      LogicalFunctionsRegister.class)
-                .stream()
-                .map(clazz -> {
-                    try {
-                        return clazz.newInstance().setRuntime(this);
-                    } catch (InstantiationException | IllegalAccessException ex) {
-                        Logger.getLogger(Runtime.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                    }
-                })
-                .forEach(reg -> { 
-                    if(reg != null) reg.registerAll(); 
-                });
+    public void clearMemory() {
+        memory = new Memory();
+        initializeMemory();
     }
-    
+
+    private void runRegisters() {
+        registers.stream().forEach(reg -> reg.registerAll());
+    }
+
     public void initializeStreams() {
 //        register("stdin", new )
     }

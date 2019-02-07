@@ -5,11 +5,19 @@
     <artifactId>TauLang</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <name>TauLang</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <name>Repo</name>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -29,5 +37,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <name>TauLang</name>
 </project>

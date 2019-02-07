@@ -32,7 +32,7 @@ public class Test {
         Interpreter interpreter = new Interpreter(runtime);
 //        interpreter.interpret(code);
         List<Value> searchPath = runtime.getSearchPath();
-        searchPath.add(new StringValue("/home/charlvj/NetBeansProjects/rocketlauncher/TauLang/src/main/taulang"));
+        searchPath.add(new StringValue("/home/charlvj/NetBeansProjects/TauLang/src/main/taulang"));
         File file = new File("test.logo");
         if (!file.exists()) {
             for (Value path : searchPath) {

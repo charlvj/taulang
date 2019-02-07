@@ -2,6 +2,10 @@ print [ "In test.logo" newline ]
 
 import "stdlib.logo" "system"
 
+alias :p :print
+
+p "From the alias."
+
 make :code [ printline "yay" ]
 call code []
 

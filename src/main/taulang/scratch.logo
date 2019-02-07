@@ -14,3 +14,7 @@ call :printline [ "Hello World!" ]
 /* calling a list */
 run [ something somethingelse ]
 
+
+
+
+clone Object :Person
