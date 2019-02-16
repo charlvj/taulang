@@ -22,13 +22,12 @@ import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.StringValue;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -36,6 +35,7 @@ import java.util.logging.Logger;
  */
 public class Runtime {
 
+    protected RuntimeFlags flags = new RuntimeFlags();
     protected Interpreter interpreter = null;
 
     protected Memory memory = new Memory();
@@ -49,15 +49,22 @@ public class Runtime {
     public CallFunction callFunction = null;
 
     public Runtime() {
+        interpreter = new Interpreter(this);
+
         addRegister(new SystemFunctionsRegister());
         addRegister(new ListableFunctionsRegister());
         addRegister(new MathFunctionsRegister());
         addRegister(new LogicalFunctionsRegister());
+
     }
 
     public void addRegister(AbstractRegister register) {
         register.setRuntime(this);
         registers.add(register);
+    }
+    
+    public RuntimeFlags getFlags() {
+        return flags;
     }
 
     public Memory getMemory() {
@@ -111,9 +118,15 @@ public class Runtime {
 
         runRegisters();
 
+        try {
+            importStdLib();
+        } catch (Exception ex) {
+            stdout.println("Error loading stdlib: " + ex);
+        }
+
         getQuickAccessFunctions();
     }
-    
+
     public void clearMemory() {
         memory = new Memory();
         initializeMemory();
@@ -130,4 +143,27 @@ public class Runtime {
     private void getQuickAccessFunctions() {
         callFunction = (CallFunction) memory.get("call");
     }
+
+    private void importStdLib() throws Exception {
+        ImportFunction importFunc = new ImportFunction();
+        importFunc.setRuntime(this);
+        importFunc.execute("stdlib.tau");
+//        URL stdlibURL = getClass().getResource("/stdlib.tau");
+//        System.out.println("File: " + stdlibURL.getFile() + "\nFile Exists? " + );
+//        importFunc.execute(new File(stdlibURL.getFile()));
+//        String code = null;
+//        try (InputStream in = getClass().getResourceAsStream("/stdlib.tau")) {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//            StringBuilder out = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                out.append(line);
+//            }
+//            code = out.toString();
+//        }
+//        if(code != null) {
+//            interpreter.interpret(code);
+//        }
+    }
+
 }

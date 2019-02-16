@@ -44,7 +44,12 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
         Token tok;
         while (iterator.hasNext()) {
             tok = iterator.next();
-            list.add(getInterpreter().eval(tok, iterator));
+            Value v = getInterpreter().eval(tok, iterator);
+            
+            if(getInterpreter().getRuntime().getFlags().isTailCallOptimizationEnabled())
+                v = v.realize();
+            
+            list.add(v);
         }
         return list;
     }

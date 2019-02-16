@@ -7,6 +7,7 @@ package com.charlware.taulang;
 
 import com.charlware.taulang.functions.ValueFunction;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
 
@@ -36,4 +37,12 @@ public abstract class AbstractRegister {
     }
     
     public abstract void registerAll();
+    
+    protected BooleanValue trueValue() {
+        return BooleanValue.TRUE;
+    }
+    
+    protected BooleanValue falseValue() {
+        return BooleanValue.FALSE;
+    }
 }

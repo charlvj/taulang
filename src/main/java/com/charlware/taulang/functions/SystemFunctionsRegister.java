@@ -8,7 +8,14 @@ package com.charlware.taulang.functions;
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.Memory;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.values.BooleanValue;
+import com.charlware.taulang.values.FunctionValue;
+import com.charlware.taulang.values.Listable;
+import com.charlware.taulang.values.NullValue;
+import com.charlware.taulang.values.NumberValue;
+import com.charlware.taulang.values.ObjectValue;
 import com.charlware.taulang.values.StringValue;
+import com.charlware.taulang.values.SymbolValue;
 import com.charlware.taulang.values.Value;
 import java.util.Map;
 
@@ -75,5 +82,63 @@ public class SystemFunctionsRegister extends AbstractRegister {
 //                return new NumberValue(Double.valueOf(0.0));
 //            }
 //        });
+    }
+    
+    public void registerTypes() {
+        reg(new GenericFunction1("is_number", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof NumberValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_logical", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof BooleanValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_list", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof Listable ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_string", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof StringValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_symbol", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof SymbolValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_null", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof NullValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_function", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof FunctionValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_object", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof ObjectValue ? trueValue() : falseValue());
+            }
+        });
     }
 }

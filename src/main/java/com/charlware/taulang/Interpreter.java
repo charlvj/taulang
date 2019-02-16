@@ -6,9 +6,11 @@
 package com.charlware.taulang;
 
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.ListValue;
+import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.SymbolValue;
@@ -51,7 +53,7 @@ public class Interpreter {
         while (tokens.hasNext()) {
             result = eval(tokens.next(), tokens);
         }
-        return result;
+        return result.realize();
     }
 
     public Value eval(Token token, Iterator<Token> tokens) throws Exception {
@@ -68,6 +70,7 @@ public class Interpreter {
                 break;
             case SYMBOL:
                 result = new SymbolValue(token);
+                break;
             case IDENTIFIER:
                 Function function = runtime.getMemory().get(token.getSource());
 
@@ -79,12 +82,22 @@ public class Interpreter {
                         tok = tokens.next();
                         params[i] = eval(tok, tokens);
                     }
-                    result = function.execute(params);
+                    if(runtime.getFlags().isTailCallOptimizationEnabled()) {
+                        if(tokens.hasNext())
+                            result = function.execute(params);
+                        else
+                            result = new TailCallValue(function, params);
+                    }
+                    else
+                        result = function.execute(params);
                 }
                 break;
         }
         if(result != null)
             result.setInterpreter(this);
+        else
+            result = NullValue.NULL;
+        
         return result;
     }
 
@@ -98,4 +111,7 @@ public class Interpreter {
         return result;
     }
 
+    public Runtime getRuntime() {
+        return runtime;
+    }
 }

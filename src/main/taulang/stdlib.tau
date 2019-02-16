@@ -1,3 +1,5 @@
+import "stdmath.tau" ""
+
 to :printline
     [ :msg ] 
     [ print [ msg newline ] ]
@@ -17,11 +19,3 @@ to :times
           times dec i code ]
     ]
 expose :times
-
-
-/* Math Function */
-to :dec [:n] [minus n 1]
-expose :dec
-
-to :inc [:n] [plus n 1]
-expose :inc

@@ -28,8 +28,8 @@ public class Test {
 //        code = "make \"list\" [ 1 2 3 4 ] print [ \"List Size: \" listsize list newline \"Third: \" getelem list 2 ]";
 
         Runtime runtime = new Runtime();
+        Interpreter interpreter = runtime.getInterpreter();
         runtime.initialize();
-        Interpreter interpreter = new Interpreter(runtime);
 //        interpreter.interpret(code);
         List<Value> searchPath = runtime.getSearchPath();
         searchPath.add(new StringValue("/home/charlvj/NetBeansProjects/TauLang/src/main/taulang"));

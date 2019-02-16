@@ -8,9 +8,9 @@ package com.charlware.taulang.functions;
 import com.charlware.taulang.Memory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Value;
-import java.util.List;
 
 /**
  *
@@ -54,6 +54,14 @@ public class ToFunction extends Function {
                         memory.put(new ValueFunction(params[i], paramValues[i]));
                     }
                     Value result = runtime.getInterpreter().eval(code.iterator());
+                    if(runtime.getFlags().isTailCallOptimizationEnabled() && result instanceof TailCallValue) {
+                        memory.pop();
+                        memory.push();
+                        for(int i = 0; i < params.length; i++) {
+                            memory.put(new ValueFunction(params[i], paramValues[i]));
+                        }
+                        result = result.realize();
+                    }
                     return result;
                 } 
                 finally {

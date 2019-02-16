@@ -1,0 +1,19 @@
+to :dec [:n] [minus n 1]
+expose :dec
+
+to :inc [:n] [plus n 1]
+expose :inc
+
+to :sqr [:n] [mult n n]
+expose :sqr
+
+to :pow [:n :p] [
+  if eq p 1 
+    [ n ]
+    [ mult n pow n dec p ]
+  ]
+expose :pow
+
+to :abs [:n]
+  [ if lt n 0 [mult -1 n] [n] ]
+expose :abs

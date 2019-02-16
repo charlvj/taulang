@@ -1,6 +1,19 @@
-print [ "In test.logo" newline ]
+/* print [ "In test.logo" newline ]
+printline "printline works..."
 
-import "stdlib.logo" "system"
+printline "Let us check some math stuff "
+*/
+
+system.memory.dump
+
+print "Hello?"
+printline "Hello!"
+
+printline [ "inc 2 = " inc 2 ]
+printline [ "dec 2 = " dec 2 ]
+
+print [ "3 + 4 + 5 = " plus 3 plus 4 5 ]
+
 
 alias :p :print
 
@@ -48,7 +61,7 @@ to :elseif [:condition :thencode :elsecode]
 if false then [ printline "in then" ] else [ printline "in else" ]
 
 
-
+/*
 printline "What is your name?"
 make :name readline
 if 
@@ -58,7 +71,7 @@ elseif
     eq "Lynelle" name
     [ printline "Hello, good looking." ]
 else [ printline [ "Hello, " name ". Please take me to your master."] ]
-
+*/
 
 
 to :fac
@@ -71,20 +84,7 @@ make :n 6
 printline [ n "! = " fac n ]
 
 
-/*
-to :fib
-    [:n]
-    [
-        if eq n 1
-            then [1]
-            elseif eq n 2
-            then [1]
-            else [
-                plus
-                    fib minus n 1
-                    fib minus n 2
-            ]
-    ]
-printline [ "fib(" n ") = " fib n ]
-print "Done."
-*/
+printline [ "2^2 = " sqr 2 ]
+printline [ "2^3 = " pow 2 3 ]
+printline [ "abs(10) = " abs 10]
+printline [ "abs(-10) = " abs -10]
