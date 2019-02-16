@@ -54,8 +54,10 @@ public abstract class AbstractValue<V> implements Value<V> {
     
     @Override
     public Value realize() throws Exception {
-        value = processToken();
-        realized = true;
+        if(!realized) {
+            value = processToken();
+            realized = true;
+        }
         return this;
     }
     

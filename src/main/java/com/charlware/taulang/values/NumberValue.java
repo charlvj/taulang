@@ -23,6 +23,10 @@ public class NumberValue extends AbstractValue<Double> {
         super(value);
     }
     
+    public NumberValue(Integer value) {
+        this(value.doubleValue());
+    }
+    
     @Override
     public String asString() throws Exception {
         return getValue().toString();

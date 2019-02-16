@@ -88,3 +88,7 @@ printline [ "2^2 = " sqr 2 ]
 printline [ "2^3 = " pow 2 3 ]
 printline [ "abs(10) = " abs 10]
 printline [ "abs(-10) = " abs -10]
+
+
+print "Repeating: "
+repeat 10 [ print [ $1 " " ] ] printline "."
