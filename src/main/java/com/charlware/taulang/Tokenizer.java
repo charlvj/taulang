@@ -82,6 +82,7 @@ public class Tokenizer {
         tokenizer.wordChars(':', ':');
         tokenizer.wordChars('?', '?');
         tokenizer.wordChars('$', '$');
+        tokenizer.wordChars('_', '_');
         tokenizer.slashStarComments(true);
         
         boolean eof = false;

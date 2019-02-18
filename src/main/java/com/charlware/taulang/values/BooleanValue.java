@@ -53,4 +53,9 @@ public class BooleanValue extends AbstractValue<Boolean> {
             return null;
         }
     }
+    
+    public static BooleanValue valueOf(boolean b) {
+        if(b) return TRUE;
+        else return FALSE;
+    }
 }

@@ -6,6 +6,7 @@
 package com.charlware.taulang;
 
 import com.charlware.taulang.functions.CallFunction;
+import com.charlware.taulang.functions.ErrorFunctionRegister;
 import com.charlware.taulang.functions.ImportFunction;
 import com.charlware.taulang.functions.ListableFunctionsRegister;
 import com.charlware.taulang.functions.LogicalFunctionsRegister;
@@ -22,9 +23,7 @@ import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.StringValue;
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +51,7 @@ public class Runtime {
         interpreter = new Interpreter(this);
 
         addRegister(new SystemFunctionsRegister());
+        addRegister(new ErrorFunctionRegister());
         addRegister(new ListableFunctionsRegister());
         addRegister(new MathFunctionsRegister());
         addRegister(new LogicalFunctionsRegister());

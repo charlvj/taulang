@@ -82,6 +82,8 @@ public class SystemFunctionsRegister extends AbstractRegister {
 //                return new NumberValue(Double.valueOf(0.0));
 //            }
 //        });
+
+        registerTypes();
     }
     
     public void registerTypes() {
@@ -106,6 +108,7 @@ public class SystemFunctionsRegister extends AbstractRegister {
             }
         });
         
+        System.out.println("Defining is_string");
         reg(new GenericFunction1("is_string", "value") {
             @Override
             public Value execute(Value value) throws Exception {

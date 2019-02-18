@@ -8,6 +8,7 @@ package com.charlware.taulang;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
@@ -52,6 +53,7 @@ public class Interpreter {
         Value result = null;
         while (tokens.hasNext()) {
             result = eval(tokens.next(), tokens);
+            if(result instanceof ErrorValue) break;
         }
         return result.realize();
     }
@@ -107,6 +109,11 @@ public class Interpreter {
         while (tokens.hasNext()) {
             token = tokens.next();
             result = eval(token, tokens);
+            if(result instanceof ErrorValue) 
+                break;
+//            if(result instanceof ErrorValue 
+//                    && ((ErrorValue) result).getValue().isFatal()) 
+//                break;
         }
         return result;
     }

@@ -2,7 +2,7 @@ import "stdmath.tau" ""
 
 to :printline
     [ :msg ] 
-    [ print [ msg newline ] ]
+    [ print [ ifnull msg "null" newline ] ]
 expose :printline
 
 to :calllist
@@ -19,3 +19,15 @@ to :times
           times dec i code ]
     ]
 expose :times
+
+to :required [:param]
+  [ if is_null param
+    [ throwError "Parameter must be provided" ]
+    [ param ]
+  ]
+
+to :ifnull [:param :default]
+  [ if is_null param 
+    [ default ]
+    [ param ]
+  ]
