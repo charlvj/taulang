@@ -10,3 +10,11 @@ if isError required doesNotExist
 
 printline [ "Something? " ifnull result "Yes!" ]
 printline [ "Something? " ifnull doesNotExist "No!" ]
+
+to :introduce_tau [:to_whom]
+  [ printline [ "Hello " 
+                ifnull to_whom "Anonymous Person" 
+                ", I am Tau." ]
+  ]
+introduce_tau "Curious Reader"
+introduce_tau ?
