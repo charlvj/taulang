@@ -6,8 +6,10 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.Memory;
+import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.Symbol;
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.SymbolValue;
@@ -28,6 +30,8 @@ public class CallFunction extends Function {
     
     @Override
     public Value execute(Value[] params) throws Exception {
+        if(params.length != 2)
+            return new ErrorValue(ErrorFactory.createInvalidParamsError("Two parameters expected for a call"));
         return execute(params[0], params[1]);
     }
     

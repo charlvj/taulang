@@ -18,4 +18,7 @@ public class ErrorFactory {
         e.setFatal(true);
         return e;
     }
+    public static TauError createInvalidParamsError(String msg) {
+        return createFatalError("Invalid Parameters: " + msg);
+    }
 }
