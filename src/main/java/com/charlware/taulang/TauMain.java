@@ -1,5 +1,6 @@
 package com.charlware.taulang;
 
+import com.charlware.taulang.ui.TauIDE;
 import com.charlware.taulang.values.Value;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +19,6 @@ public class TauMain {
     private static Options progOptions = new Options();
     
     public static void main(String[] args) throws org.apache.commons.cli.ParseException, IOException {
-
-        Runtime runtime = new Runtime();
-        Interpreter interpreter = runtime.getInterpreter();
-        runtime.initialize();
-        
         CommandLine cl = createCLParser(args);
         Option[] options = cl.getOptions();
         String program = null;
@@ -44,18 +40,26 @@ public class TauMain {
                 case "c":
                     program = opt.getValue(0);
                     break;
+                case "ide":
+                    TauIDE.main(new String[] {});
+                    break;
                 default:
                     HelpFormatter help = new HelpFormatter();
                     help.printHelp("bbl", progOptions, true);
                     return;
             }
         }
-        Value result;
-        try {
-            result = interpreter.interpret(program);
-            System.out.println(result);
-        } catch (Exception ex) {
-            System.out.println("Runtime Error: " + ex);
+        if(program != null) {
+            Runtime runtime = new Runtime();
+            Interpreter interpreter = runtime.getInterpreter();
+            runtime.initialize();
+            Value result;
+            try {
+                result = interpreter.interpret(program);
+                System.out.println(result);
+            } catch (Exception ex) {
+                System.out.println("Runtime Error: " + ex);
+            }
         }
         
    }
@@ -72,6 +76,10 @@ public class TauMain {
                 .argName("Tau code")
                 .hasArg()
                 .build();
+        Option ideOption = Option.builder("ide")
+                .longOpt("ide")
+                .desc("Opens a simple IDE for graphical editing.")
+                .build();
         Option helpOption = Option.builder("h")
                 .longOpt("help")
                 .desc("Help")
@@ -80,7 +88,8 @@ public class TauMain {
         
         progOptions.addOption(programOption)
                 .addOption(codeOption)
-                .addOption(helpOption);
+                .addOption(helpOption)
+                .addOption(ideOption);
 
         CommandLineParser parser = new DefaultParser();
         return parser.parse(progOptions, args);
