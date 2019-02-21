@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -18,7 +19,11 @@ import java.nio.file.Files;
 public class TauEditorPane extends javax.swing.JPanel {
 
     private File file = null;
+    private File workFile = null;
     private boolean saved = false;
+    private boolean newFile = true;
+    
+    private JFileChooser fileChooser = null;
     
     /**
      * Creates new form TauEditorPane
@@ -32,7 +37,7 @@ public class TauEditorPane extends javax.swing.JPanel {
     }
     
     public boolean isNew() {
-        return !file.exists();
+        return file == null;
     }
     
     public File getFile() {
@@ -43,9 +48,12 @@ public class TauEditorPane extends javax.swing.JPanel {
         this.file = file;
     }
     
-    public void newFile() {
+    public void newFile(String filename) {
         saved = false;
         file = null;
+        newFile = true;
+        file = new File(System.getProperty("java.io.tmpdir"), filename);
+        file.deleteOnExit();
     }
     
     public void openFile(File file) throws IOException {
@@ -54,11 +62,20 @@ public class TauEditorPane extends javax.swing.JPanel {
         Files.lines(file.toPath())
                 .forEach(line -> sb.append(line).append("\n"));
         txContents.setText(sb.toString());
+        newFile = false;
     }
     
     public void saveFile() throws FileNotFoundException {
+        if(newFile) {
+            int res = getFileChooser().showSaveDialog(this);
+            if(res == JFileChooser.APPROVE_OPTION)  {
+                file = getFileChooser().getSelectedFile();
+            }
+        }
         try(PrintStream stream = new PrintStream(file)) {
             stream.print(txContents.getText());
+            saved = true;
+            newFile = false;
         }
     }
     
@@ -68,6 +85,19 @@ public class TauEditorPane extends javax.swing.JPanel {
         }
         saveFile();
     }
+
+    public JFileChooser getFileChooser() {
+        if(fileChooser == null) {
+            fileChooser = new JFileChooser();
+        }
+        return fileChooser;
+    }
+
+    public void setFileChooser(JFileChooser fileChooser) {
+        this.fileChooser = fileChooser;
+    }
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.

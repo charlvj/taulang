@@ -180,8 +180,9 @@ public class TauIDE extends javax.swing.JFrame {
 
     private void btNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNewActionPerformed
         TauEditorPane editor = new TauEditorPane();
-        editor.newFile();
-        addClosableTab("Unnamed" + unnamedCount++, editor);
+        String filename = "Unnamed" + unnamedCount++;
+        editor.newFile(filename);
+        addClosableTab(filename, editor);
     }//GEN-LAST:event_btNewActionPerformed
 
     private void btOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOpenActionPerformed
