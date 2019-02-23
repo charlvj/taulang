@@ -5,6 +5,7 @@
  */
 package com.charlware.taulang;
 
+import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.language.Token;
@@ -76,7 +77,10 @@ public class Interpreter {
             case IDENTIFIER:
                 Function function = runtime.getMemory().get(token.getSource());
 
-                if (function != null) {
+                if(function == null) {
+                    result = new ErrorValue(ErrorFactory.createError("Function not defined: " + token.getSource()));
+                }
+                else {
                     int numParams = function.getNumParams();
                     Value[] params = new Value[numParams];
                     Token tok;

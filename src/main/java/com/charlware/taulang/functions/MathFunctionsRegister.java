@@ -6,9 +6,12 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
-import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.ErrorFactory;
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.Value;
+import java.util.Arrays;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 /**
  *
@@ -43,6 +46,35 @@ public class MathFunctionsRegister extends AbstractRegister {
                 return new NumberValue(param1.asNumber() / param2.asNumber());
             }
         });
-        
+//        reg(new GenericFunction1("sin", "x") {
+//            @Override
+//            public Value execute(Value x) throws Exception {
+//                return new NumberValue(Math.sin(x.asNumber()));
+//            }
+//        });
+        registerMathClass();
+    }
+    
+    private void registerMathClass() {
+        Arrays.asList("sin", "cos", "tan", 
+                "sinh", "cosh", "tanh",
+                "asin", "acos", "atan",
+                "log", "log10",
+                "toDegrees", "toRadians")
+                .stream()
+                .forEach(fname -> {
+                    reg(new GenericFunction1(fname, "x") {
+                       @Override
+                       public Value execute(Value x) {
+                           Double d;
+                           try {
+                               d = (Double) MethodUtils.invokeStaticMethod(Math.class, fname, x.asNumber());
+                               return new NumberValue(d);
+                           } catch (Exception ex) {
+                               return new ErrorValue(ErrorFactory.createError("Error executing " + fname + " : " + ex));
+                           }
+                       }
+                    });
+                });
     }
 }
