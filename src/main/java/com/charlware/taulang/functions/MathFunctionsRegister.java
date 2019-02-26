@@ -60,7 +60,8 @@ public class MathFunctionsRegister extends AbstractRegister {
                 "sinh", "cosh", "tanh",
                 "asin", "acos", "atan",
                 "log", "log10",
-                "toDegrees", "toRadians")
+                "toDegrees", "toRadians",
+                "sqrt")
                 .stream()
                 .forEach(fname -> {
                     reg(new GenericFunction1(fname, "x") {

@@ -148,22 +148,6 @@ public class Runtime {
         ImportFunction importFunc = new ImportFunction();
         importFunc.setRuntime(this);
         importFunc.execute("stdlib.tau");
-//        URL stdlibURL = getClass().getResource("/stdlib.tau");
-//        System.out.println("File: " + stdlibURL.getFile() + "\nFile Exists? " + );
-//        importFunc.execute(new File(stdlibURL.getFile()));
-//        String code = null;
-//        try (InputStream in = getClass().getResourceAsStream("/stdlib.tau")) {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//            StringBuilder out = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                out.append(line);
-//            }
-//            code = out.toString();
-//        }
-//        if(code != null) {
-//            interpreter.interpret(code);
-//        }
     }
 
 }
