@@ -77,5 +77,12 @@ public class MathFunctionsRegister extends AbstractRegister {
                        }
                     });
                 });
+        
+        reg(new GenericFunction2("atan2", "x", "y") {
+            @Override
+            public Value execute(Value x, Value y) throws Exception {
+                return new NumberValue(Math.atan2(x.asNumber(), y.asNumber()));
+            }
+        });
     }
 }

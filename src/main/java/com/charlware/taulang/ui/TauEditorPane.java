@@ -66,12 +66,12 @@ public class TauEditorPane extends javax.swing.JPanel {
     }
     
     public void saveFile() throws FileNotFoundException {
-        if(newFile) {
-            int res = getFileChooser().showSaveDialog(this);
-            if(res == JFileChooser.APPROVE_OPTION)  {
-                file = getFileChooser().getSelectedFile();
-            }
-        }
+//        if(newFile) {
+//            int res = getFileChooser().showSaveDialog(this);
+//            if(res == JFileChooser.APPROVE_OPTION)  {
+//                file = getFileChooser().getSelectedFile();
+//            }
+//        }
         try(PrintStream stream = new PrintStream(file)) {
             stream.print(txContents.getText());
             saved = true;
