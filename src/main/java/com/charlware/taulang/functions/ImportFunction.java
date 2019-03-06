@@ -6,6 +6,7 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ListValue;
@@ -78,25 +79,20 @@ public class ImportFunction extends Function {
 
     public Value execute(File file) throws Exception {
         Value result = null;
-        try {
-            if (file.exists()) {
-                Path p = file.toPath();
-                result = interpretWrapped(file.getAbsolutePath(), 
-                                          () -> runtime.getInterpreter().interpret(p));
-            } else {
-                runtime.stdout.println("Could not find file");
-                result = BooleanValue.FALSE;
-            }
-        } finally {
-            runtime.getMemory().setSystemContext();
+        if (file.exists()) {
+            Path p = file.toPath();
+            result = interpretWrapped(file.getAbsolutePath(), 
+                                      () -> runtime.getInterpreter().interpret(p));
+        } else {
+            runtime.stdout.println("Could not find file");
+            result = BooleanValue.FALSE;
         }
         return result;
     }
     
     protected BooleanValue interpretWrapped(String contextName, Callable callable) {
         Memory memory = runtime.getMemory();
-        memory.setContext(contextName);
-        memory.push();
+        MemoryScope scope = memory.pushScope();
         try {
             callable.call();
             return BooleanValue.FALSE;
@@ -106,7 +102,7 @@ public class ImportFunction extends Function {
             return BooleanValue.FALSE;
         }       
         finally {
-            memory.setSystemContext();
+            memory.popScope();
         }
     }
 }

@@ -1,3 +1,4 @@
+print [ "In test.logo" newline ]
 make :result "ss"
 
 printline [ "Testing with result=" result " and doesNotExist=" doesNotExist ]
@@ -10,6 +11,7 @@ if isError required doesNotExist
 
 printline [ "Something? " ifnull result "Yes!" ]
 printline [ "Something? " ifnull doesNotExist "No!" ]
+
 
 to :introduce_tau [:to_whom]
   [ printline [ "Hello " 

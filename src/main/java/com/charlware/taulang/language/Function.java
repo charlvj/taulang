@@ -5,6 +5,7 @@
  */
 package com.charlware.taulang.language;
 
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.values.Value;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public abstract class Function {
     protected String[] params;
     protected com.charlware.taulang.Runtime runtime;
     protected String context = null;
+    protected MemoryScope memory = null;
     
     public String getName() {
         return name;
@@ -45,6 +47,17 @@ public abstract class Function {
     
     public void setContext(String context) {
         this.context = context;
+    }
+    
+    public void setMemory(MemoryScope memory) {
+        this.memory = memory;
+    }
+    
+    public MemoryScope getMemory() {
+//        if(memory == null) 
+//            return runtime.getMemory().getCurrentScope();
+//        else
+            return memory;
     }
     
     public abstract Value execute(Value[] params) throws Exception;

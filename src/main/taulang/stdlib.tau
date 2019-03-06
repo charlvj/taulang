@@ -25,9 +25,11 @@ to :required [:param]
     [ throwError "Parameter must be provided" ]
     [ param ]
   ]
+expose :required
 
 to :ifnull [:param :default]
   [ if is_null param 
     [ default ]
     [ param ]
   ]
+expose :ifnull

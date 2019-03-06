@@ -5,7 +5,7 @@
  */
 package com.charlware.taulang.functions;
 
-import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.Value;
 
@@ -22,8 +22,8 @@ public class ExposeFunction extends Function {
     @Override
     public Value execute(Value[] params) throws Exception {
         String functionName = params[0].asString();
-        Memory memory = runtime.getMemory();
-        memory.elevate(functionName);
+        MemoryScope memory = runtime.getMemory().getCurrentScope();
+        memory.elevateToSystem(functionName);
         return null;
     }
 }

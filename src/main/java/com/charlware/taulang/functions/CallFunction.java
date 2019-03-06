@@ -5,7 +5,7 @@
  */
 package com.charlware.taulang.functions;
 
-import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.Symbol;
@@ -50,16 +50,9 @@ public class CallFunction extends Function {
 
     public Value call(SymbolValue symbol, Value callParams) throws Exception {
         Symbol sym = symbol.getValue();
-        Memory memory = runtime.getMemory();
+        MemoryScope memory = runtime.getMemory().getCurrentScope();
         Function function = memory.get(sym.getStringValue());
         return call(function, callParams);
-    }
-    
-    public Value call(Function function, ListValue callParams) throws Exception {
-        int numParams = function.getNumParams();
-        List<Value> callParamsList = callParams.getValue();
-        
-        return function.execute(callParamsList);
     }
     
     public Value call(Function function, Value callParams) throws Exception {
@@ -71,25 +64,26 @@ public class CallFunction extends Function {
         }
     }
 
-    public Value call(ListValue code, Value callParams) throws Exception {
-        Memory memory = runtime.getMemory();
-        memory.push();
+    public Value call(Function function, ListValue callParams) throws Exception {
+        int numParams = function.getNumParams();
+        List<Value> callParamsList = callParams.getValue();
         
-        try {
-            if(callParams instanceof ListValue) {
-                List<Value> paramsList = ((ListValue) callParams).getValue();
-                for(int i = 0; i < paramsList.size(); i++) {
-                    memory.put(new ValueFunction("$" + i, paramsList.get(i)));
-                }
-            } else {
-                memory.put(new ValueFunction("$1", callParams));
+        return function.execute(callParamsList);
+    }
+    
+    public Value call(ListValue code, Value callParams) throws Exception {
+        MemoryScope memory = getMemory().push();
+        
+        if(callParams instanceof ListValue) {
+            List<Value> paramsList = ((ListValue) callParams).getValue();
+            for(int i = 0; i < paramsList.size(); i++) {
+                memory.put(new ValueFunction("$" + i, paramsList.get(i)));
             }
-            Value result = runtime.getInterpreter().eval(code.getListToken().iterator());
-            return result;
-        } 
-        finally {
-            memory.pop();
+        } else {
+            memory.put(new ValueFunction("$1", callParams));
         }
+        Value result = runtime.getInterpreter().eval(code.getListToken().iterator());
+        return result;
     }
     
 }

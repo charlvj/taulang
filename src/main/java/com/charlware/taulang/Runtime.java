@@ -84,18 +84,18 @@ public class Runtime {
     }
 
     public void register(String name, Function function) {
-        memory.put(name, function);
+        memory.getSystemScope().put(name, function);
         function.setRuntime(this);
     }
 
     public void register(Function function) {
-        memory.put(function.getName(), function);
+        memory.getSystemScope().put(function.getName(), function);
         function.setRuntime(this);
     }
 
     public void register(String name, Value value) {
         Function function = new ValueFunction(name, value);
-        memory.put(name, function);
+        memory.getSystemScope().put(name, function);
         function.setRuntime(this);
     }
 
@@ -141,7 +141,7 @@ public class Runtime {
     }
 
     private void getQuickAccessFunctions() {
-        callFunction = (CallFunction) memory.get("call");
+        callFunction = (CallFunction) memory.getCurrentScope().get("call");
     }
 
     private void importStdLib() throws Exception {

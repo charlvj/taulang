@@ -6,6 +6,7 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.language.TailCallValue;
@@ -48,29 +49,29 @@ public class ToFunction extends Function {
             @Override
             public Value execute(Value[] paramValues) throws Exception {
                 Memory memory = runtime.getMemory();
-                memory.push();
+                MemoryScope scope = memory.pushScope();
                 try {
                     for(int i = 0; i < params.length; i++) {
-                        memory.put(new ValueFunction(params[i], paramValues[i]));
+                        scope.put(new ValueFunction(params[i], paramValues[i]));
                     }
                     Value result = runtime.getInterpreter().eval(code.iterator());
                     if(runtime.getFlags().isTailCallOptimizationEnabled() && result instanceof TailCallValue) {
-                        memory.pop();
-                        memory.push();
+                        memory.popScope();
+                        scope = memory.pushScope();
                         for(int i = 0; i < params.length; i++) {
-                            memory.put(new ValueFunction(params[i], paramValues[i]));
+                            scope.put(new ValueFunction(params[i], paramValues[i]));
                         }
                         result = result.realize();
                     }
                     return result;
                 } 
                 finally {
-                    memory.pop();
+                    memory.popScope();
                 }
             }
         };
         function.setRuntime(runtime);
-        runtime.getMemory().put(function);
+        runtime.getMemory().getCurrentScope().put(function);
         return null;
     }
     

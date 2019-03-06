@@ -22,7 +22,7 @@ public class MakeFunction extends Function {
     public Value execute(Value[] params) throws Exception {
         String variableName = params[0].asString();
         Value value = params[1];
-        runtime.register(variableName, value);
+        getMemory().put(variableName, new ValueFunction(variableName, value));
         return value;
     }
 

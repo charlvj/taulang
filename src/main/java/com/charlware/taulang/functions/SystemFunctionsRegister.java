@@ -6,7 +6,7 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
-import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.FunctionValue;
@@ -41,32 +41,32 @@ public class SystemFunctionsRegister extends AbstractRegister {
 //                return null;
 //            }
 //        });
-        reg(new GenericFunction0("system.memory.currentcontext") {
-            @Override
-            public Value execute() throws Exception {
-                return new StringValue(runtime.getMemory().getCurrentContext());
-            }
-        });
-        
-        reg(new GenericFunction0("system.memory.dump") {
-            @Override
-            public Value execute() throws Exception {
-                Memory memory = runtime.getMemory();
-                for(Map<String,Function> hash: memory) {
-                    for(Map.Entry entry: hash.entrySet()) {
-                        System.out.print(entry.getKey() + "  ");
-                    }
-                    System.out.println();
-                }
-                return null;
-            }
-            
-        });
+//        reg(new GenericFunction0("system.memory.currentcontext") {
+//            @Override
+//            public Value execute() throws Exception {
+//                return new StringValue(runtime.getMemory().getCurrentContext());
+//            }
+//        });
+//        
+//        reg(new GenericFunction0("system.memory.dump") {
+//            @Override
+//            public Value execute() throws Exception {
+//                MemoryScope memory = runtime.getMemory();
+//                for(Map<String,Function> hash: memory) {
+//                    for(Map.Entry entry: hash.entrySet()) {
+//                        System.out.print(entry.getKey() + "  ");
+//                    }
+//                    System.out.println();
+//                }
+//                return null;
+//            }
+//            
+//        });
         
         reg(new GenericFunction2("alias", "aliasName", "existingFunction") {
             @Override
             public Value execute(Value aliasName, Value existingFunc) throws Exception {
-                Memory memory = runtime.getMemory();
+                MemoryScope memory = runtime.getMemory().getCurrentScope();
                 Function func = memory.get(existingFunc.asString());
                 memory.put(aliasName.asString(), func);
                 return aliasName;

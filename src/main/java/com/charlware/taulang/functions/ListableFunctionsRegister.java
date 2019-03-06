@@ -6,7 +6,7 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
-import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.values.ListValue;
@@ -54,24 +54,24 @@ public class ListableFunctionsRegister extends AbstractRegister {
             }
             
         });
-        reg(new GenericFunction3("foreach1", "list", "varname", "code") {
-            @Override
-            public Value execute(Value list, Value varname, Value code) throws Exception {
-                if(list instanceof Listable) {
-                    ListValue listValue = (ListValue) list;
-                    ListValue codeList = (ListValue) code;
-                    ListToken codeTokens = codeList.getListToken();
-                    Value result = null;
-                    Memory memory = runtime.getMemory();
-                    for(Value value: listValue.getValue()) {
-                        memory.push();
-                        runtime.register(varname.asString(), value);
-                        result = runtime.getInterpreter().eval(codeTokens.iterator());
-                    }
-                    return result;
-                }
-                return new NumberValue(Double.valueOf(0.0));
-            }
-        });
+//        reg(new GenericFunction3("foreach1", "list", "varname", "code") {
+//            @Override
+//            public Value execute(Value list, Value varname, Value code) throws Exception {
+//                if(list instanceof Listable) {
+//                    ListValue listValue = (ListValue) list;
+//                    ListValue codeList = (ListValue) code;
+//                    ListToken codeTokens = codeList.getListToken();
+//                    Value result = null;
+//                    MemoryScope memory = runtime.getMemory();
+//                    for(Value value: listValue.getValue()) {
+//                        memory.push();
+//                        runtime.register(varname.asString(), value);
+//                        result = runtime.getInterpreter().eval(codeTokens.iterator());
+//                    }
+//                    return result;
+//                }
+//                return new NumberValue(Double.valueOf(0.0));
+//            }
+//        });
     }
 }

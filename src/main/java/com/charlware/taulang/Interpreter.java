@@ -78,7 +78,7 @@ public class Interpreter {
                 Function function = runtime.getMemory().get(token.getSource());
 
                 if(function == null) {
-                    result = new ErrorValue(ErrorFactory.createError("Function not defined: " + token.getSource()));
+//                    result = new ErrorValue(ErrorFactory.createError("Function not defined: " + token.getSource()));
                 }
                 else {
                     int numParams = function.getNumParams();
@@ -94,8 +94,9 @@ public class Interpreter {
                         else
                             result = new TailCallValue(function, params);
                     }
-                    else
+                    else {
                         result = function.execute(params);
+                    }
                 }
                 break;
         }
