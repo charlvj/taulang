@@ -1,3 +1,7 @@
+printline "Testing..."
+
+helper "test.logo"
+
 print [ "In test.logo" newline ]
 make :result "ss"
 

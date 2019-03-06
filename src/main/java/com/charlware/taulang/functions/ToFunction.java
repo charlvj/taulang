@@ -49,6 +49,8 @@ public class ToFunction extends Function {
             @Override
             public Value execute(Value[] paramValues) throws Exception {
                 Memory memory = runtime.getMemory();
+                MemoryScope savedScope = memory.getCurrentScope();
+                memory.setCurrentScope(getMemory());
                 MemoryScope scope = memory.pushScope();
                 try {
                     for(int i = 0; i < params.length; i++) {
@@ -56,8 +58,8 @@ public class ToFunction extends Function {
                     }
                     Value result = runtime.getInterpreter().eval(code.iterator());
                     if(runtime.getFlags().isTailCallOptimizationEnabled() && result instanceof TailCallValue) {
-                        memory.popScope();
-                        scope = memory.pushScope();
+//                        memory.popScope();
+//                        scope = memory.pushScope();
                         for(int i = 0; i < params.length; i++) {
                             scope.put(new ValueFunction(params[i], paramValues[i]));
                         }
@@ -67,6 +69,7 @@ public class ToFunction extends Function {
                 } 
                 finally {
                     memory.popScope();
+                    memory.setCurrentScope(savedScope);
                 }
             }
         };
