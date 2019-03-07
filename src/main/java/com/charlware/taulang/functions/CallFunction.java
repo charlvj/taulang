@@ -5,6 +5,7 @@
  */
 package com.charlware.taulang.functions;
 
+import com.charlware.taulang.Memory;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
@@ -72,18 +73,23 @@ public class CallFunction extends Function {
     }
     
     public Value call(ListValue code, Value callParams) throws Exception {
-        MemoryScope memory = getMemory().push();
+        Memory memory = runtime.getMemory();
+        MemoryScope scope = memory.pushScope();
         
-        if(callParams instanceof ListValue) {
-            List<Value> paramsList = ((ListValue) callParams).getValue();
-            for(int i = 0; i < paramsList.size(); i++) {
-                memory.put(new ValueFunction("$" + i, paramsList.get(i)));
+        try {
+            if(callParams instanceof ListValue) {
+                List<Value> paramsList = ((ListValue) callParams).getValue();
+                for(int i = 0; i < paramsList.size(); i++) {
+                    scope.put(new ValueFunction("$" + i, paramsList.get(i)));
+                }
+            } else {
+                scope.put(new ValueFunction("$1", callParams));
             }
-        } else {
-            memory.put(new ValueFunction("$1", callParams));
+            Value result = runtime.getInterpreter().eval(code.getListToken().iterator());
+            return result;
+        } finally {
+          memory.popScope();
         }
-        Value result = runtime.getInterpreter().eval(code.getListToken().iterator());
-        return result;
     }
     
 }
