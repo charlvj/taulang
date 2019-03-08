@@ -1,6 +1,6 @@
 # taulang
 Language inspired by Logo.
-I created it because I wanted to teach my son some programming with Logo, but the free version I was using kept crashing. I first created the language itself and called it Tau. I created a different project that creates a Logo adapter to the language.
+I created it because I wanted to teach my son some programming with Logo, but the free version I was using kept crashing. I first created the language itself and called it Tau. I created a different project that creates a Logo adapter to the language - [TauLogo](https://github.com/charlvj/taulogo).
 
 # Overview
 TauLang is a functional language inspired by the Logo language.
