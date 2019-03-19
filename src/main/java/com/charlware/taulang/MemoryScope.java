@@ -35,6 +35,10 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
         put(function.getName(), function);
     }
     
+    public void putAll(MemoryScope scope) {
+        functions.putAll(scope.functions);
+    }
+    
     public Function get(String name) {
         Function function = functions.get(name);
         if(function == null && parent != null)

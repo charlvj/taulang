@@ -52,6 +52,7 @@ public class ToFunction extends Function {
                 MemoryScope savedScope = memory.getCurrentScope();
                 memory.setCurrentScope(getMemory());
                 MemoryScope scope = memory.pushScope();
+                scope.putAll(savedScope);
                 try {
                     for(int i = 0; i < params.length; i++) {
                         scope.put(new ValueFunction(params[i], paramValues[i]));
