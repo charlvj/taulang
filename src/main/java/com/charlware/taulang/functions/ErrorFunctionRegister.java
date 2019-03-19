@@ -22,14 +22,14 @@ public class ErrorFunctionRegister extends AbstractRegister {
 
     @Override
     public void registerAll() {
-        reg(new GenericFunction1("throwError", "msg") {
+        reg(new GenericFunction1("throw_error", "msg") {
             @Override
             public Value execute(Value msg) throws Exception {
                 return new ErrorValue(ErrorFactory.createError(msg.asString()));
             }
         });
         
-        reg(new GenericFunction1("isError", "error") {
+        reg(new GenericFunction1("is_error", "error") {
             @Override
             public Value execute(Value error) throws Exception {
                 return BooleanValue.valueOf(error instanceof ErrorValue);
