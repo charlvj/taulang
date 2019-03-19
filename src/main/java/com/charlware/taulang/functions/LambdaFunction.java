@@ -37,32 +37,7 @@ public class LambdaFunction extends Function {
         }
         ListValue codeListValue = (ListValue) params[1];
         
-        Function lambdaFunction = new Function() {
-            private ListToken code;
-            
-            {
-                name = "__lambda_" + seq;
-                params = funcParamArr;
-                runtime = LambdaFunction.this.runtime;
-                code = codeListValue.getListToken();
-            }
-
-            @Override
-            public Value execute(Value[] paramValues) throws Exception {
-                Memory memory = runtime.getMemory();
-                MemoryScope scope = memory.pushScope();
-                try {
-                    for(int i = 0; i < params.length; i++) {
-                        scope.put(new ValueFunction(params[i], paramValues[i]));
-                    }
-                    Value result = runtime.getInterpreter().eval(code.iterator());
-                    return result;
-                } 
-                finally {
-                    memory.popScope();
-                }
-            }
-        };
+        Function lambdaFunction = new AnonymousFunction(funcParamArr, codeListValue);
         return new FunctionValue(lambdaFunction);
     }
     

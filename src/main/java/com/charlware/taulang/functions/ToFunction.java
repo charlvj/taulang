@@ -5,11 +5,8 @@
  */
 package com.charlware.taulang.functions;
 
-import com.charlware.taulang.Memory;
-import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
-import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Value;
 
@@ -36,44 +33,7 @@ public class ToFunction extends Function {
         ListValue funcCode = (ListValue) params[2];
         ListToken funcTokens = funcCode.getListToken();
         
-        Function function = new Function() {
-            private ListToken code;
-            
-            {
-                name = funcName;
-                params = funcParamArr;
-                runtime = ToFunction.this.runtime;
-                code = funcTokens;
-            }
-
-            @Override
-            public Value execute(Value[] paramValues) throws Exception {
-                Memory memory = runtime.getMemory();
-                MemoryScope savedScope = memory.getCurrentScope();
-                memory.setCurrentScope(getMemory());
-                MemoryScope scope = memory.pushScope();
-                scope.putAll(savedScope);
-                try {
-                    for(int i = 0; i < params.length; i++) {
-                        scope.put(new ValueFunction(params[i], paramValues[i]));
-                    }
-                    Value result = runtime.getInterpreter().eval(code.iterator());
-                    if(runtime.getFlags().isTailCallOptimizationEnabled() && result instanceof TailCallValue) {
-//                        memory.popScope();
-//                        scope = memory.pushScope();
-                        for(int i = 0; i < params.length; i++) {
-                            scope.put(new ValueFunction(params[i], paramValues[i]));
-                        }
-                        result = result.realize();
-                    }
-                    return result;
-                } 
-                finally {
-                    memory.popScope();
-                    memory.setCurrentScope(savedScope);
-                }
-            }
-        };
+        Function function = new DefinedFunction(funcName, funcParamArr, funcTokens);
         function.setRuntime(runtime);
         runtime.getMemory().getCurrentScope().put(function);
         return null;

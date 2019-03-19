@@ -7,7 +7,7 @@ expose :printline
 
 to :calllist
     [ :list ]
-    [ call [ ] list ]
+    [ call list [ ] ]
 expose :calllist
 
 to :times
