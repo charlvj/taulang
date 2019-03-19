@@ -1,3 +1,18 @@
+import "tautest" ""
+
+test "True means tue" [
+  assert_true true
+]
+
+test "False means false" [
+  printline "In the test"
+  assert_false false
+]
+
+test "An error is an error" [
+  throw_error "test error"
+]
+
 printline "Testing..."
 
 helper "test.logo"
@@ -9,7 +24,7 @@ printline [ "Testing with result=" result " and doesNotExist=" doesNotExist ]
 
 required result
 printline "we have a result"
-if isError required doesNotExist
+if is_error required doesNotExist
   [ printline "Nothing" ]
   [ printline "what happened?" ]
 
