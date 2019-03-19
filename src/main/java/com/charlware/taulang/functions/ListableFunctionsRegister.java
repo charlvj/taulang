@@ -6,15 +6,14 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
-import com.charlware.taulang.MemoryScope;
-import com.charlware.taulang.language.Function;
-import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Listable;
 import com.charlware.taulang.values.NumberValue;
+import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -53,6 +52,37 @@ public class ListableFunctionsRegister extends AbstractRegister {
                 return new ListValue(list);
             }
             
+        });
+        reg(new GenericFunction2("concat", "list1", "list2") {
+            @Override
+            public Value execute(Value list1, Value list2) throws Exception {
+                List<Value> l1 = ((ListValue) list1).getValue();
+                List<Value> l2 = ((ListValue) list2).getValue();
+                List<Value> newList = new ArrayList(l1.size() + l2.size());
+                newList.addAll(l1);
+                newList.addAll(l2);
+                return new ListValue(newList);
+            }
+        });
+        reg(new GenericFunction2("join", "list", "chars") {
+            @Override
+            public Value execute(Value list, Value chars) throws Exception {
+                List<Value> l1 = ((ListValue) list).getValue();
+                String c = chars.asString();
+                String result = l1.stream()
+                        .map(v -> {
+                            String s;
+                            try {
+                                s = v.asString();
+                            } catch(Exception e) {
+                                s = "";
+                            }
+                            return s;
+                        }
+                        )
+                        .collect(Collectors.joining(c));
+                return new StringValue(result);
+            }
         });
 //        reg(new GenericFunction3("foreach1", "list", "varname", "code") {
 //            @Override
