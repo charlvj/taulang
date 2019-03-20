@@ -56,6 +56,34 @@ A function returns a value. Tau supports the following value types:
 7) Function: This is essentially an anonymous function, created by the lambda function.
 8) Error: This is a special value that has some information about an error, but also causes the execution of a function to stop immediately, returning the error. This can create a chain reaction that will last until the error is handled and a non-error can be returned.
 
+## Memory
+The memory is implemented as a tree structure of scopes. A new scope is created as a child of the existing one at various points, including importing a file, defining a function and running a function. When a new function is defined, it carries with it the scope in which it was defined such that when it is called, it has visibility to those functions that were defined in its original scope. For example, when a new function is defined in a file called helpers.tau, and this file is imported into a main.tau, that file is only available the contents of helpers.tau. If you want to be able to call a function defined in helpers.tau from main.tau, that function must be _exposed_. Exposing a function will elevate it to the top-level scope, thus making it available to all other scopes.
+### Example:
+```
+/* helpers.tau */
+to :private_function []
+[ printline "In private_function" ]
+
+to :public_function []
+[ private_function
+  printline "In public_function ]
+expose :public_function
+```
+```
+/* main.tau */
+import "helpers.tau" ""   /* The second parameter is for a namespace, which is not implemented yet. */
+printline "In main.tau"
+
+public_function  
+/* The above line will result in:
+In private_function
+In public_function
+*/
+
+private_function
+/* The above will not be found, a null will be returned. */
+```
+
 ## Summary
 That is pretty much it. The language is rather simple, with a lot of potential.
 
