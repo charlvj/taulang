@@ -56,6 +56,7 @@ public class Interpreter {
             result = eval(tokens.next(), tokens);
             if(result instanceof ErrorValue) break;
         }
+        if(result == null) result = NullValue.NULL;
         return result.realize();
     }
 

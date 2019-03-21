@@ -41,4 +41,22 @@ public class NumberValue extends AbstractValue<Double> {
     public Double processToken() {
         return NumberUtils.toDouble(token.getSource());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean eq = super.equals(obj);
+        if(!eq && obj instanceof NumberValue) {
+            try {
+                Double d1 = asNumber();
+                Double d2 = ((NumberValue) obj).asNumber();
+                Double epsilon = getInterpreter().getRuntime().getMemory().get("math_compare_default_epsilon").execute().asNumber();
+                eq = Math.abs(d1 - d2) < epsilon;
+            } catch(Exception e) {
+                eq = false;
+            }
+        }
+        return eq;
+    }
+    
+    
 }

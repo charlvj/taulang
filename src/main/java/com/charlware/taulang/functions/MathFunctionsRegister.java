@@ -21,6 +21,7 @@ public class MathFunctionsRegister extends AbstractRegister {
     @Override
     public void registerAll() {
         runtime.register("pi", new NumberValue(Math.PI));
+        runtime.register("math_compare_default_epsilon", new NumberValue(0.00001));
         
         reg(new GenericFunction2("plus", "value1", "value2") {
             @Override
