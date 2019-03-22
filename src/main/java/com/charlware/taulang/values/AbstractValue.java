@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author charlvj
  */
-public abstract class AbstractValue<V> implements Value<V> {
+public abstract class AbstractValue<V> implements Value {
     protected final Token token;
     private V value;
     protected boolean realized = false;

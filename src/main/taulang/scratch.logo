@@ -240,3 +240,41 @@ printline [ "abs(-10) = " abs -10]
 
 print "Repeating: "
 repeat 10 [ print [ $1 " " ] ] printline "."
+
+
+
+
+define_object :Name [ :first_name :last_name ]
+[ make :id next_id
+  
+  to :full_name [] [ join [first_name last_name] ", " ]
+  to :equals [:other]
+  [ and
+      eq first_name .first_name other
+      eq last_name  .last_name other
+  ]
+]
+expose_object :Name [:id :full_name :equals]
+
+make :p1 Name "John" "Smith"
+make :p2 Name "John" "Doe"
+printline ["Person " Name.id p1 ": " Name.full_name p1]
+printline ["Person " Name.id p2 ": " Name.full_name p2]
+printline ["Equals? " Name.equals p1 p2]
+
+
+
+define_object :ListStream [:list]
+[ push_prototype Stream
+  
+  make :current_pos 0
+  
+  to :has_next [] [ gt size list current_pos ]
+  to :next [] 
+  [ make :current_pos inc current_pos
+    getelem list current_pos
+  ]
+]
+
+.foreach ListStream [1 2 3 4] [:element]
+  [ printline ["Number " element] ]
