@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ListableFunctionsRegister extends AbstractRegister {
     @Override
     public void registerAll() {
-        reg(new GenericFunction1("listsize", "list") {
+        reg(new GenericFunction1("size", "list") {
             @Override
             public Value execute(Value list) throws Exception {
                 if(list instanceof Listable) {

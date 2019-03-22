@@ -12,7 +12,7 @@ import com.charlware.taulang.language.InvalidCastException;
  *
  * @author charlvj
  */
-public interface Value<V> {
+public interface Value {
     public void setInterpreter(Interpreter interpreter);
     public Value realize() throws Exception;
     public String getType();
