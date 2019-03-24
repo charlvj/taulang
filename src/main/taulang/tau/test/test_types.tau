@@ -1,14 +1,46 @@
 import "tau/test/tautest" ""
 
-test "True means tue" [
-  assert_true true
-]
+test "True means tue" 
+[ assert_true true ]
 
-test "False means false" [
-  printline "In the test"
-  assert_false false
-]
+test "False means false" 
+[ assert_false false ]
 
-test "An error is an error" [
-  throw_error "test error"
-]
+test "An error is an error" 
+[ assert_true is_error throw_error "test error" ]
+
+test "is_logical"
+[ assert_true is_logical true
+  assert_true is_logical false
+  assert_false is_logical 1
+  assert_false is_logical "s"
+  assert_false is_logical ?
+  assert_false is_logical [1 2]
+  assert_false is_logical :a_symbol ]
+
+test "is_number"
+[ assert_true is_number 1
+  assert_true is_number 1.2
+  assert_false is_number true
+  assert_false is_number "s"
+  assert_false is_number ?
+  assert_false is_number [1 2]
+  assert_false is_number :a_symbol ]
+
+test "is_string"
+[ assert_true is_string ""
+  assert_true is_string "asd"
+  assert_false is_string true
+  assert_false is_string 1.2
+  assert_false is_string ?
+  assert_false is_string [1 2]
+  assert_false is_string :a_symbol ]
+
+test "is_list"
+[ assert_true is_list []
+  assert_true is_list [1 2]
+  assert_false is_list true
+  assert_false is_list 1.2
+  assert_false is_list ?
+  assert_true is_list "asd"
+  assert_false is_list :a_symbol ]
