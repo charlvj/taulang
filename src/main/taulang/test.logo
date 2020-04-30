@@ -1,4 +1,9 @@
+to :get_list [:num] [ [ num num num ] ]
+print get_list  1
+
 import "tau/test/tautest" ""
+
+
 
 test "True means tue" [
   assert_true true
@@ -39,3 +44,50 @@ to :introduce_tau [:to_whom]
   ]
 introduce_tau "Curious Reader"
 introduce_tau ?
+
+define_object :Name [:first_name :last_name]
+  [ printline "Defining an object!" ]
+
+make :p1 Name "John" "Smith"
+printline ["Object? " is_object p1]
+
+
+to :get_list [:num] [ [ num num num ] ]
+printline ["get_list " get_list 2 ]
+
+
+
+to :int_range_next [:start :end]
+[ 
+  /* printline ["debug " start "; " end ] */
+  [ start
+    [ plus start 1
+      end] 
+  ]
+]
+
+to :int_range_has_next [:start :end]
+[ not gt start end ]
+
+to :int_range [:start :end]
+[ new_stream 
+    [start end] 
+    :int_range_has_next 
+    :int_range_next
+]
+
+printline "Testing the stream:"
+for_each int_range 1 10 
+  lambda [:i] [printline ["Iteration " i]]
+
+try_catch
+[ for_each stream_from_uri "/tmp/test.txts"
+    lambda [:c] [ print c ]
+]
+[ printline 
+  [ "An error occured: ["
+    error_code $1
+    "] "
+    error_message $1
+  ]
+]

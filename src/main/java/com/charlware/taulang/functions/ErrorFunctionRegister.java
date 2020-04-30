@@ -36,14 +36,14 @@ public class ErrorFunctionRegister extends AbstractRegister {
             }
         });
         
-        reg(new GenericFunction1("error.message", "error") {
+        reg(new GenericFunction1("error_message", "error") {
             @Override
             public Value execute(Value error) throws Exception {
                 return new StringValue(getError(error).getMessage());
             }
         });
         
-        reg(new GenericFunction1("error.code", "error") {
+        reg(new GenericFunction1("error_code", "error") {
             @Override
             public Value execute(Value error) throws Exception {
                 return new NumberValue(getError(error).getCode());

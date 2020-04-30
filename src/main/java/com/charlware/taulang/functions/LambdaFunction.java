@@ -38,6 +38,8 @@ public class LambdaFunction extends Function {
         ListValue codeListValue = (ListValue) params[1];
         
         Function lambdaFunction = new AnonymousFunction(funcParamArr, codeListValue);
+        lambdaFunction.setRuntime(runtime);
+        lambdaFunction.setMemory(memory);
         return new FunctionValue(lambdaFunction);
     }
     

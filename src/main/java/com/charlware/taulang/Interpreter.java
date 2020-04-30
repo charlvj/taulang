@@ -106,6 +106,7 @@ public class Interpreter {
         else
             result = NullValue.NULL;
         
+        result.setMemoryScope(runtime.getMemory().getCurrentScope());
         return result;
     }
 

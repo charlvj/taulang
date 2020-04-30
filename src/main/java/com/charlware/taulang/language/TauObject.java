@@ -5,15 +5,14 @@
  */
 package com.charlware.taulang.language;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.charlware.taulang.MemoryScope;
 
 /**
  *
  * @author charlvj
  */
 public class TauObject {
-    private Map<String,Function> functions = new HashMap();
+    private MemoryScope scope = null;
     private String type = "Object";
     
     public void setType(String type) {
@@ -25,10 +24,20 @@ public class TauObject {
     }
     
     public Function get(String functionName) {
-        return functions.get(functionName);
+        return scope.get(functionName);
     }
     
     public void put(String functionName, Function function) {
-        functions.put(functionName, function);
+        scope.put(functionName, function);
     }
+
+    public MemoryScope getScope() {
+        return scope;
+    }
+
+    public void setScope(MemoryScope scope) {
+        this.scope = scope;
+    }
+    
+    
 }

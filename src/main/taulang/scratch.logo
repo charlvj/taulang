@@ -278,3 +278,33 @@ define_object :ListStream [:list]
 
 .foreach ListStream [1 2 3 4] [:element]
   [ printline ["Number " element] ]
+
+
+
+new_stream [start state] :next_function
+
+to :range_next [ :list :idx ] 
+[ [ get list 1
+    [ list dec idx ]
+  ]
+]
+
+to :int_range_next [:start :end]
+[ [ start
+   [ inc start 
+     end] 
+  ]
+]
+
+to :int_range_has_next [:start :end]
+[ not eq start end ]
+
+to :int_range [:start :end]
+[ new_stream 
+    [start end] 
+    :int_range_has_next 
+    :int_range_next
+]
+
+for_each int_range 1 10 
+  lambda [:i] [print_line i]

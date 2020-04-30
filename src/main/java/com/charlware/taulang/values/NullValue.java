@@ -6,6 +6,7 @@
 package com.charlware.taulang.values;
 
 import com.charlware.taulang.Interpreter;
+import com.charlware.taulang.MemoryScope;
 
 /**
  *
@@ -48,5 +49,10 @@ public class NullValue implements Value {
     @Override
     public String toString() {
         return "";
+    }
+
+    @Override
+    public void setMemoryScope(MemoryScope memoryScope) {
+        
     }
 }

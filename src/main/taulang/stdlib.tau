@@ -33,3 +33,11 @@ to :ifnull [:param :default]
     [ param ]
   ]
 expose :ifnull
+
+to :try_catch [:try_code :catch_code]
+[ make :result call try_code [] 
+  if is_error result
+  [ call :catch [ result ] ]
+  [ result ]
+]
+expose :try_catch

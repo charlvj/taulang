@@ -6,6 +6,7 @@
 package com.charlware.taulang.language;
 
 import com.charlware.taulang.Interpreter;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -25,6 +26,11 @@ public class TailCallValue implements Value {
     @Override
     public void setInterpreter(Interpreter interpreter) {
         // Nada
+    }
+    
+    @Override
+    public void setMemoryScope(MemoryScope memoryScope) {
+        // ...
     }
 
     @Override

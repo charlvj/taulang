@@ -50,6 +50,7 @@ public class DefinedFunction extends Function {
                 }
                 result = result.realize();
             }
+            result.setMemoryScope(scope);
             return result;
         }
         finally {

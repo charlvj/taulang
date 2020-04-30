@@ -12,11 +12,13 @@ import com.charlware.taulang.functions.ListableFunctionsRegister;
 import com.charlware.taulang.functions.LogicalFunctionsRegister;
 import com.charlware.taulang.functions.MakeFunction;
 import com.charlware.taulang.functions.MathFunctionsRegister;
+import com.charlware.taulang.functions.ObjectFunctionsRegister;
 import com.charlware.taulang.functions.PrintFunction;
 import com.charlware.taulang.functions.ReadlineFunction;
 import com.charlware.taulang.functions.ValueFunction;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.functions.RepeatFunction;
+import com.charlware.taulang.functions.StreamFunctionsRegister;
 import com.charlware.taulang.functions.SystemFunctionsRegister;
 import com.charlware.taulang.functions.ToFunction;
 import com.charlware.taulang.values.ListValue;
@@ -55,6 +57,8 @@ public class Runtime {
         addRegister(new ListableFunctionsRegister());
         addRegister(new MathFunctionsRegister());
         addRegister(new LogicalFunctionsRegister());
+        addRegister(new ObjectFunctionsRegister());
+        addRegister(new StreamFunctionsRegister());
 
     }
 

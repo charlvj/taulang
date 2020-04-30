@@ -1,0 +1,7 @@
+import "tau/test/tautest" ""
+
+test "ifnull" 
+[ assert_equals 1 ifnull 1 2
+  assert_equals 2 ifnull ? 2
+]
+

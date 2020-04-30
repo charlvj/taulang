@@ -6,8 +6,8 @@
 package com.charlware.taulang.values;
 
 import com.charlware.taulang.Interpreter;
+import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Token;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +20,8 @@ public abstract class AbstractValue<V> implements Value {
     private V value;
     protected boolean realized = false;
     protected Interpreter interpreter;
+    
+    protected MemoryScope memoryScope = null;
     
     public AbstractValue(Token token) {
         this.token = token;
@@ -41,6 +43,11 @@ public abstract class AbstractValue<V> implements Value {
     }
     
     @Override
+    public void setMemoryScope(MemoryScope memoryScope) {
+        this.memoryScope = memoryScope;
+    }
+    
+    @Override
     public String getType() {
         return token.getType().toString();
     }
@@ -54,9 +61,21 @@ public abstract class AbstractValue<V> implements Value {
     
     @Override
     public Value realize() throws Exception {
+        MemoryScope savedScope = null;
         if(!realized) {
-            value = processToken();
-            realized = true;
+            try {
+                if(memoryScope != null) {
+                    savedScope = interpreter.getRuntime().getMemory().getCurrentScope();
+                    interpreter.getRuntime().getMemory().setCurrentScope(memoryScope);
+                }
+                value = processToken();
+                realized = true;
+            }
+            finally {
+                if(memoryScope != null) {
+                    interpreter.getRuntime().getMemory().setCurrentScope(savedScope);
+                }
+            }
         }
         return this;
     }

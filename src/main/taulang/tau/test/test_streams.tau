@@ -1,0 +1,8 @@
+import "tau/test/tautest" ""
+
+test "list_to_stream" 
+[ make :list [1 2 3 4]
+  assert_false is_stream list
+  assert_true is_stream list_to_stream list
+]
+
