@@ -1,8 +1,8 @@
 to :test_failed [:error]
-[ printline ["The test failed with message: " error] ]
+[ printline ["Failed: " error] ]
 
 to :test_passed []
-[ printline "Test Passed!" ]
+[ printline "Passed!" ]
 
 to :eval_test [:result]
 [ if is_error result
@@ -11,7 +11,7 @@ to :eval_test [:result]
 ]
 
 to :test [:name :code]
-[ printline ["Performing Test: " name]
+[ print [" TauTest: " name "\t- "]
   eval_test call code []
 ]
 expose :test

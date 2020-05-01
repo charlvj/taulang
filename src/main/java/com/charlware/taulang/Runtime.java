@@ -25,8 +25,11 @@ import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.StringValue;
+
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +54,8 @@ public class Runtime {
 
     public Runtime() {
         interpreter = new Interpreter(this);
+        
+        addDefaultSearchPath();
 
         addRegister(new SystemFunctionsRegister());
         addRegister(new ErrorFunctionRegister());
@@ -87,6 +92,18 @@ public class Runtime {
         return searchPath;
     }
 
+    private void addDefaultSearchPath() {
+    	try {
+	    	Path path= new File(
+	                com.charlware.taulang.Runtime.class.getResource("/tau").toURI()
+	        ).getParentFile().toPath();
+			searchPath.add(new StringValue(path.toFile().getAbsolutePath()));
+    	}
+    	catch(Exception e) {
+    		System.out.println("Could not find default search path.");
+    	}
+    }
+    
     public void register(String name, Function function) {
         memory.getSystemScope().put(name, function);
         function.setRuntime(this);

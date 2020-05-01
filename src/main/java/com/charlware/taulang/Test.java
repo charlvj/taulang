@@ -5,10 +5,11 @@
  */
 package com.charlware.taulang;
 
-import com.charlware.taulang.values.StringValue;
-import com.charlware.taulang.values.Value;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
+
+import com.charlware.taulang.values.Value;
 
 /**
  *
@@ -32,17 +33,23 @@ public class Test {
         runtime.initialize();
 //        interpreter.interpret(code);
         List<Value> searchPath = runtime.getSearchPath();
-        searchPath.add(new StringValue("/home/charlvj/NetBeansProjects/TauLang/src/main/taulang"));
-        File file = new File("test.logo");
-        if (!file.exists()) {
-            for (Value path : searchPath) {
-                file = new File(path.asString(), "test.logo");
-                if (file.exists()) {
-                    break;
-                }
-            }
-        }
-//        File file = new File("~/NetBeansProjects/rocketlauncher/CvJLogo/src/main/cvjlogo/test.logo");
+//        searchPath.add(new StringValue("/scratch"));
+        
+        String fileToRun = "scratch/streams.tau";
+        File file = new File(
+                com.charlware.taulang.Runtime.class.getResource("/tau/" + fileToRun).toURI()
+        );
+        
+        
+//        File file = new File(fileToRun);
+//        if (!file.exists()) {
+//            for (Value path : searchPath) {
+//                file = new File(path.asString(), fileToRun);
+//                if (file.exists()) {
+//                    break;
+//                }
+//            }
+//        }
         if(file.exists())
             interpreter.interpret(file.toPath());
         else

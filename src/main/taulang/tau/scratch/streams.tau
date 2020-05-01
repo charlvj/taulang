@@ -1,0 +1,12 @@
+try_catch
+[ printline "Printing..."
+  for_each stream_from_uri "/tmp/test.txt"
+    lambda [:c] [ print c ]
+]
+[ printline 
+  [ "An error occured: ["
+    error_code $1
+    "] "
+    error_message $1
+  ]
+]
