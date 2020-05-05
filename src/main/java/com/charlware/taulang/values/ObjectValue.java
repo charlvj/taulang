@@ -28,14 +28,4 @@ public class ObjectValue extends AbstractValue<TauObject> {
         return new TauObject();
     }
 
-    @Override
-    public String asString() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Double asNumber() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

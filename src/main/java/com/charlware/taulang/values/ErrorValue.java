@@ -34,8 +34,8 @@ public class ErrorValue extends AbstractValue<TauError> {
     }
 
     @Override
-    public Double asNumber() throws Exception {
-        return (double) getValue().getCode();
+    public Integer asInteger() throws Exception {
+        return getValue().getCode();
     }
     
 }

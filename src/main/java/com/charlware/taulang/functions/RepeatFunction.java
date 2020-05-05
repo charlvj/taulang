@@ -24,12 +24,12 @@ public class RepeatFunction extends Function {
     
     @Override
     public Value execute(Value[] params) throws Exception {
-        int times = params[0].asNumber().intValue();
+        int times = params[0].asInteger();
         ListValue listValue = (ListValue) params[1];
         ListToken listToken = listValue.getListToken();
         Value result = null;
         for(int i = 0; i < times; i++) {
-            result = runtime.callFunction.call(listValue, new NumberValue((double) i+1));
+            result = runtime.callFunction.call(listValue, NumberValue.valueOf(i+1));
 //            result = runtime.getInterpreter().eval(listToken.iterator());
         }
         return result;

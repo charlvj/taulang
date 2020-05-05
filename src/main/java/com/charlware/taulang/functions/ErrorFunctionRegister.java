@@ -10,7 +10,7 @@ import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.TauError;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
-import com.charlware.taulang.values.NumberValue;
+import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
 
@@ -46,7 +46,7 @@ public class ErrorFunctionRegister extends AbstractRegister {
         reg(new GenericFunction1("error_code", "error") {
             @Override
             public Value execute(Value error) throws Exception {
-                return new NumberValue(getError(error).getCode());
+                return new IntegerValue(getError(error).getCode());
             }
         });
         

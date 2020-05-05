@@ -29,8 +29,8 @@ public class SymbolValue extends AbstractValue<Symbol> {
     }
 
     @Override
-    public Double asNumber() throws Exception {
-        return Double.valueOf(getValue().getIntValue());
+    public Integer asInteger() throws Exception {
+        return getValue().getIntValue();
     }
     
     @Override

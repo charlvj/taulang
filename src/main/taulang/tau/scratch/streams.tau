@@ -10,3 +10,15 @@ try_catch
     error_message $1
   ]
 ]
+
+make :stream list_to_stream [1 2 3 4]
+while [has_next stream]
+  [ printline next stream ]
+  
+printline pushelem 4 [1 2 3 4]
+
+make :file stream_from_uri "/tmp/test.txt"
+while [has_next file]
+[ printline "reading line"
+  make :line sreadline file
+  printline line ]

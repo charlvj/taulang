@@ -5,58 +5,35 @@
  */
 package com.charlware.taulang.values;
 
-import com.charlware.taulang.language.InvalidCastException;
 import com.charlware.taulang.language.Token;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.charlware.taulang.values.abilities.Addable;
+import com.charlware.taulang.values.abilities.Subtractable;
 
 /**
  *
  * @author charlvj
  */
-public class NumberValue extends AbstractValue<Double> {
+public abstract class NumberValue<NumberType> extends AbstractValue<NumberType> 
+	implements Addable<NumberType>, Subtractable<NumberType> {
     
+	public static IntegerValue valueOf(Integer i) {
+		return new IntegerValue(i);
+	}
+	
+	public static DoubleValue valueOf(Double d) {
+		return new DoubleValue(d);
+	}
+	
     public NumberValue(Token token) {
         super(token);
     }
     
-    public NumberValue(Double value) {
+    public NumberValue(NumberType value) {
         super(value);
-    }
-    
-    public NumberValue(Integer value) {
-        this(value.doubleValue());
     }
     
     @Override
     public String asString() throws Exception {
         return getValue().toString();
     }
-
-    @Override
-    public Double asNumber() throws Exception {
-        return getValue();
-    }
-    
-    @Override
-    public Double processToken() {
-        return NumberUtils.toDouble(token.getSource());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        boolean eq = super.equals(obj);
-        if(!eq && obj instanceof NumberValue) {
-            try {
-                Double d1 = asNumber();
-                Double d2 = ((NumberValue) obj).asNumber();
-                Double epsilon = getInterpreter().getRuntime().getMemory().get("math_compare_default_epsilon").execute().asNumber();
-                eq = Math.abs(d1 - d2) < epsilon;
-            } catch(Exception e) {
-                eq = false;
-            }
-        }
-        return eq;
-    }
-    
-    
 }

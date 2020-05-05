@@ -11,7 +11,8 @@ package com.charlware.taulang.language;
  */
 public enum TokenType {
     COMMENT,
-    NUMBER,
+    INTEGER,
+    DOUBLE,
     STRING,
     BOOLEAN,
     IDENTIFIER,

@@ -54,13 +54,13 @@ public class LogicalFunctionsRegister extends AbstractRegister {
         reg(new GenericFunction2("lt", "p1", "p2") {
             @Override
             public Value execute(Value p1, Value p2) throws Exception {
-                return p1.asNumber() < p2.asNumber() ? BooleanValue.TRUE : BooleanValue.FALSE;
+                return p1.asDouble() < p2.asDouble() ? BooleanValue.TRUE : BooleanValue.FALSE;
             }
         });
         reg(new GenericFunction2("gt", "p1", "p2") {
             @Override
             public Value execute(Value p1, Value p2) throws Exception {
-                return p1.asNumber() > p2.asNumber() ? BooleanValue.TRUE : BooleanValue.FALSE;
+                return p1.asDouble() > p2.asDouble() ? BooleanValue.TRUE : BooleanValue.FALSE;
             }
         });
     }

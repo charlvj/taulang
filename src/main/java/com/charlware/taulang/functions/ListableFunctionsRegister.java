@@ -5,15 +5,18 @@
  */
 package com.charlware.taulang.functions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.charlware.taulang.AbstractRegister;
+import com.charlware.taulang.language.ErrorFactory;
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Listable;
 import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -27,19 +30,20 @@ public class ListableFunctionsRegister extends AbstractRegister {
             public Value execute(Value list) throws Exception {
                 if(list instanceof Listable) {
                     Listable listable = (Listable) list;
-                    return new NumberValue(new Double(listable.size()));
+                    return NumberValue.valueOf(listable.size());
                 }
-                return new NumberValue(Double.valueOf(0.0));
+                return NumberValue.valueOf(0);
             }
         });
         reg(new GenericFunction2("getelem", "list", "index") {
             @Override
-            public Value execute(Value list, Value index) throws Exception {
+            public Value execute(Value list, Value indexValue) throws Exception {
+            	int index = indexValue.asInteger();
                 if(list instanceof Listable) {
                     Listable listable = (Listable) list;
-                    return (Value) listable.get(index.asNumber().intValue());
+                    return (Value) listable.get(index);
                 }
-                return new NumberValue(Double.valueOf(0.0));
+                return new ErrorValue(ErrorFactory.createError("Index out of bounds: " + index));
             }
         });
         reg(new GenericFunction2("range", "start", "end") {
@@ -47,7 +51,7 @@ public class ListableFunctionsRegister extends AbstractRegister {
             public Value execute(Value start, Value end) throws Exception {
                 List<Value> list = new ArrayList<>();
                 for(int i = start.asInteger(); i <= end.asInteger(); i++) {
-                    list.add(new NumberValue(Double.valueOf(i)));
+                    list.add(NumberValue.valueOf(i));
                 }
                 return new ListValue(list);
             }

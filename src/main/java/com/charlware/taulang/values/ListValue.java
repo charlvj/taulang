@@ -9,6 +9,7 @@ import com.charlware.taulang.language.InvalidCastException;
 import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.language.Token;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,8 @@ import java.util.stream.Stream;
  */
 public class ListValue extends AbstractValue<List<Value>> implements Listable<Value> {
 
+	public static final ListValue EMPTY_LIST = new ListValue(Collections.EMPTY_LIST);
+	
     public ListValue(Token token) {
         super(token);
     }
@@ -68,11 +71,6 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
         return sb.toString();
     }
 
-    @Override
-    public Double asNumber() throws InvalidCastException {
-        throw new InvalidCastException("List", "Number");
-    }
-    
     public ListToken getListToken() {
         return (ListToken) token;
     }

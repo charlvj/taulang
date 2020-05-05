@@ -94,7 +94,13 @@ public class Tokenizer {
                     eof = true;
                     break;
                 case StreamTokenizer.TT_NUMBER:
-                    result.add(new Token(""+tokenizer.nval, TokenType.NUMBER));
+                	double d = tokenizer.nval;
+                	if ((d == Math.floor(d)) && !Double.isInfinite(d)) {
+                	    result.add(new Token(""+Math.floor(d), TokenType.INTEGER));
+                	}
+                	else {
+                		result.add(new Token(""+tokenizer.nval, TokenType.DOUBLE));
+                	}
                     break;
                 case StreamTokenizer.TT_WORD:
                     if(tokStr.startsWith(":")) 
@@ -181,7 +187,7 @@ public class Tokenizer {
             }
 
             if(NumberUtils.isParsable(tok)) {
-                result.add(new Token(tok, TokenType.NUMBER));
+                result.add(new Token(tok, TokenType.DOUBLE));
             } 
             else if(tok.equals("[")) {
                 result.add(new Token(tok, TokenType.LEFT_BRACKET));

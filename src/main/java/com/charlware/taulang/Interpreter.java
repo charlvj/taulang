@@ -5,20 +5,21 @@
  */
 package com.charlware.taulang;
 
-import com.charlware.taulang.language.ErrorFactory;
-import com.charlware.taulang.language.Function;
-import com.charlware.taulang.language.TailCallValue;
-import com.charlware.taulang.language.Token;
-import com.charlware.taulang.values.ErrorValue;
-import com.charlware.taulang.values.Value;
-import com.charlware.taulang.values.ListValue;
-import com.charlware.taulang.values.NullValue;
-import com.charlware.taulang.values.NumberValue;
-import com.charlware.taulang.values.StringValue;
-import com.charlware.taulang.values.SymbolValue;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+
+import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.TailCallValue;
+import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.DoubleValue;
+import com.charlware.taulang.values.ErrorValue;
+import com.charlware.taulang.values.IntegerValue;
+import com.charlware.taulang.values.ListValue;
+import com.charlware.taulang.values.NullValue;
+import com.charlware.taulang.values.StringValue;
+import com.charlware.taulang.values.SymbolValue;
+import com.charlware.taulang.values.Value;
 
 /**
  *
@@ -66,9 +67,12 @@ public class Interpreter {
             case LIST:
                 result = new ListValue(token);
                 break;
-            case NUMBER:
-                result = new NumberValue(token);
+            case DOUBLE:
+                result = new DoubleValue(token);
                 break;
+            case INTEGER:
+            	result = new IntegerValue(token);
+            	break;
             case STRING:
                 result = new StringValue(token);
                 break;

@@ -27,10 +27,4 @@ public class FunctionValue extends AbstractValue<Function> {
     public String asString() throws Exception {
         return getValue().getName();
     }
-
-    @Override
-    public Double asNumber() throws Exception {
-        throw new InvalidCastException("Function", "Number");
-    }
-    
 }

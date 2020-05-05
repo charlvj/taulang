@@ -1,4 +1,5 @@
 import "stdmath.tau" ""
+import "streamslib.tau" ""
 
 to :printline
     [ :msg ] 
@@ -41,3 +42,11 @@ to :try_catch [:try_code :catch_code]
   [ result ]
 ]
 expose :try_catch
+
+to :pushelem [:elem :list]
+[ concat [elem] list ]
+expose :pushelem
+
+to :appendelem [:elem :list]
+[ concat list [elem] ]
+expose :appendelem

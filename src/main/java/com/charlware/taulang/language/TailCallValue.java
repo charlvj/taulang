@@ -50,7 +50,7 @@ public class TailCallValue implements Value {
     }
 
     @Override
-    public Double asNumber() throws Exception {
+    public Double asDouble() throws Exception {
         // Don't do anything here
         return null;
     }
@@ -61,4 +61,9 @@ public class TailCallValue implements Value {
         return null;
     }
     
+    @Override
+    public Boolean asBoolean() throws Exception {
+        // Don't do anything here
+        return null;
+    }
 }

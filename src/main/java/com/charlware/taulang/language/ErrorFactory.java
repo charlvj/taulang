@@ -13,12 +13,18 @@ public class ErrorFactory {
     public static TauError createError(String msg) {
         return new TauError(msg);
     }
+    
     public static TauError createFatalError(String msg) {
         TauError e = new TauError(msg);
         e.setFatal(true);
         return e;
     }
+    
     public static TauError createInvalidParamsError(String msg) {
         return createFatalError("Invalid Parameters: " + msg);
+    }
+    
+    public static TauError createError(Exception e) {
+    	return new TauError(e.toString());
     }
 }

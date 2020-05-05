@@ -52,11 +52,6 @@ public abstract class AbstractValue<V> implements Value {
         return token.getType().toString();
     }
     
-    @Override
-    public Integer asInteger() throws Exception {
-        return asNumber().intValue();
-    }
-    
     protected abstract V processToken() throws Exception;
     
     @Override
@@ -114,5 +109,24 @@ public abstract class AbstractValue<V> implements Value {
         }
     }
     
+    @Override
+    public String asString() throws Exception {
+    	return getValue().toString();
+    }
+    
+    @Override
+    public Double asDouble() throws Exception {
+    	throw new Exception("Not Implemented Yet");
+    }
+
+    @Override
+    public Integer asInteger() throws Exception {
+    	throw new Exception("Not Implemented Yet");
+    }
+
+    @Override
+    public Boolean asBoolean() throws Exception {
+    	throw new Exception("Not Implemented Yet");
+    }
     
 }

@@ -39,8 +39,8 @@ public class BooleanValue extends AbstractValue<Boolean> {
     }
 
     @Override
-    public Double asNumber() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Boolean asBoolean() throws Exception {
+        return getValue();
     }
     
     public BooleanValue not() {

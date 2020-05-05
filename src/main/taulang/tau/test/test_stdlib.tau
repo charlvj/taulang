@@ -5,3 +5,8 @@ test "ifnull"
   assert_equals 2 ifnull ? 2
 ]
 
+test "add string"
+[ assert_equals "SeaSaw" plus "Sea" "Saw" 
+  // assert_equals "1-Star" plus 1 "-Star" 
+  assert_equals "High-5" plus "High-" 5 
+  ]

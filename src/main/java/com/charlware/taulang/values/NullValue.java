@@ -28,7 +28,7 @@ public class NullValue implements Value {
 
     @Override
     public String getType() {
-        return "Null";
+        return "?";
     }
 
     @Override
@@ -37,7 +37,7 @@ public class NullValue implements Value {
     }
 
     @Override
-    public Double asNumber() throws Exception {
+    public Double asDouble() throws Exception {
         return null;
     }
 
@@ -47,8 +47,13 @@ public class NullValue implements Value {
     }
     
     @Override
+    public Boolean asBoolean() throws Exception {
+    	return null;
+    }
+    
+    @Override
     public String toString() {
-        return "";
+        return "?";
     }
 
     @Override

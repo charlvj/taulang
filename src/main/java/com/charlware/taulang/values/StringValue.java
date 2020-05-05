@@ -5,17 +5,17 @@
  */
 package com.charlware.taulang.values;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.charlware.taulang.language.InvalidCastException;
 import com.charlware.taulang.language.Token;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.charlware.taulang.values.abilities.Addable;
 
 /**
  *
  * @author charlvj
  */
-public class StringValue extends AbstractValue<String> implements Listable<String> {
+public class StringValue extends AbstractValue<String> implements Listable<String>, Addable<String> {
     public StringValue(Token token) {
         super(token);
     }
@@ -34,12 +34,21 @@ public class StringValue extends AbstractValue<String> implements Listable<Strin
     }
 
     @Override
-    public Double asNumber() throws Exception {
+    public Double asDouble() throws Exception {
         String value = getValue();
         if(NumberUtils.isCreatable(value)) {
             return NumberUtils.toDouble(value);
         }
-        throw new InvalidCastException(value, "Number");
+        throw new InvalidCastException(value, "Double");
+    }
+    
+    @Override
+    public Integer asInteger() throws Exception {
+        String value = getValue();
+        if(NumberUtils.isCreatable(value)) {
+            return NumberUtils.toInt(value);
+        }
+        throw new InvalidCastException(value, "Integer");
     }
 
     @Override
@@ -59,5 +68,20 @@ public class StringValue extends AbstractValue<String> implements Listable<Strin
     @Override
     public void set(int index, String elem) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public String add(Value x) throws NotAddableException {
+    	if(x == NullValue.NULL) 
+    		return null;
+    	
+    	try {
+    		String s = getValue();
+    		return s + x.asString();
+    	}
+    	catch(Exception e) {
+    		System.out.println("Unexpected error: " + e);
+    	}
+		return null;
     }
 }

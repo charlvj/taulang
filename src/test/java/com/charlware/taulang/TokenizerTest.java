@@ -134,7 +134,7 @@ public class TokenizerTest extends Tokenizer {
     @Test
     public void testParseTokens() throws IOException {
         System.out.println("parseTokens");
-        String code = "test 1 2.0 \"blah\" [ end ]";
+        String code = "test 1 2.2 \"blah\" [ end ]";
         parseTokens(code);
         
         Token t = tokens[0];
@@ -143,11 +143,11 @@ public class TokenizerTest extends Tokenizer {
         
         t = tokens[1];
         assertEquals("1.0", t.getSource());
-        assertEquals(TokenType.NUMBER, t.getType());
+        assertEquals(TokenType.INTEGER, t.getType());
         
         t = tokens[2];
-        assertEquals("2.0", t.getSource());
-        assertEquals(TokenType.NUMBER, t.getType());
+        assertEquals("2.2", t.getSource());
+        assertEquals(TokenType.DOUBLE, t.getType());
         
         t = tokens[3];
         assertEquals("blah", t.getSource());

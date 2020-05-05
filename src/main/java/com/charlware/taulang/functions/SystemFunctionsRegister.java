@@ -146,13 +146,6 @@ public class SystemFunctionsRegister extends AbstractRegister {
     }
     
     private void registerControl() {
-    	reg(new GenericFunction2("while", "predicate", "code") {
-			@Override
-			public Value execute(Value predicateValue, Value codeValue) throws Exception {
-				
-				return null;
-			}
-    		
-    	});
+    	reg(new WhileFunction());
     }
 }

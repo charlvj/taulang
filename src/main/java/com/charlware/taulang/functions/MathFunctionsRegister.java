@@ -5,13 +5,20 @@
  */
 package com.charlware.taulang.functions;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
+import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.Value;
-import java.util.Arrays;
-import org.apache.commons.lang3.reflect.MethodUtils;
+import com.charlware.taulang.values.abilities.Addable;
+import com.charlware.taulang.values.abilities.Addable.NotAddableException;
+import com.charlware.taulang.values.abilities.Subtractable;
+import com.charlware.taulang.values.abilities.Subtractable.NotSubtractableException;
 
 /**
  *
@@ -20,31 +27,75 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 public class MathFunctionsRegister extends AbstractRegister {
     @Override
     public void registerAll() {
-        runtime.register("pi", new NumberValue(Math.PI));
-        runtime.register("math_compare_default_epsilon", new NumberValue(0.00001));
+        runtime.register("pi", new DoubleValue(Math.PI));
+        runtime.register("math_compare_default_epsilon", new DoubleValue(0.00001));
         
         reg(new GenericFunction2("plus", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new NumberValue(param1.asNumber() + param2.asNumber());
+            	try {
+	            	Value result = null;
+	            	if(param1 instanceof Addable) {
+	            		try {
+	            			Addable p1 = (Addable) param1;
+	            			result = Value.of(p1.add(param2));
+	            		}
+	            		catch(NotAddableException nae) {
+	            			// leave result null
+	            		}
+	            	}
+	            	if(result == null && param2 instanceof Addable) {
+	            		Addable p2 = (Addable) param2;
+	            		result = Value.of(p2.add(param1));
+	            	}
+	            	if(result == null)
+	            		throw new NotAddableException();
+	            	else
+	            		return result;
+            	}
+            	catch(NotAddableException nae) {
+            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be added: " + param1.asString() + " + " + param2.asString()));
+            	}
             }
         });
         reg(new GenericFunction2("minus", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new NumberValue(param1.asNumber() - param2.asNumber());
+            	try {
+	            	Value result = null;
+	            	if(param1 instanceof Addable) {
+	            		try {
+	            			Subtractable p1 = (Subtractable) param1;
+	            			result = Value.of(p1.subtract(param2));
+	            		} 
+	            		catch(NotSubtractableException nse) {
+	            			// leave result null
+	            		}
+	            	}
+	            	if(result == null && param2 instanceof Addable) {
+	            		Subtractable p2 = (Subtractable) param2;
+	            		result = Value.of(p2.subtract(param1));
+	            	}
+	            	if(result == null) 
+	            		throw new NotSubtractableException();
+	            	else
+	            		return result;
+            	}
+            	catch(NotSubtractableException nae) {
+            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be subtracted: " + param1.asString() + " - " + param2.asString()));
+            	}
             }
         });
         reg(new GenericFunction2("mult", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new NumberValue(param1.asNumber() * param2.asNumber());
+                return new DoubleValue(param1.asDouble() * param2.asDouble());
             }
         });
         reg(new GenericFunction2("div", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new NumberValue(param1.asNumber() / param2.asNumber());
+                return new DoubleValue(param1.asDouble() / param2.asDouble());
             }
         });
 //        reg(new GenericFunction1("sin", "x") {
@@ -70,8 +121,8 @@ public class MathFunctionsRegister extends AbstractRegister {
                        public Value execute(Value x) {
                            Double d;
                            try {
-                               d = (Double) MethodUtils.invokeStaticMethod(Math.class, fname, x.asNumber());
-                               return new NumberValue(d);
+                               d = (Double) MethodUtils.invokeStaticMethod(Math.class, fname, x.asDouble());
+                               return new DoubleValue(d);
                            } catch (Exception ex) {
                                return new ErrorValue(ErrorFactory.createError("Error executing " + fname + " : " + ex));
                            }
@@ -82,7 +133,7 @@ public class MathFunctionsRegister extends AbstractRegister {
         reg(new GenericFunction2("atan2", "x", "y") {
             @Override
             public Value execute(Value x, Value y) throws Exception {
-                return new NumberValue(Math.atan2(x.asNumber(), y.asNumber()));
+                return new DoubleValue(Math.atan2(x.asDouble(), y.asDouble()));
             }
         });
     }

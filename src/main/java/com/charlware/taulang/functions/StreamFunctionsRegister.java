@@ -5,6 +5,9 @@
  */
 package com.charlware.taulang.functions;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.FileInputStream;
@@ -17,9 +20,8 @@ import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.StreamValue;
+import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.Value;
-import java.io.IOException;
-import java.util.Iterator;
 
 /**
  *
@@ -29,6 +31,26 @@ public class StreamFunctionsRegister extends AbstractRegister {
 
     @Override
     public void registerAll() {
+    	reg(new GenericFunction1("has_next", "stream") {
+    		@Override
+    		public Value execute(Value streamValue) throws Exception {
+    			if(!(streamValue instanceof StreamValue)) {
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("has_next: Expected a Stream value"));
+    			}
+    			return BooleanValue.valueOf(((StreamValue)streamValue).getValue().hasNext());
+    		}
+    	});
+    	
+    	reg(new GenericFunction1("next", "stream") {
+    		@Override
+    		public Value execute(Value streamValue) throws Exception {
+    			if(!(streamValue instanceof StreamValue)) {
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("has_next: Expected a Stream value"));
+    			}
+    			return ((StreamValue)streamValue).getValue().next();
+    		}
+    	});
+    	
         reg(new GenericFunction1("is_stream", "value") {
             @Override
             public Value execute(Value value) throws Exception {
@@ -132,6 +154,24 @@ public class StreamFunctionsRegister extends AbstractRegister {
                 return new StreamValue(stream);
             }
             
+        });
+        
+        reg(new GenericFunction1("sreadline", "stream") {
+        	@Override
+        	public Value execute(Value streamValue) throws Exception {
+        		if(!(streamValue instanceof StreamValue)) {
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("has_next: Expected a Stream value"));
+    			}
+        		IStream stream = ((StreamValue) streamValue).getValue();
+        		StringBuffer sb = new StringBuffer();
+        		while(stream.hasNext()) {
+        			char c = (char) stream.next().asInteger().intValue();
+        			if(c == '\n') 
+        				break;
+        			sb.append(c);
+        		}
+        		return new StringValue(sb.toString());
+        	}
         });
     }
     
