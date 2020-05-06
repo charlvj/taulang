@@ -6,7 +6,7 @@
 package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.IStream;
-import com.charlware.taulang.language.Stream;
+import com.charlware.taulang.language.DefinedStream;
 
 
 /**
@@ -20,7 +20,7 @@ public class StreamValue extends AbstractValue<IStream> {
     }
 
     @Override
-    protected Stream processToken() throws Exception {
+    protected DefinedStream processToken() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

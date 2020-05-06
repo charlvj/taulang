@@ -115,5 +115,36 @@ public class DoubleValue extends NumberValue<Double> {
     		}
     	}
     }
+    
+    @Override
+    public Double multiply(Value x) throws NotMultiplyableException {
+    	if(x == null || x == NullValue.NULL) 
+    		return null;
+    	else {
+    		Double thisValue;
+    		try {
+    			thisValue = getValue();
+    		}
+    		catch(Exception e) {
+    			System.out.println("Unexpected error: " + e);
+    			return null;
+    		}
+    		
+    		// Addition can result in a Double iff double + double or double + int.
+    		try {
+    			Double xDouble = x.asDouble();
+	    		return thisValue * xDouble;
+    		} catch(Exception e) {
+    			// Do Nothing
+    		}
+    		try {
+    			Integer xInt = x.asInteger();
+    			return thisValue * xInt.doubleValue();
+    		}
+    		catch(Exception e) {
+    			throw new NotMultiplyableException();
+    		}
+    	}
+    }
 
 }

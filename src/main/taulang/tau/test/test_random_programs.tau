@@ -1,0 +1,10 @@
+import "tau/test/tautest" ""
+
+to :faculty [:n]
+[ if eq 2 n 
+    [ 2 ]
+    [ mult n faculty minus n 1 ]
+]
+
+test :faculty
+[ assert_equals 720 faculty 6 ]

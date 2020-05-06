@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.values.abilities.Addable;
+import com.charlware.taulang.values.abilities.Multiplyable;
 import com.charlware.taulang.values.abilities.Subtractable;
 
 /**
@@ -14,7 +15,9 @@ import com.charlware.taulang.values.abilities.Subtractable;
  * @author charlvj
  */
 public abstract class NumberValue<NumberType> extends AbstractValue<NumberType> 
-	implements Addable<NumberType>, Subtractable<NumberType> {
+	implements Addable<NumberType>, 
+			   Subtractable<NumberType>,
+			   Multiplyable<NumberType> {
     
 	public static IntegerValue valueOf(Integer i) {
 		return new IntegerValue(i);

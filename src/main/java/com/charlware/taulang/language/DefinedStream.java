@@ -18,22 +18,22 @@ import java.util.logging.Logger;
  *
  * @author charlvj
  */
-public class Stream implements IStream {
+public class DefinedStream implements IStream {
     private Value[] state;
     private Function hasNextFunction;
     private Function nextFunction;
     
-    public Stream(ListValue startingState, Function hasNextFunction, Function nextFunction) {
+    public DefinedStream(ListValue startingState, Function hasNextFunction, Function nextFunction) {
         try {
             this.state = startingState.getValue().toArray(new Value[0]);
             this.hasNextFunction = hasNextFunction;
             this.nextFunction = nextFunction;
         } catch (Exception ex) {
-            Logger.getLogger(Stream.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefinedStream.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public Stream(Value[] startingState, Function hasNextFunction, Function nextFunction) {
+    public DefinedStream(Value[] startingState, Function hasNextFunction, Function nextFunction) {
         this.state = startingState;
         this.hasNextFunction = hasNextFunction;
         this.nextFunction = nextFunction;
@@ -44,7 +44,7 @@ public class Stream implements IStream {
         try {
             return hasNextFunction.execute(state) == BooleanValue.TRUE;
         } catch (Exception ex) {
-            Logger.getLogger(Stream.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefinedStream.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -62,7 +62,7 @@ public class Stream implements IStream {
                 return result;
             }
         } catch (Exception ex) {
-            Logger.getLogger(Stream.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefinedStream.class.getName()).log(Level.SEVERE, null, ex);
             return new ErrorValue(ErrorFactory.createFatalError("Error getting next stream value: " + ex));
         }
     }
@@ -71,4 +71,9 @@ public class Stream implements IStream {
     public void close() throws IOException {
         // ...
     }
+
+	@Override
+	public void write(Value value) throws IOException {
+		throw new IOException("Defined Stream does not support writing.");
+	}
 }

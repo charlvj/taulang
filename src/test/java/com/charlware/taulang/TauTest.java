@@ -56,6 +56,8 @@ public class TauTest {
             result = interpreter.interpret(filename);
         }
         catch (Exception ex) {
+        	System.out.println("Caught: " + ex);
+        	ex.printStackTrace();
             result = new ErrorValue(ErrorFactory.createError("Test Failed - " + ex));
         }
         assertFalse("An error was returned: " + result, result instanceof ErrorValue);

@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import com.charlware.taulang.AbstractRegister;
+import com.charlware.taulang.language.DefinedStream;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.FileInputStream;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.GenericStream;
 import com.charlware.taulang.language.IStream;
-import com.charlware.taulang.language.Stream;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.FunctionValue;
@@ -51,6 +52,17 @@ public class StreamFunctionsRegister extends AbstractRegister {
     		}
     	});
     	
+    	reg(new GenericFunction2("write", "stream", "value") {
+    		@Override
+    		public Value execute(Value streamValue, Value value) throws Exception {
+    			if(!(streamValue instanceof StreamValue)) {
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("write: Expected a Stream value"));
+    			}
+    			((StreamValue) streamValue).getValue().write(value);
+    			return streamValue;
+    		}
+    	});
+    	
         reg(new GenericFunction1("is_stream", "value") {
             @Override
             public Value execute(Value value) throws Exception {
@@ -59,7 +71,15 @@ public class StreamFunctionsRegister extends AbstractRegister {
             
         });
         
-        reg(new GenericFunction3("new_stream", "initial_state", "has_next_function", "next_function") {
+        reg(new GenericFunction0("new_stream") {
+			@Override
+			public Value execute() throws Exception {
+				StreamValue value = new StreamValue(new GenericStream());
+				return value;
+			}
+        });
+        
+        reg(new GenericFunction3("new_stream_source", "initial_state", "has_next_function", "next_function") {
             @Override
             public Value execute(Value initialStateValue, Value hasNextFunctionValue, Value nextFunctionValue) throws Exception {
                 if(!(initialStateValue instanceof ListValue)) {
@@ -73,7 +93,7 @@ public class StreamFunctionsRegister extends AbstractRegister {
                 functionName = nextFunctionValue.asString();
                 Function nextFunction = getMemory().get(functionName);
                 
-                Stream stream = new Stream(initialState, hasNextFunction, nextFunction);
+                DefinedStream stream = new DefinedStream(initialState, hasNextFunction, nextFunction);
                 return new StreamValue(stream);
             }
         });
@@ -149,6 +169,11 @@ public class StreamFunctionsRegister extends AbstractRegister {
                     @Override
                     public void close() throws IOException {
                         // Nada
+                    }
+                    
+                    @Override
+                    public void write(Value v) throws IOException {
+                    	throw new IOException("Not Supported");
                     }
                 };
                 return new StreamValue(stream);

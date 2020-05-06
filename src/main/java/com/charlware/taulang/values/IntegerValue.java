@@ -79,6 +79,22 @@ public class IntegerValue extends NumberValue<Integer> {
     		}
     	}
     }
+    
+    @Override
+    public Integer multiply(Value x) throws NotMultiplyableException {
+    	if(x == null || x == NullValue.NULL) 
+    		return null;
+    	else {
+    		try {
+    			Integer thisValue = getValue();
+	    		Integer xInt = x.asInteger();
+	    		return thisValue * xInt;
+    		} catch(Exception e) {
+    			// Integer multiplication is the only thing that produces an integer.
+    			throw new NotMultiplyableException();
+    		}
+    	}
+    }
 
 	@Override
 	public Double asDouble() throws Exception {

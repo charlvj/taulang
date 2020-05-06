@@ -140,7 +140,7 @@ public class Runtime {
         runRegisters();
 
         try {
-            importStdLib();
+            importStdLibs();
         } catch (Exception ex) {
             stdout.println("Error loading stdlib: " + ex);
         }
@@ -165,10 +165,12 @@ public class Runtime {
         callFunction = (CallFunction) memory.getCurrentScope().get("call");
     }
 
-    private void importStdLib() throws Exception {
+    private void importStdLibs() throws Exception {
         ImportFunction importFunc = new ImportFunction();
         importFunc.setRuntime(this);
         importFunc.execute("stdlib.tau");
+        importFunc.execute("stdmath.tau");
+        importFunc.execute("stdstreams.tau");
     }
 
 }

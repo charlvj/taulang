@@ -5,17 +5,17 @@
  */
 package com.charlware.taulang.language;
 
-import com.charlware.taulang.values.ErrorValue;
-import com.charlware.taulang.values.StringValue;
-import com.charlware.taulang.values.Value;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.charlware.taulang.values.ErrorValue;
+import com.charlware.taulang.values.StringValue;
+import com.charlware.taulang.values.Value;
 
 /**
  *
@@ -77,6 +77,11 @@ public class FileInputStream implements IStream {
     public void close() throws IOException {
         if(reader != null)
             reader.close();
+    }
+    
+    @Override
+    public void write(Value value) throws IOException {
+    	throw new IOException("File not open for writing.");
     }
     
 }

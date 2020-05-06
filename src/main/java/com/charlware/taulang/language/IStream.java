@@ -5,13 +5,16 @@
  */
 package com.charlware.taulang.language;
 
-import com.charlware.taulang.values.Value;
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Iterator;
+
+import com.charlware.taulang.values.Value;
 
 /**
  *
  * @author charlvj
  */
 public interface IStream extends Iterator<Value>, Closeable {
+	void write(Value value) throws IOException;
 }

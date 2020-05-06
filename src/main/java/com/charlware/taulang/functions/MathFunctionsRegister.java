@@ -13,10 +13,11 @@ import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.ErrorValue;
-import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.abilities.Addable;
 import com.charlware.taulang.values.abilities.Addable.NotAddableException;
+import com.charlware.taulang.values.abilities.Multiplyable;
+import com.charlware.taulang.values.abilities.Multiplyable.NotMultiplyableException;
 import com.charlware.taulang.values.abilities.Subtractable;
 import com.charlware.taulang.values.abilities.Subtractable.NotSubtractableException;
 
@@ -89,7 +90,29 @@ public class MathFunctionsRegister extends AbstractRegister {
         reg(new GenericFunction2("mult", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new DoubleValue(param1.asDouble() * param2.asDouble());
+            	try {
+	            	Value result = null;
+	            	if(param1 instanceof Addable) {
+	            		try {
+	            			Multiplyable p1 = (Multiplyable) param1;
+	            			result = Value.of(p1.multiply(param2));
+	            		} 
+	            		catch(NotMultiplyableException nse) {
+	            			// leave result null
+	            		}
+	            	}
+	            	if(result == null && param2 instanceof Addable) {
+	            		Multiplyable p2 = (Multiplyable) param2;
+	            		result = Value.of(p2.multiply(param1));
+	            	}
+	            	if(result == null) 
+	            		throw new NotMultiplyableException();
+	            	else
+	            		return result;
+            	}
+            	catch(NotMultiplyableException nae) {
+            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be subtracted: " + param1.asString() + " - " + param2.asString()));
+            	}
             }
         });
         reg(new GenericFunction2("div", "value1", "value2") {

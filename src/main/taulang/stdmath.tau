@@ -17,3 +17,19 @@ expose :pow
 to :abs [:n]
   [ if lt n 0 [mult -1 n] [n] ]
 expose :abs
+
+to :sum [:numbers]
+[ make :result 0
+  make :s list_to_stream numbers
+  while [ has_next s ]
+    [ make :result plus result next s ]
+  result
+]
+expose :sum
+
+to :faculty [:n]
+[ if eq 2 n 
+    [ 2 ]
+    [ mult n faculty minus n 1 ]
+]
+expose :faculty

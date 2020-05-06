@@ -17,8 +17,13 @@ while [has_next stream]
   
 printline pushelem 4 [1 2 3 4]
 
-make :file stream_from_uri "/tmp/test.txt"
-while [has_next file]
-[ printline "reading line"
-  make :line sreadline file
-  printline line ]
+  printline "Hello?"
+ make :s new_stream
+ printline ["has next? " has_next s]
+ write s "Hello World"
+ printline ["has next? " has_next s]
+ printline ["Next: " next s ]
+ 
+ make :s2 new_stream
+ write s "To Be Reversed"
+ 

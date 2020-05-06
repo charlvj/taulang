@@ -25,6 +25,8 @@ public interface Value {
     public Boolean asBoolean() throws Exception;
     
     public static Value of(Object o) {
+    	if(o instanceof Value) 
+    		return (Value) o;
     	if(o == null)
     		return NullValue.NULL;
     	if(o instanceof Integer)
@@ -37,6 +39,6 @@ public interface Value {
     		return new BooleanValue((Boolean) o);
     	
     	
-    	throw new RuntimeException("Could not map the object to a Value: " + o);
+    	throw new RuntimeException("Could not map the object to a Value: " + o + ": " + o.getClass());
     }
 }

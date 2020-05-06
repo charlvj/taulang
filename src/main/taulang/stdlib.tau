@@ -1,6 +1,3 @@
-import "stdmath.tau" ""
-import "streamslib.tau" ""
-
 to :printline
     [ :msg ] 
     [ print [ ifnull msg "null" newline ] ]
