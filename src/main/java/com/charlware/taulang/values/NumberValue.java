@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.values.abilities.Addable;
+import com.charlware.taulang.values.abilities.Divisible;
 import com.charlware.taulang.values.abilities.Multiplyable;
 import com.charlware.taulang.values.abilities.Subtractable;
 

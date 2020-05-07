@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.charlware.taulang.language.InvalidCastException;
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.values.abilities.Addable;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 
 /**
  *
@@ -83,5 +84,17 @@ public class StringValue extends AbstractValue<String> implements Listable<Strin
     		System.out.println("Unexpected error: " + e);
     	}
 		return null;
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof StringValue) {
+            String s1 = getValueThrowing(NotComparableException.class);
+            String s2 = ((StringValue) o).getValueThrowing(NotComparableException.class);
+            return s1.compareTo(s2);
+        }
+        else {
+        	throw new NotComparableException();
+        }
     }
 }

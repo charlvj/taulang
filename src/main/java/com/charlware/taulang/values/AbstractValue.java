@@ -8,6 +8,8 @@ package com.charlware.taulang.values;
 import com.charlware.taulang.Interpreter;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Token;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,6 +129,21 @@ public abstract class AbstractValue<V> implements Value {
     @Override
     public Boolean asBoolean() throws Exception {
     	throw new Exception("Not Implemented Yet");
+    }
+    
+    protected <E extends Throwable> V getValueThrowing(Class<E> toThrow) throws E {
+    	try {
+    		return getValue();
+    	}
+    	catch(Exception e) {
+    		try {
+				E ex = toThrow.getConstructor(Throwable.class).newInstance(e);
+				throw ex;
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+				throw new RuntimeException("Could not create new instance of " + toThrow.getCanonicalName() + ". Error: " + e1);
+			}
+    	}
     }
     
 }

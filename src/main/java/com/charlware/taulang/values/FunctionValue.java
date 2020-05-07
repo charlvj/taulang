@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.InvalidCastException;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 
 /**
  *
@@ -26,5 +27,17 @@ public class FunctionValue extends AbstractValue<Function> {
     @Override
     public String asString() throws Exception {
         return getValue().getName();
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof FunctionValue) {
+            String s1 = getValueThrowing(NotComparableException.class).getName();
+            String s2 = ((FunctionValue) o).getValueThrowing(NotComparableException.class).getName();
+            return s1.compareTo(s2);
+        }
+        else {
+        	throw new NotComparableException();
+        }
     }
 }

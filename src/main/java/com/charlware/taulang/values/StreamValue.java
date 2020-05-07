@@ -6,6 +6,7 @@
 package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.IStream;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 import com.charlware.taulang.language.DefinedStream;
 
 
@@ -22,5 +23,10 @@ public class StreamValue extends AbstractValue<IStream> {
     @Override
     protected DefinedStream processToken() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        throw new NotComparableException();
     }
 }

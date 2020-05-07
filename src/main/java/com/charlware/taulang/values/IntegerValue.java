@@ -29,18 +29,20 @@ public class IntegerValue extends NumberValue<Integer> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        boolean eq = super.equals(obj);
-        if(!eq && obj instanceof IntegerValue) {
-            try {
-                Integer d1 = asInteger();
-                Integer d2 = ((IntegerValue) obj).asInteger();
-                eq = d1.equals(d2);
-            } catch(Exception e) {
-                eq = false;
-            }
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof IntegerValue) {
+            Integer d1 = getValueThrowing(NotComparableException.class);
+            Integer d2 = ((IntegerValue) o).getValueThrowing(NotComparableException.class);
+            return d1.compareTo(d2);
         }
-        return eq;
+        else if(o instanceof DoubleValue) {
+        	Double d1 = getValueThrowing(NotComparableException.class).doubleValue();
+            Double d2 = ((DoubleValue) o).getValueThrowing(NotComparableException.class);
+            return d1.compareTo(d2);
+        }
+        else {
+        	throw new NotComparableException();
+        }
     }
 
     @Override
@@ -84,7 +86,7 @@ public class IntegerValue extends NumberValue<Integer> {
     public Integer multiply(Value x) throws NotMultiplyableException {
     	if(x == null || x == NullValue.NULL) 
     		return null;
-    	else {
+    	else if(x instanceof IntegerValue) {
     		try {
     			Integer thisValue = getValue();
 	    		Integer xInt = x.asInteger();
@@ -94,6 +96,8 @@ public class IntegerValue extends NumberValue<Integer> {
     			throw new NotMultiplyableException();
     		}
     	}
+    	else
+    		throw new NotMultiplyableException();
     }
 
 	@Override

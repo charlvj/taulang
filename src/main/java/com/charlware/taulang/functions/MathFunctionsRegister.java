@@ -16,6 +16,8 @@ import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.abilities.Addable;
 import com.charlware.taulang.values.abilities.Addable.NotAddableException;
+import com.charlware.taulang.values.abilities.Divisible;
+import com.charlware.taulang.values.abilities.Divisible.NotDivisibleException;
 import com.charlware.taulang.values.abilities.Multiplyable;
 import com.charlware.taulang.values.abilities.Multiplyable.NotMultiplyableException;
 import com.charlware.taulang.values.abilities.Subtractable;
@@ -64,7 +66,7 @@ public class MathFunctionsRegister extends AbstractRegister {
             public Value execute(Value param1, Value param2) throws Exception {
             	try {
 	            	Value result = null;
-	            	if(param1 instanceof Addable) {
+	            	if(param1 instanceof Subtractable) {
 	            		try {
 	            			Subtractable p1 = (Subtractable) param1;
 	            			result = Value.of(p1.subtract(param2));
@@ -92,7 +94,7 @@ public class MathFunctionsRegister extends AbstractRegister {
             public Value execute(Value param1, Value param2) throws Exception {
             	try {
 	            	Value result = null;
-	            	if(param1 instanceof Addable) {
+	            	if(param1 instanceof Multiplyable) {
 	            		try {
 	            			Multiplyable p1 = (Multiplyable) param1;
 	            			result = Value.of(p1.multiply(param2));
@@ -111,14 +113,34 @@ public class MathFunctionsRegister extends AbstractRegister {
 	            		return result;
             	}
             	catch(NotMultiplyableException nae) {
-            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be subtracted: " + param1.asString() + " - " + param2.asString()));
+            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be multiplied: " + param1.asString() + " - " + param2.asString()));
             	}
             }
         });
         reg(new GenericFunction2("div", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
-                return new DoubleValue(param1.asDouble() / param2.asDouble());
+            	try {
+	            	Value result = null;
+	            	if(param1 instanceof Divisible) {
+	            		try {
+	            			Divisible p1 = (Divisible) param1;
+	            			result = Value.of(p1.divide(param2));
+	            		} 
+	            		catch(NotDivisibleException nse) {
+	            			// leave result null
+	            		}
+	            	}
+	            	// division is one-way
+	            	
+	            	if(result == null) 
+	            		throw new NotDivisibleException();
+	            	else
+	            		return result;
+            	}
+            	catch(NotDivisibleException nae) {
+            		return new ErrorValue(ErrorFactory.createInvalidParamsError("Two values cannot be divided: " + param1.asString() + " - " + param2.asString()));
+            	}
             }
         });
 //        reg(new GenericFunction1("sin", "x") {

@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.TauError;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 
 /**
  *
@@ -36,6 +37,18 @@ public class ErrorValue extends AbstractValue<TauError> {
     @Override
     public Integer asInteger() throws Exception {
         return getValue().getCode();
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof ErrorValue) {
+            String s1 = getValueThrowing(NotComparableException.class).getMessage();
+            String s2 = ((ErrorValue) o).getValueThrowing(NotComparableException.class).getMessage();
+            return s1.compareTo(s2);
+        }
+        else {
+        	throw new NotComparableException();
+        }
     }
     
 }

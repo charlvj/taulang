@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.TauObject;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 
 /**
  *
@@ -28,4 +29,8 @@ public class ObjectValue extends AbstractValue<TauObject> {
         return new TauObject();
     }
 
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        throw new NotComparableException();
+    }
 }

@@ -7,6 +7,8 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.language.Symbol;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
@@ -36,5 +38,17 @@ public class SymbolValue extends AbstractValue<Symbol> {
     @Override
     public Symbol processToken() {
         return new Symbol(token.getSource());
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof SymbolValue) {
+            String s1 = getValueThrowing(NotComparableException.class).getStringValue();
+            String s2 = ((SymbolValue) o).getValueThrowing(NotComparableException.class).getStringValue();
+            return s1.compareTo(s2);
+        }
+        else {
+        	throw new NotComparableException();
+        }
     }
 }

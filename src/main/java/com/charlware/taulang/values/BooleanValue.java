@@ -58,4 +58,18 @@ public class BooleanValue extends AbstractValue<Boolean> {
         if(b) return TRUE;
         else return FALSE;
     }
+
+	@Override
+	public int compareTo(Value o) throws NotComparableException {
+		if(o instanceof BooleanValue) {
+			Boolean a = getValueThrowing(NotComparableException.class);
+			Boolean b = ((BooleanValue) o).getValueThrowing(NotComparableException.class);
+			return a.compareTo(b);
+		}
+		else {
+			throw new NotComparableException();
+		}
+	}
+    
+    
 }

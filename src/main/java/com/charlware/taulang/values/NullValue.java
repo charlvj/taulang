@@ -7,6 +7,7 @@ package com.charlware.taulang.values;
 
 import com.charlware.taulang.Interpreter;
 import com.charlware.taulang.MemoryScope;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
 
 /**
  *
@@ -59,5 +60,14 @@ public class NullValue implements Value {
     @Override
     public void setMemoryScope(MemoryScope memoryScope) {
         
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof NullValue) 
+        	return 0;
+        else {
+        	return 1;
+        }
     }
 }

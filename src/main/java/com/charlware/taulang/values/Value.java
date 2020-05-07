@@ -5,16 +5,15 @@
  */
 package com.charlware.taulang.values;
 
-import javax.management.RuntimeErrorException;
-
 import com.charlware.taulang.Interpreter;
 import com.charlware.taulang.MemoryScope;
+import com.charlware.taulang.language.TauError;
 
 /**
  *
  * @author charlvj
  */
-public interface Value {
+public interface Value extends com.charlware.taulang.values.abilities.Comparable {
     public void setInterpreter(Interpreter interpreter);
     public void setMemoryScope(MemoryScope memoryScope);
     public Value realize() throws Exception;
@@ -37,6 +36,8 @@ public interface Value {
     		return new StringValue((String) o);
     	if(o instanceof Boolean)
     		return new BooleanValue((Boolean) o);
+    	if(o instanceof TauError)
+    		return new ErrorValue((TauError) o);
     	
     	
     	throw new RuntimeException("Could not map the object to a Value: " + o + ": " + o.getClass());

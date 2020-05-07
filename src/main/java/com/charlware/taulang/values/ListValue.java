@@ -8,6 +8,8 @@ package com.charlware.taulang.values;
 import com.charlware.taulang.language.InvalidCastException;
 import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -100,6 +102,19 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
             getValue().set(index, elem);
         } catch (Exception ex) {
             // Just do nothing for now
+        }
+    }
+    
+    @Override
+    public int compareTo(Value o) throws NotComparableException {
+        if(o instanceof ListValue) {
+        	// compare sizes? I guess?
+            int s1 = size();
+            int s2 = ((ListValue) o).getValueThrowing(NotComparableException.class).size();
+            return Integer.compare(s1, s2);
+        }
+        else {
+        	throw new NotComparableException();
         }
     }
 }

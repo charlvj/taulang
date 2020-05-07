@@ -7,6 +7,7 @@ package com.charlware.taulang.language;
 
 import com.charlware.taulang.Interpreter;
 import com.charlware.taulang.MemoryScope;
+import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -66,4 +67,11 @@ public class TailCallValue implements Value {
         // Don't do anything here
         return null;
     }
+
+	@Override
+	public int compareTo(Value a) throws NotComparableException {
+		throw new NotComparableException();
+	}
+    
+    
 }
