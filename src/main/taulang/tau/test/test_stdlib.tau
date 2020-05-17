@@ -7,6 +7,46 @@ test "ifnull"
 
 test "add string"
 [ assert_equals "SeaSaw" plus "Sea" "Saw" 
-  // assert_equals "1-Star" plus 1 "-Star" 
   assert_equals "High-5" plus "High-" 5 
   ]
+  
+test "eq"
+[ assert_equals 1 1
+  assert_equals -2 -2
+  assert_equals 2.3 2.3
+  assert_equals 2.0 2.0
+  assert_equals 4 minus 4.5 0.5  /* force an integer == double comparison */
+  assert_equals 5.0 5
+  assert_equals "aa" "aa"
+  assert_equals true true
+  assert_equals false false
+  assert_equals ? ? 
+  
+  assert_not_equal 1 2
+  assert_not_equal 2.3 3.2
+  assert_not_equal "aa" "bb"
+  assert_not_equal true false ]
+  
+test "not" 
+[ assert_false not true
+  assert_true not false ]
+  
+test "ne"
+[ assert_true ne 1 2
+  assert_true ne "a" "b" ]
+  
+test "gt"
+[ assert_true gt 4 3
+  assert_true gt 3 -4
+  assert_true gt 5.5 5
+  assert_true gt 3 2.3
+  assert_true gt "b" "a"
+  assert_true gt "aa" "a" ]
+  
+test "lt"
+[ assert_true lt 2 3
+  assert_true lt -3 4
+  assert_true lt 5 5.5
+  assert_true lt 2.3 3
+  assert_true lt "a" "b"
+  assert_true lt "a" "aa" ]

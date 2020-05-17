@@ -8,6 +8,7 @@ package com.charlware.taulang;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.TailCallValue;
@@ -28,6 +29,8 @@ import com.charlware.taulang.values.Value;
 public class Interpreter {
 
     protected final Runtime runtime;
+    
+    private AtomicInteger stepCounter = new AtomicInteger(0);
 
     public Interpreter(Runtime runtime) {
         this.runtime = runtime;
@@ -62,7 +65,11 @@ public class Interpreter {
     }
 
     public Value eval(Token token, Iterator<Token> tokens) throws Exception {
-        Value result = null;
+        if(runtime.flags.isEnableTracer()) {
+        	runtime.tracer.println("Token: " + stepCounter.getAndIncrement() + " - " + token.toStringShort());
+        	runtime.memory.getCurrentScope().printKeys(runtime.tracer);
+        }
+    	Value result = null;
         switch (token.getType()) {
             case LIST:
                 result = new ListValue(token);
@@ -94,13 +101,16 @@ public class Interpreter {
                         params[i] = eval(tok, tokens);
                     }
                     if(runtime.getFlags().isTailCallOptimizationEnabled()) {
-                        if(tokens.hasNext())
-                            result = function.execute(params);
+                        if(tokens.hasNext()) {
+                        	result = function.execute(params);
+//                        	result = runtime.functionCaller.call(function, params);
+                        }
                         else
                             result = new TailCallValue(function, params);
                     }
                     else {
                         result = function.execute(params);
+//                        result = runtime.functionCaller.call(function, params);
                     }
                 }
                 break;

@@ -6,7 +6,9 @@
 package com.charlware.taulang.functions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.DefinedStream;
@@ -18,6 +20,7 @@ import com.charlware.taulang.language.IStream;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.FunctionValue;
+import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.StreamValue;
@@ -46,9 +49,40 @@ public class StreamFunctionsRegister extends AbstractRegister {
     		@Override
     		public Value execute(Value streamValue) throws Exception {
     			if(!(streamValue instanceof StreamValue)) {
-    				return new ErrorValue(ErrorFactory.createInvalidParamsError("has_next: Expected a Stream value"));
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("next: Expected a Stream value"));
     			}
     			return ((StreamValue)streamValue).getValue().next();
+    		}
+    	});
+    	
+    	reg(new GenericFunction2("next_n", "stream", "count") {
+    		@Override
+    		public Value execute(Value streamValue, Value countValue) throws Exception {
+    			if(!(streamValue instanceof StreamValue)) {
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("next_n: Expected a Stream value"));
+    			}
+    			int count = 0;
+    			boolean readAll = false;
+    			if(countValue == NullValue.NULL) 
+    				readAll = true;
+    			else if(countValue instanceof IntegerValue) 
+    				count = countValue.asInteger();
+    			else
+    				return new ErrorValue(ErrorFactory.createInvalidParamsError("next_n: Expected an integer for count"));
+    			
+    			List<Value> a = new ArrayList<>(readAll ? 10 : count);
+    			if(count > 0) {
+	    			IStream stream = ((StreamValue)streamValue).getValue();
+	    			
+	    			int i = 0;
+	    			while(stream.hasNext()) {
+	    				if(!readAll && i >= count)
+	    					break;
+	    				a.add(stream.next());
+	    				i++;
+	    			}
+    			}
+    			return new ListValue(a);
     		}
     	});
     	
@@ -79,7 +113,7 @@ public class StreamFunctionsRegister extends AbstractRegister {
 			}
         });
         
-        reg(new GenericFunction3("new_stream_source", "initial_state", "has_next_function", "next_function") {
+        reg(new GenericFunction3("new_stream_source", "initial_state", "has_next_callable", "next_callable") {
             @Override
             public Value execute(Value initialStateValue, Value hasNextFunctionValue, Value nextFunctionValue) throws Exception {
                 if(!(initialStateValue instanceof ListValue)) {
@@ -87,49 +121,48 @@ public class StreamFunctionsRegister extends AbstractRegister {
                 }
                 ListValue initialState = (ListValue) initialStateValue;
                 
-                String functionName = hasNextFunctionValue.asString();
-                Function hasNextFunction = getMemory().get(functionName);
-                
-                functionName = nextFunctionValue.asString();
-                Function nextFunction = getMemory().get(functionName);
-                
-                DefinedStream stream = new DefinedStream(initialState, hasNextFunction, nextFunction);
+//                String functionName = hasNextFunctionValue.asString();
+//                Function hasNextFunction = getMemory().get(functionName);
+//                
+//                functionName = nextFunctionValue.asString();
+//                Function nextFunction = getMemory().get(functionName);
+                DefinedStream stream = new DefinedStream(runtime, initialState, hasNextFunctionValue, nextFunctionValue);
                 return new StreamValue(stream);
             }
         });
         
-        reg(new GenericFunction2("for_each", "stream", "proc") {
-            @Override
-            public Value execute(Value streamValue, Value procValue) throws Exception {
-                if(streamValue instanceof ErrorValue)
-                    return streamValue;
-                
-                if(!(streamValue instanceof StreamValue)) {
-                    return new ErrorValue(ErrorFactory.createInvalidParamsError("for_each expects a stream as a first parameter."));
-                }
-                IStream stream = ((StreamValue) streamValue).getValue();
-                
-                Function function = null;
-                if(procValue instanceof FunctionValue) {
-                    function = ((FunctionValue) procValue).getValue();
-                }
-                
-                if(function == null) {
-                    return new ErrorValue(ErrorFactory.createInvalidParamsError("for_each expects a function as a second parameter."));
-                }
-                
-                Value result = NullValue.NULL;
-                while(stream.hasNext()) {
-                    Value nextValue = stream.next();
-                    result = function.execute(new Value[] {nextValue});
-                    if(result instanceof ErrorValue) break;
-                }
-                stream.close();
-
-                return result;
-            }
-            
-        });
+//        reg(new GenericFunction2("for_each", "stream", "proc") {
+//            @Override
+//            public Value execute(Value streamValue, Value procValue) throws Exception {
+//                if(streamValue instanceof ErrorValue)
+//                    return streamValue;
+//                
+//                if(!(streamValue instanceof StreamValue)) {
+//                    return new ErrorValue(ErrorFactory.createInvalidParamsError("for_each expects a stream as a first parameter."));
+//                }
+//                IStream stream = ((StreamValue) streamValue).getValue();
+//                
+//                Function function = null;
+//                if(procValue instanceof FunctionValue) {
+//                    function = ((FunctionValue) procValue).getValue();
+//                }
+//                
+//                if(function == null) {
+//                    return new ErrorValue(ErrorFactory.createInvalidParamsError("for_each expects a function as a second parameter."));
+//                }
+//                
+//                Value result = NullValue.NULL;
+//                while(stream.hasNext()) {
+//                    Value nextValue = stream.next();
+//                    result = function.execute(new Value[] {nextValue});
+//                    if(result instanceof ErrorValue) break;
+//                }
+//                stream.close();
+//
+//                return result;
+//            }
+//            
+//        });
         
         reg(new GenericFunction1("stream_from_uri", "uri") {
             @Override

@@ -33,6 +33,10 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
     public ListValue(List<Value> list) {
         super(list);
     }
+    
+    public ListValue(Value[] list) {
+        this(List.of(list));
+    }
 
 //    public Iterator<Value> iterator() {
 //        return getValue().iterator();
@@ -63,13 +67,12 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
     public String asString() throws Exception {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
+        sb.append("[ ");
         for (Value value : getValue()) {
-            if (first) {
-                sb.append(" ");
-            }
             sb.append(value.asString());
-            first = false;
+            sb.append(" ");
         }
+        sb.append("]");
         return sb.toString();
     }
 

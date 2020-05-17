@@ -35,7 +35,7 @@ expose :ifnull
 to :try_catch [:try_code :catch_code]
 [ make :result call try_code [] 
   if is_error result
-  [ call :catch [ result ] ]
+  [ call :catch_code [ result ] ]
   [ result ]
 ]
 expose :try_catch
@@ -47,3 +47,7 @@ expose :pushelem
 to :appendelem [:elem :list]
 [ concat list [elem] ]
 expose :appendelem
+
+to :ne [:a :b]
+[ not eq a b ]
+expose :ne

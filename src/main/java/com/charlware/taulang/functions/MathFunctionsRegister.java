@@ -13,6 +13,7 @@ import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.ErrorValue;
+import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.abilities.Addable;
 import com.charlware.taulang.values.abilities.Addable.NotAddableException;
@@ -143,12 +144,12 @@ public class MathFunctionsRegister extends AbstractRegister {
             	}
             }
         });
-//        reg(new GenericFunction1("sin", "x") {
-//            @Override
-//            public Value execute(Value x) throws Exception {
-//                return new NumberValue(Math.sin(x.asNumber()));
-//            }
-//        });
+        reg(new GenericFunction1("round", "x") {
+            @Override
+            public Value execute(Value x) throws Exception {
+                return new IntegerValue((int) Math.round(x.asDouble()));
+            }
+        });
         registerMathClass();
     }
     

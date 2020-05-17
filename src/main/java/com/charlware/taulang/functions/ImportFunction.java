@@ -92,7 +92,9 @@ public class ImportFunction extends Function {
     
     protected BooleanValue interpretWrapped(String contextName, Callable callable) {
         Memory memory = runtime.getMemory();
+        memory.getCurrentScope().setImportSource(true);
         MemoryScope scope = memory.pushScope();
+        scope.setImportScope(true);
         try {
             callable.call();
             return BooleanValue.FALSE;

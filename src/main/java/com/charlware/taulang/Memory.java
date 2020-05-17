@@ -38,6 +38,10 @@ public class Memory {
             currentScope = scope;
     }
     
+    public MemoryScope findImportSource() {
+    	return currentScope.findImportSource();
+    }
+    
     public Function get(String name) {
         return currentScope.get(name);
     }

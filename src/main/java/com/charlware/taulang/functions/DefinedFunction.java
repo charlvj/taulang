@@ -32,30 +32,14 @@ public class DefinedFunction extends Function {
 
     @Override
     public Value execute(Value[] paramValues) throws Exception {
-        Memory memory = runtime.getMemory();
-        MemoryScope savedScope = memory.getCurrentScope();
-        memory.setCurrentScope(getMemory());
-        MemoryScope scope = memory.pushScope();
-        scope.putAll(savedScope);
-        try {
-            for (int i = 0; i < params.length; i++) {
-                scope.put(new ValueFunction(params[i], paramValues[i]));
-            }
-            Value result = runtime.getInterpreter().eval(code.iterator());
-            if (runtime.getFlags().isTailCallOptimizationEnabled() && result instanceof TailCallValue) {
-//                        memory.popScope();
-//                        scope = memory.pushScope();
-                for (int i = 0; i < params.length; i++) {
-                    scope.put(new ValueFunction(params[i], paramValues[i]));
-                }
-                result = result.realize();
-            }
-            result.setMemoryScope(scope);
-            return result;
-        }
-        finally {
-            memory.popScope();
-            memory.setCurrentScope(savedScope);
-        }
+    	Memory memory = runtime.getMemory();
+    	MemoryScope oldScope = memory.getCurrentScope();
+  		memory.setCurrentScope(this.memory);
+    	try {
+    		return runtime.functionCaller.call(code.iterator(), params, paramValues);
+    	}
+    	finally {
+   			memory.setCurrentScope(oldScope);
+    	}
     }
 }

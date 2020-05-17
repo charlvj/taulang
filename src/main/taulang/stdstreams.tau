@@ -1,0 +1,6 @@
+
+to :for_each [:stream :code]
+[ while [has_next stream]
+  [ call code [next stream] ]
+]
+expose :for_each

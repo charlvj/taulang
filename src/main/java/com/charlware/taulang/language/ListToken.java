@@ -51,4 +51,15 @@ public class ListToken extends Token implements Iterable<Token> {
         sb.append(" ]");
         return sb.toString();
     }
+    
+    @Override
+    public String toStringShort() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(Token token: tokens) {
+            sb.append(" ").append(token.toStringShort());
+        }
+        sb.append(" ]");
+        return sb.toString();
+    }
 }

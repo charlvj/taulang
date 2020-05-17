@@ -10,6 +10,8 @@ package com.charlware.taulang;
  * @author charlvj
  */
 public class RuntimeFlags {
+	boolean enableTracer = true;
+	String tracerFile = "/tmp/taulang.trace";
     boolean tailCallOptimizationEnabled = false;
 
     public boolean isTailCallOptimizationEnabled() {
@@ -19,6 +21,22 @@ public class RuntimeFlags {
     public void setTailCallOptimizationEnabled(boolean tailCallOptimizationEnabled) {
         this.tailCallOptimizationEnabled = tailCallOptimizationEnabled;
     }
+
+	public boolean isEnableTracer() {
+		return enableTracer;
+	}
+
+	public void setEnableTracer(boolean enableTracer) {
+		this.enableTracer = enableTracer;
+	}
+
+	public String getTracerFile() {
+		return tracerFile;
+	}
+
+	public void setTracerFile(String tracerFile) {
+		this.tracerFile = tracerFile;
+	}
     
     
 }

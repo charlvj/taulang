@@ -30,7 +30,7 @@ public class PrintFunction extends Function {
             ListValue listValue = (ListValue) param;
             StringBuilder sb = new StringBuilder();
             for(Value value: listValue.getValue()) {
-                if(value == null) sb.append("<null>");
+            	if(value == null) sb.append("<null>");
                 else sb.append(value.asString());
             }
             msg = sb.toString();

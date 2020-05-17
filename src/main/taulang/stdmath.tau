@@ -33,3 +33,11 @@ to :faculty [:n]
     [ mult n faculty minus n 1 ]
 ]
 expose :faculty
+
+to :random []
+[ next randomizer ]
+expose :random
+
+to :random_int [:max]
+[ round mult max next randomizer ]
+expose :random_int

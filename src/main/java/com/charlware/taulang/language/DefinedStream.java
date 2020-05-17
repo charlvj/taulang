@@ -5,14 +5,14 @@
  */
 package com.charlware.taulang.language;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Value;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,29 +20,31 @@ import java.util.logging.Logger;
  */
 public class DefinedStream implements IStream {
     private Value[] state;
-    private Function hasNextFunction;
-    private Function nextFunction;
+    private Value hasNextCallable;
+    private Value nextCallable;
+    private com.charlware.taulang.Runtime runtime;
     
-    public DefinedStream(ListValue startingState, Function hasNextFunction, Function nextFunction) {
+    public DefinedStream(com.charlware.taulang.Runtime runtime, ListValue startingState, Value hasNextCallable, Value nextCallable) {
         try {
-            this.state = startingState.getValue().toArray(new Value[0]);
-            this.hasNextFunction = hasNextFunction;
-            this.nextFunction = nextFunction;
+        	this.runtime = runtime;
+        	this.state = startingState.getValue().toArray(new Value[0]);
+            this.hasNextCallable = hasNextCallable;
+            this.nextCallable = nextCallable;
         } catch (Exception ex) {
             Logger.getLogger(DefinedStream.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public DefinedStream(Value[] startingState, Function hasNextFunction, Function nextFunction) {
+    public DefinedStream(Value[] startingState, Value hasNextCallable, Value nextCallable) {
         this.state = startingState;
-        this.hasNextFunction = hasNextFunction;
-        this.nextFunction = nextFunction;
+        this.hasNextCallable = hasNextCallable;
+        this.nextCallable = nextCallable;
     }
     
     @Override
     public boolean hasNext() {
         try {
-            return hasNextFunction.execute(state) == BooleanValue.TRUE;
+            return runtime.callFunction.execute(hasNextCallable, new ListValue(state)) == BooleanValue.TRUE;
         } catch (Exception ex) {
             Logger.getLogger(DefinedStream.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -52,7 +54,7 @@ public class DefinedStream implements IStream {
     @Override
     public Value next() {
         try {
-            Value result = nextFunction.execute(state);
+            Value result = runtime.callFunction.execute(nextCallable, new ListValue(state));
             if(result instanceof ListValue) {
                 ListValue resultList = (ListValue) result;
                 state = ((ListValue) resultList.get(1)).getValue().toArray(new Value[0]);

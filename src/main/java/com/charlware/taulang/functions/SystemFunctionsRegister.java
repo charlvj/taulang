@@ -7,17 +7,20 @@ package com.charlware.taulang.functions;
 
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.MemoryScope;
+import com.charlware.taulang.functions.streams.RandomStream;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.BooleanValue;
+import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.FunctionValue;
+import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.Listable;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.ObjectValue;
+import com.charlware.taulang.values.StreamValue;
 import com.charlware.taulang.values.StringValue;
 import com.charlware.taulang.values.SymbolValue;
 import com.charlware.taulang.values.Value;
-import java.util.Map;
 
 /**
  *
@@ -28,41 +31,10 @@ public class SystemFunctionsRegister extends AbstractRegister {
     
     @Override
     public void registerAll() {
+    	reg("randomizer", new StreamValue(new RandomStream()));
         reg(new ExposeFunction());
         reg(new CallFunction());
         reg(new LambdaFunction());
-//        reg(new GenericFunction2("call" , "callable") {
-//            @Override
-//            public Value execute(Value callable) throws Exception {
-//                if(callable instanceof ListValue) {
-//                    ListToken listToken = ((ListValue) callable).getListToken();
-//                    return runtime.getInterpreter().eval(listToken.iterator());
-//                }
-//                return null;
-//            }
-//        });
-//        reg(new GenericFunction0("system.memory.currentcontext") {
-//            @Override
-//            public Value execute() throws Exception {
-//                return new StringValue(runtime.getMemory().getCurrentContext());
-//            }
-//        });
-//        
-//        reg(new GenericFunction0("system.memory.dump") {
-//            @Override
-//            public Value execute() throws Exception {
-//                MemoryScope memory = runtime.getMemory();
-//                for(Map<String,Function> hash: memory) {
-//                    for(Map.Entry entry: hash.entrySet()) {
-//                        System.out.print(entry.getKey() + "  ");
-//                    }
-//                    System.out.println();
-//                }
-//                return null;
-//            }
-//            
-//        });
-        
         reg(new GenericFunction2("alias", "aliasName", "existingFunction") {
             @Override
             public Value execute(Value aliasName, Value existingFunc) throws Exception {
@@ -72,16 +44,6 @@ public class SystemFunctionsRegister extends AbstractRegister {
                 return aliasName;
             }
         });
-//        reg(new GenericFunction2("getelem", "list", "index") {
-//            @Override
-//            public Value execute(Value list, Value index) throws Exception {
-//                if (list instanceof Listable) {
-//                    Listable listable = (Listable) list;
-//                    return (Value) listable.get(index.asNumber().intValue());
-//                }
-//                return new NumberValue(Double.valueOf(0.0));
-//            }
-//        });
 
         registerTypes();
         registerControl();
@@ -92,6 +54,20 @@ public class SystemFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value value) throws Exception {
                 return (value instanceof NumberValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_integer", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof IntegerValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_double", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof DoubleValue ? trueValue() : falseValue());
             }
         });
         
@@ -141,6 +117,13 @@ public class SystemFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value value) throws Exception {
                 return (value instanceof ObjectValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("is_stream", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return (value instanceof StreamValue ? trueValue() : falseValue());
             }
         });
     }

@@ -7,6 +7,7 @@ package com.charlware.taulang.functions;
 
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -23,7 +24,7 @@ public class ExposeFunction extends Function {
     public Value execute(Value[] params) throws Exception {
         String functionName = params[0].asString();
         MemoryScope memory = runtime.getMemory().getCurrentScope();
-        memory.elevateToSystem(functionName);
-        return null;
+        boolean res = memory.exportToImportSource(functionName);
+        return BooleanValue.valueOf(res);
     }
 }

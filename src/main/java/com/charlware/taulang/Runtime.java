@@ -5,6 +5,14 @@
  */
 package com.charlware.taulang;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.charlware.taulang.functions.CallFunction;
 import com.charlware.taulang.functions.ErrorFunctionRegister;
 import com.charlware.taulang.functions.ImportFunction;
@@ -15,23 +23,17 @@ import com.charlware.taulang.functions.MathFunctionsRegister;
 import com.charlware.taulang.functions.ObjectFunctionsRegister;
 import com.charlware.taulang.functions.PrintFunction;
 import com.charlware.taulang.functions.ReadlineFunction;
-import com.charlware.taulang.functions.ValueFunction;
-import com.charlware.taulang.language.Function;
 import com.charlware.taulang.functions.RepeatFunction;
 import com.charlware.taulang.functions.StreamFunctionsRegister;
 import com.charlware.taulang.functions.SystemFunctionsRegister;
 import com.charlware.taulang.functions.ToFunction;
+import com.charlware.taulang.functions.ValueFunction;
+import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.FunctionCaller;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
-import com.charlware.taulang.values.Value;
 import com.charlware.taulang.values.StringValue;
-
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import com.charlware.taulang.values.Value;
 
 /**
  *
@@ -46,13 +48,17 @@ public class Runtime {
 
     public PrintStream stdout = System.out;
     public InputStream stdin = System.in;
+    
+    public PrintStream tracer = null;
 
     protected List<AbstractRegister> registers = new ArrayList<>();
     protected List<Value> searchPath = new ArrayList<>();
 
     public CallFunction callFunction = null;
+    public final FunctionCaller functionCaller;
 
     public Runtime() {
+    	functionCaller = new FunctionCaller(this);
         interpreter = new Interpreter(this);
         
         addDefaultSearchPath();
@@ -65,6 +71,14 @@ public class Runtime {
         addRegister(new ObjectFunctionsRegister());
         addRegister(new StreamFunctionsRegister());
 
+        if(flags.isEnableTracer()) {
+        	try {
+				tracer = new PrintStream(flags.getTracerFile());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
     }
 
     public void addRegister(AbstractRegister register) {

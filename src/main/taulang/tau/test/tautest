@@ -23,6 +23,12 @@ to :assert_equals [:expected :value]
 ]
 expose :assert_equals
 
+to :assert_not_equal [:notexpected :value]
+[ if eq expected value 
+  [ throw_error join ["Assertion Failed. Not Expected: " expected "; found " value] "" ]
+  [ true ]
+]
+
 to :assert_true [:value]
 [ assert_equals true value ]
 expose :assert_true

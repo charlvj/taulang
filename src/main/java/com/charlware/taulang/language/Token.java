@@ -33,6 +33,10 @@ public class Token {
     public String toString() {
         return "Token{" + "source=" + source + ", type=" + type + ", startLine=" + startLine + ", startCol=" + startCol + ", endLine=" + endLine + ", endCol=" + endCol + ", nextToken=" + nextToken + '}';
     }
+    
+    public String toStringShort() {
+        return source;
+    }
 
     @Override
     public int hashCode() {

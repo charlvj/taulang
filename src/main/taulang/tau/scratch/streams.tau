@@ -1,3 +1,4 @@
+/*
 try_catch
 [ printline "Printing..."
   for_each stream_from_uri "/tmp/test.txt"
@@ -5,25 +6,54 @@ try_catch
 ]
 [ printline 
   [ "An error occured: ["
-    error_code $1
+    error_code $0
     "] "
-    error_message $1
+    error_message $0
   ]
 ]
 
-make :stream list_to_stream [1 2 3 4]
-while [has_next stream]
-  [ printline next stream ]
-  
-printline pushelem 4 [1 2 3 4]
+printline next_n randomizer 5
+*/
 
-  printline "Hello?"
- make :s new_stream
- printline ["has next? " has_next s]
- write s "Hello World"
- printline ["has next? " has_next s]
- printline ["Next: " next s ]
- 
- make :s2 new_stream
- write s "To Be Reversed"
- 
+to :limit [:number :ds]
+[ print ["first " has_next ds newline]
+  new_stream_source [5] 
+    lambda [:number] 
+    [ print ["has_next  " number "  " has_next ds newline]
+      and 
+        has_next ds 
+        gt number 0 
+    ]
+    lambda [:number] 
+    [ [ next ds
+  	    [ dec number ]
+  	  ]
+    ]
+]
+
+for_each 
+  limit 5 randomizer
+  lambda [:i] [ printline i ]
+
+
+
+/*
+make :ds new_stream_source [5] 
+  lambda [:number] [ gt number 0 ]
+  lambda [:number] [
+  	[ number
+  	  [ dec number ]
+  	]
+  ]
+*/
+  
+/*
+for_each
+  limit 5
+    filter
+      lambda [:r] [gt r 5]
+      map 
+        lambda [:r] [as_integer r]
+        randomizer
+  [ printline $1 ]
+*/

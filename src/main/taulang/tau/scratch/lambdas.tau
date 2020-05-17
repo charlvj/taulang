@@ -1,0 +1,8 @@
+to :setup_lambda [:i]
+[ 
+ lambda [] [ print [ "a " i ] ]
+]
+
+make :f setup_lambda 2
+
+call f []

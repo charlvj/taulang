@@ -39,7 +39,7 @@ public class LambdaFunction extends Function {
         
         Function lambdaFunction = new AnonymousFunction(funcParamArr, codeListValue);
         lambdaFunction.setRuntime(runtime);
-        lambdaFunction.setMemory(memory);
+        lambdaFunction.setMemory(runtime.getMemory().getCurrentScope());
         return new FunctionValue(lambdaFunction);
     }
     
