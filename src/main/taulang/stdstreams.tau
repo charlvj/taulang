@@ -4,3 +4,43 @@ to :for_each [:stream :code]
   [ call code [next stream] ]
 ]
 expose :for_each
+
+
+to :limit [:number :ds]
+[ new_stream_source [5] 
+    lambda [:number] 
+    [ and 
+        has_next ds 
+        gt number 0 
+    ]
+    lambda [:number] 
+    [ [ next ds
+  	    [ dec number ]
+  	  ]
+    ]
+]
+expose :limit
+
+
+to :map [:func :ds]
+[ new_stream_source []
+    lambda [] [ has_next ds ]
+    lambda [] [ call func next ds ]
+]
+expose :map
+
+
+to :range [:from :to_exclusive]
+[ new_stream_source [from]
+    lambda [:current] [ lt current to_exclusive ]
+    lambda [:current] [
+      [ current
+        [inc current] ]
+    ]
+]
+expose :range
+
+
+to :range_closed [:from :to]
+[ range from inc to ]
+expose :range_closed

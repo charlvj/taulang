@@ -46,17 +46,17 @@ public class ListableFunctionsRegister extends AbstractRegister {
                 return new ErrorValue(ErrorFactory.createError("Index out of bounds: " + index));
             }
         });
-        reg(new GenericFunction2("range", "start", "end") {
-            @Override
-            public Value execute(Value start, Value end) throws Exception {
-                List<Value> list = new ArrayList<>();
-                for(int i = start.asInteger(); i <= end.asInteger(); i++) {
-                    list.add(NumberValue.valueOf(i));
-                }
-                return new ListValue(list);
-            }
-            
-        });
+//        reg(new GenericFunction2("range", "start", "end") {
+//            @Override
+//            public Value execute(Value start, Value end) throws Exception {
+//                List<Value> list = new ArrayList<>();
+//                for(int i = start.asInteger(); i <= end.asInteger(); i++) {
+//                    list.add(NumberValue.valueOf(i));
+//                }
+//                return new ListValue(list);
+//            }
+//            
+//        });
         reg(new GenericFunction2("concat", "list1", "list2") {
             @Override
             public Value execute(Value list1, Value list2) throws Exception {

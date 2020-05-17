@@ -15,6 +15,7 @@ try_catch
 printline next_n randomizer 5
 */
 
+/*
 to :limit [:number :ds]
 [ print ["first " has_next ds newline]
   new_stream_source [5] 
@@ -30,11 +31,21 @@ to :limit [:number :ds]
   	  ]
     ]
 ]
+*/
 
+printline "Random ints"
 for_each 
-  limit 5 randomizer
+  limit 5 
+    map
+      lambda [:e] [ round e ]
+      map
+        lambda [:e] [ mult e 10 ]
+        randomizer
   lambda [:i] [ printline i ]
 
+printline "ranges"
+for_each range_closed 3 10
+  lambda [:i] [ print [i "-"] ]
 
 
 /*
