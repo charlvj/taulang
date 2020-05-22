@@ -46,7 +46,8 @@ public abstract class AbstractValue<V> implements Value {
     
     @Override
     public void setMemoryScope(MemoryScope memoryScope) {
-        this.memoryScope = memoryScope;
+    	if(this.memoryScope == null)
+    		this.memoryScope = memoryScope;
     }
     
     @Override
