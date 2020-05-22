@@ -1,6 +1,10 @@
 to :printline
     [ :msg ] 
-    [ print [ ifnull msg "null" newline ] ]
+    [ if is_null msg
+      [ print "<null>" ]
+      [ print msg ]
+      print newline
+    ] 
 expose :printline
 
 to :calllist
