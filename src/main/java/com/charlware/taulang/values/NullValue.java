@@ -63,6 +63,11 @@ public class NullValue implements Value {
     }
     
     @Override
+    public MemoryScope getMemoryScope() {
+    	return null;
+    }
+    
+    @Override
     public int compareTo(Value o) throws NotComparableException {
         if(o instanceof NullValue) 
         	return 0;

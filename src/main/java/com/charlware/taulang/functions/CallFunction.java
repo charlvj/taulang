@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.charlware.taulang.Memory;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
@@ -76,26 +77,22 @@ public class CallFunction extends Function {
     public Value call(ListValue code, Value callParams) throws Exception {
     	Value[] params = ((ListValue) callParams).getValue().toArray(new Value[] {});
     	Iterator<Token> tokens = code.getListToken().iterator();
-    	
-    	return runtime.functionCaller.call(tokens, params);
-    	
-//        Memory memory = runtime.getMemory();
-//        MemoryScope scope = memory.pushScope();
-//        
-//        try {
-//            if(callParams instanceof ListValue) {
-//                List<Value> paramsList = ((ListValue) callParams).getValue();
-//                for(int i = 0; i < paramsList.size(); i++) {
-//                    scope.put(new ValueFunction("$" + i, paramsList.get(i)));
-//                }
-//            } else {
-//                scope.put(new ValueFunction("$1", callParams));
-//            }
-//            Value result = runtime.getInterpreter().eval(code.getListToken().iterator());
-//            return result;
-//        } finally {
-//          memory.popScope();
-//        }
+
+    	Memory memory = null;
+    	MemoryScope oldScope = null;
+    	if(code.getMemoryScope() != null) {
+    		memory = runtime.getMemory();
+    		oldScope = memory.getCurrentScope();
+    		memory.setCurrentScope(code.getMemoryScope());
+    	}
+    	try {
+    		return runtime.functionCaller.call(tokens, params);
+    	}
+    	finally {
+    		if(memory != null) {
+    			memory.setCurrentScope(oldScope);
+    		}
+    	}
     }
     
 }

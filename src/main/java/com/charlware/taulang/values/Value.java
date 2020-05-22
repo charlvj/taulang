@@ -16,6 +16,7 @@ import com.charlware.taulang.language.TauError;
 public interface Value extends com.charlware.taulang.values.abilities.Comparable {
     public void setInterpreter(Interpreter interpreter);
     public void setMemoryScope(MemoryScope memoryScope);
+    public MemoryScope getMemoryScope();
     public Value realize() throws Exception;
     public String getType();
     public String asString() throws Exception;

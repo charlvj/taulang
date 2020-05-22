@@ -51,6 +51,11 @@ public abstract class AbstractValue<V> implements Value {
     }
     
     @Override
+    public MemoryScope getMemoryScope() {
+    	return memoryScope;
+    }
+    
+    @Override
     public String getType() {
         return token.getType().toString();
     }

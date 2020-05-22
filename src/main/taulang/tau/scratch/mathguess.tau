@@ -29,5 +29,5 @@ to :app_loop []
 ]
 
 for_each app_loop
-lambda [:e] [ do_guess ]
+[ do_guess ]
 

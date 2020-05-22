@@ -33,6 +33,11 @@ public class TailCallValue implements Value {
     public void setMemoryScope(MemoryScope memoryScope) {
         // ...
     }
+    
+    @Override
+    public MemoryScope getMemoryScope() {
+    	return null;
+    }
 
     @Override
     public Value realize() throws Exception {
