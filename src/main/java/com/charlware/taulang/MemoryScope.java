@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.charlware.taulang.language.Function;
 
@@ -26,6 +27,10 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     public MemoryScope(MemoryScope parent) {
         this.parent = parent;
 //        setSystemContext();
+    }
+    
+    public MemoryScope getParent() {
+    	return parent;
     }
     
     public void put(String name, Function function) {
@@ -140,6 +145,10 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     @Override
     public Iterator<Map<String,Function>> iterator() {
         return null;
+    }
+    
+    public Set<String> keySet() {
+    	return functions.keySet();
     }
     
     public void printKeys(PrintStream out) {

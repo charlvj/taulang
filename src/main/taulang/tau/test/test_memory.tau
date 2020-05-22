@@ -1,0 +1,14 @@
+import "tau/test/tautest" ""
+
+test "Able to update memory in same scope"
+[ make :s "Hello"
+  make :s "Bye"
+  assert_equals "Bye" s
+]
+
+
+test "Not able to update memory in higher scope"
+[ make :s "Hello"
+  call [ make :s "Bye" ] []
+  assert_equals "Hello" s
+]

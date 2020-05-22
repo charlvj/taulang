@@ -5,6 +5,11 @@
  */
 package com.charlware.taulang.functions;
 
+import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.functions.streams.RandomStream;
@@ -13,6 +18,7 @@ import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.IntegerValue;
+import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Listable;
 import com.charlware.taulang.values.NullValue;
 import com.charlware.taulang.values.NumberValue;
@@ -54,6 +60,29 @@ public class SystemFunctionsRegister extends AbstractRegister {
 			@Override
 			public Value execute() throws Exception {
 				return BooleanValue.TRUE;
+			}
+		});
+		reg(new GenericFunction1("is_defined", "function_name") {
+			@Override
+			public Value execute(Value functionName) throws Exception {
+				String name = functionName.asString();
+				Function f = runtime.getMemory().getCurrentScope().get(name);
+				return BooleanValue.valueOf(f != null);
+			}
+		});
+		reg(new GenericFunction0("memory.all_functions") {
+			@Override
+			public Value execute() throws Exception {
+				MemoryScope scope = runtime.getMemory().getCurrentScope();
+				SortedSet<String> keys = new TreeSet<>();
+				while(scope != null) {
+					keys.addAll(scope.keySet());
+					scope = scope.getParent();
+				}
+				return new ListValue(
+						keys.stream()
+						.map(k -> Value.of(k))
+						.collect(Collectors.toList()));
 			}
 		});
 	}
