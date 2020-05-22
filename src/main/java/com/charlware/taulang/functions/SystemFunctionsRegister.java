@@ -28,8 +28,7 @@ import com.charlware.taulang.values.Value;
  */
 public class SystemFunctionsRegister extends AbstractRegister {
     
-    
-    @Override
+	@Override
     public void registerAll() {
     	reg("randomizer", new StreamValue(new RandomStream()));
         reg(new ExposeFunction());
@@ -45,9 +44,19 @@ public class SystemFunctionsRegister extends AbstractRegister {
             }
         });
 
+		registerMeta();
         registerTypes();
         registerControl();
     }
+	
+	public void registerMeta() {
+		reg(new GenericFunction0("dev.breakpoint") {
+			@Override
+			public Value execute() throws Exception {
+				return BooleanValue.TRUE;
+			}
+		});
+	}
     
     public void registerTypes() {
         reg(new GenericFunction1("is_number", "value") {
@@ -124,6 +133,34 @@ public class SystemFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value value) throws Exception {
                 return (value instanceof StreamValue ? trueValue() : falseValue());
+            }
+        });
+        
+        reg(new GenericFunction1("as_string", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return new StringValue(value.asString());
+            }
+        });
+        
+        reg(new GenericFunction1("as_integer", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return new IntegerValue(value.asInteger());
+            }
+        });
+        
+        reg(new GenericFunction1("as_double", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return new DoubleValue(value.asDouble());
+            }
+        });
+        
+        reg(new GenericFunction1("as_boolean", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+                return new BooleanValue(value.asBoolean());
             }
         });
     }

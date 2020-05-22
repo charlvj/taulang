@@ -19,11 +19,10 @@ to :abs [:n]
 expose :abs
 
 to :sum [:numbers]
-[ make :result 0
-  make :s list_to_stream numbers
-  while [ has_next s ]
-    [ make :result plus result next s ]
-  result
+[ collect
+    0
+    lambda [:state :elem] [plus state elem]
+    if is_stream numbers [numbers] [list_to_stream numbers]
 ]
 expose :sum
 

@@ -1,0 +1,33 @@
+to :do_guess []
+[ make :num1 random_int 10
+  make :num2 random_int 10
+
+  make :real_answer plus num1 num2
+
+  print [ num1 " + " num2 " = " ]  
+
+  make :guess as_integer readline
+
+  if eq guess real_answer
+    [ printline "Correct!" 
+      true]
+    [ printline [ "Not right. :(  The correct answer is " real_answer newline ] 
+      false]
+]
+
+to :ask_to_play_again []
+[ print "Do you want to play again? (YES/no) "
+  not eq "no" readline
+]
+
+to :app_loop []
+[ new_stream_source [true]
+    lambda [:first] 
+    [ if first [true] [ ask_to_play_again ] ]
+    lambda [:first]
+    [ [ true [false] ] ]
+]
+
+for_each app_loop
+lambda [:e] [ do_guess ]
+

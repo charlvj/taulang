@@ -41,6 +41,30 @@ public class LogicalFunctionsRegister extends AbstractRegister {
                 return runtime.callFunction.execute(toExecute, new ListValue(new ArrayList<>()));
             }
         });
+        reg(new GenericFunction2("and", "param1", "param2") {
+            @Override
+            public Value execute(Value param1, Value param2) throws Exception {
+                if(!(param1 instanceof BooleanValue) || !(param2 instanceof BooleanValue))
+                	return new ErrorValue(ErrorFactory.createInvalidParamsError("or requires logical parameters"));
+                boolean b1 = ((BooleanValue) param1).getValue();
+                if(!b1)
+                	return BooleanValue.FALSE;
+                boolean b2 = ((BooleanValue) param2).getValue();
+                return BooleanValue.valueOf(b1 && b2);
+            }
+        });
+        reg(new GenericFunction2("or", "param1", "param2") {
+            @Override
+            public Value execute(Value param1, Value param2) throws Exception {
+                if(!(param1 instanceof BooleanValue) || !(param2 instanceof BooleanValue))
+                	return new ErrorValue(ErrorFactory.createInvalidParamsError("or requires logical parameters"));
+                boolean b1 = ((BooleanValue) param1).getValue();
+                if(b1)
+                	return BooleanValue.TRUE;
+                boolean b2 = ((BooleanValue) param2).getValue();
+                return BooleanValue.valueOf(b1 || b2);
+            }
+        });
         reg(new GenericFunction2("eq", "param1", "param2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
@@ -87,3 +111,4 @@ public class LogicalFunctionsRegister extends AbstractRegister {
     }
     
 }
+

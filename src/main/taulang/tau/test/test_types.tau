@@ -26,6 +26,24 @@ test "is_number"
   assert_false is_number ?
   assert_false is_number [1 2]
   assert_false is_number :a_symbol ]
+  
+test "is_integer"
+[ assert_true is_integer 1
+  assert_false is_integer 1.2
+  assert_false is_integer true
+  assert_false is_integer "s"
+  assert_false is_integer ?
+  assert_false is_integer [1 2]
+  assert_false is_integer :a_symbol ]
+
+test "is_double"
+[ assert_false is_double 1
+  assert_true is_double 1.2
+  assert_false is_double true
+  assert_false is_double "s"
+  assert_false is_double ?
+  assert_false is_double [1 2]
+  assert_false is_double :a_symbol ]
 
 test "is_string"
 [ assert_true is_string ""

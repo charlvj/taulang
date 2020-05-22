@@ -1,3 +1,4 @@
+
 /*
 try_catch
 [ printline "Printing..."
@@ -46,6 +47,13 @@ for_each
 printline "ranges"
 for_each range_closed 3 10
   lambda [:i] [ print [i "-"] ]
+
+
+printline "collectors"
+
+make :t next_until lambda [:e] [ gt e 0.5 ] randomizer
+printline t
+
 
 
 /*

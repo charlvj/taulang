@@ -131,6 +131,22 @@ public class StreamFunctionsRegister extends AbstractRegister {
             }
         });
         
+        reg(new GenericFunction3("collect", "initial_state", "code", "stream") {
+        	@Override
+        	public Value execute(Value initialStateValue, Value codeValue, Value streamValue) throws Exception {
+        		if(!(streamValue instanceof StreamValue)) {
+        			return new ErrorValue(ErrorFactory.createInvalidParamsError("collect expects a stream as the third parameter"));
+        		}
+        		IStream stream = ((StreamValue) streamValue).getValue();
+        		Value state = initialStateValue;
+        		while(!(state instanceof ErrorValue) && stream.hasNext()) {
+        			Value params = new ListValue(List.of(state, stream.next()));
+        			state = runtime.callFunction.execute(codeValue, params);
+        		}
+        		return state;
+        	}
+        });
+        
 //        reg(new GenericFunction2("for_each", "stream", "proc") {
 //            @Override
 //            public Value execute(Value streamValue, Value procValue) throws Exception {

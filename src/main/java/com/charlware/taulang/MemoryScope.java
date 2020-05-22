@@ -148,7 +148,7 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     	if(parent == null) 
     		sb.append("<toplevel>");
     	else
-    		functions.keySet().forEach(s -> sb.append(s).append(" "));
+    		functions.keySet().stream().sorted().forEach(s -> sb.append(s).append(" "));
     	sb.append("]");
     	out.println(sb.toString());
     	if(parent != null) {

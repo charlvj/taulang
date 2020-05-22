@@ -15,6 +15,7 @@ import com.charlware.taulang.values.Value;
 public class MakeFunction extends Function {
     public MakeFunction() {
         name = "make";
+        leaveInCallingScope = true;
         params = new String[] { "variableName", "value" };
     }
     
@@ -22,7 +23,7 @@ public class MakeFunction extends Function {
     public Value execute(Value[] params) throws Exception {
         String variableName = params[0].asString();
         Value value = params[1];
-        getMemory().put(variableName, new ValueFunction(variableName, value));
+        runtime.getMemory().getCurrentScope().put(variableName, new ValueFunction(variableName, value));
         return value;
     }
 

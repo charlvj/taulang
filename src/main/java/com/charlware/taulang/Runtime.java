@@ -160,6 +160,8 @@ public class Runtime {
         }
 
         getQuickAccessFunctions();
+        
+        memory.pushScope();
     }
 
     public void clearMemory() {

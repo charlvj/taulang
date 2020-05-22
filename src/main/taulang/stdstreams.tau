@@ -30,6 +30,29 @@ to :map [:func :ds]
 expose :map
 
 
+to :next_until [:func :ds]
+[ if has_next ds
+  [ make :next_value next ds
+    if call func [ next_value ]
+    [ next_value ]
+    [ next_until :func ds ]
+  ]
+  [ throw_error "End of the stream reached." ]
+]
+expose :next_until
+
+/*
+to :filter [:func :ds]
+[ make :next_value ?
+  new_stream_source []
+    lambda [] 
+    [ make :
+      has_next ds 
+    ]
+    lambda [] [ next_value ]
+] 
+*/
+
 to :range [:from :to_exclusive]
 [ new_stream_source [from]
     lambda [:current] [ lt current to_exclusive ]
@@ -44,3 +67,10 @@ expose :range
 to :range_closed [:from :to]
 [ range from inc to ]
 expose :range_closed
+
+
+to :repeat [:times :code]
+[ for_each range 0 times
+  lambda [:i] [ call code [i] ]
+]
+expose :repeat

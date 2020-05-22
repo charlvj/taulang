@@ -19,6 +19,7 @@ public abstract class Function {
     protected com.charlware.taulang.Runtime runtime;
     protected String context = null;
     protected MemoryScope memory = null;
+    protected boolean leaveInCallingScope = false;
     
     public String getName() {
         return name;
