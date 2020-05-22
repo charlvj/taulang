@@ -8,7 +8,12 @@ test "ifnull"
 test "add string"
 [ assert_equals "SeaSaw" plus "Sea" "Saw" 
   assert_equals "High-5" plus "High-" 5 
-  ]
+]
+
+test "join"
+[ make :v join [ "a" "b" "c" ]
+  assert_equals "abc" v
+]
   
 test "eq"
 [ assert_equals 1 1
@@ -50,3 +55,10 @@ test "lt"
   assert_true lt 2.3 3
   assert_true lt "a" "b"
   assert_true lt "a" "aa" ]
+  
+test "throw error"
+[ make :f lambda [] [ throw_error "Test" ]
+  make :r call f []
+  assert_true is_error r
+  assert_equals "Test" error_message r
+]

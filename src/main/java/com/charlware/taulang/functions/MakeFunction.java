@@ -6,6 +6,7 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -24,7 +25,7 @@ public class MakeFunction extends Function {
         String variableName = params[0].asString();
         Value value = params[1];
         runtime.getMemory().getCurrentScope().put(variableName, new ValueFunction(variableName, value));
-        return value;
+        return BooleanValue.TRUE;
     }
 
 }
