@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.charlware.taulang.functions.CallFunction;
+import com.charlware.taulang.functions.DictFunctionRegister;
 import com.charlware.taulang.functions.ErrorFunctionRegister;
 import com.charlware.taulang.functions.ImportFunction;
 import com.charlware.taulang.functions.ListableFunctionsRegister;
@@ -70,6 +71,7 @@ public class Runtime {
         addRegister(new LogicalFunctionsRegister());
         addRegister(new ObjectFunctionsRegister());
         addRegister(new StreamFunctionsRegister());
+        addRegister(new DictFunctionRegister());
 
         if(flags.isEnableTracer()) {
         	try {

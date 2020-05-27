@@ -5,6 +5,9 @@
  */
 package com.charlware.taulang.language;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author charlvj
@@ -15,7 +18,18 @@ public class Symbol {
     
     private static int seq = 1;
     
-    public Symbol(String stringValue) {
+    private static Map<String,Symbol> register = new HashMap<>();
+    
+    public static Symbol of(String string) {
+    	Symbol symbol = register.get(string);
+    	if(symbol == null) {
+    		symbol = new Symbol(string);
+    		register.put(string, symbol);
+    	}
+    	return symbol;
+    }
+    
+    private Symbol(String stringValue) {
         this.intValue = seq++;
         if(stringValue.startsWith(":")) {
             stringValue = stringValue.substring(1);

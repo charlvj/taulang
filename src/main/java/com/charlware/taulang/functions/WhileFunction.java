@@ -6,12 +6,10 @@
 package com.charlware.taulang.functions;
 
 import com.charlware.taulang.language.Function;
-import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.language.TauError;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
-import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.ListValue;
-import com.charlware.taulang.values.NumberValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -26,7 +24,11 @@ public class WhileFunction extends Function {
     }
     
     private boolean evalPredicate(Value predicate) throws Exception {
-    	BooleanValue result = (BooleanValue) runtime.callFunction.execute(predicate, ListValue.EMPTY_LIST);
+    	Value resultValue = runtime.callFunction.execute(predicate, ListValue.EMPTY_LIST);
+    	if(resultValue instanceof ErrorValue) {
+    		throw new Exception(resultValue.asString());
+    	}
+    	BooleanValue result = (BooleanValue) resultValue;
     	return result.getValue();
     }
     

@@ -97,4 +97,13 @@ public class StringValue extends AbstractValue<String> implements Listable<Strin
         	throw new NotComparableException();
         }
     }
+    
+    @Override
+    public String toString() {
+    	try {
+			return "\"" + getValue() + "\"";
+		} catch (Exception e) {
+			return "Error: " + e;
+		}
+    }
 }

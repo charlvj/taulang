@@ -37,7 +37,7 @@ public class SymbolValue extends AbstractValue<Symbol> {
     
     @Override
     public Symbol processToken() {
-        return new Symbol(token.getSource());
+        return Symbol.of(token.getSource());
     }
     
     @Override

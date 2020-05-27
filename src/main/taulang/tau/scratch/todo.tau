@@ -1,0 +1,59 @@
+make :menu dict
+[ :todo :new_item
+  :done :remove_item
+  :view :view
+  :quit :quit
+]
+
+to :initial_state []
+[ dict 
+  [ :quit false 
+    :items [] 
+  ]
+]
+
+
+to :new_item [:state]
+[ print "New Item: "
+  make :c readline
+  make :items get state :items
+  put state [:items concat items [c]]
+]
+
+to :get_command []
+[ print " > "
+  make :c readline
+  printline ""
+  c
+]
+
+
+to :view [:state]
+[ printline "Todo Items"
+  for_each list_to_stream get state :items
+  [ printline [ " * " $0 ] ]
+  state
+]
+
+to :quit [:state]
+[ put state [:quit true]
+]
+
+make :app new_stream_source [initial_state]
+  lambda [:state] [ not get state :quit ]
+  lambda [:state]
+  [ make :command get_command
+    make :f get menu command
+    if is_null f
+    [ printline "Invalid command." ]
+    [ make :new_state call f [state]
+      [ true [ new_state ] ]
+    ]
+  ]
+
+
+ 
+for_each app
+  [ printline "" ]
+
+

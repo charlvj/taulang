@@ -5,6 +5,7 @@
  */
 package com.charlware.taulang.language;
 
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -20,6 +21,17 @@ public class TauError {
     
     public TauError(String msg) {
         this.message = msg;
+    }
+    
+    public TauError(ErrorValue v) {
+    	try {
+			this.message = v.asString();
+			this.reference = v;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
     
     public String toString() {

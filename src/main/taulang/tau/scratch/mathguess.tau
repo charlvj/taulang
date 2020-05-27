@@ -1,6 +1,6 @@
-to :do_guess []
-[ make :num1 random_int 10
-  make :num2 random_int 10
+to :do_guess [:max]
+[ make :num1 random_int max
+  make :num2 random_int max
 
   make :real_answer plus num1 num2
 
@@ -28,6 +28,9 @@ to :app_loop []
     [ [ true [false] ] ]
 ]
 
+print "How high should the numbers go? "
+make :max as_integer readline
+
 for_each app_loop
-[ do_guess ]
+[ do_guess max ]
 

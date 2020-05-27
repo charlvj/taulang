@@ -46,16 +46,19 @@ public class ListableFunctionsRegister extends AbstractRegister {
                 return new ErrorValue(ErrorFactory.createError("Index out of bounds: " + index));
             }
         });
-//        reg(new GenericFunction2("range", "start", "end") {
-//            @Override
-//            public Value execute(Value start, Value end) throws Exception {
-//                List<Value> list = new ArrayList<>();
-//                for(int i = start.asInteger(); i <= end.asInteger(); i++) {
-//                    list.add(NumberValue.valueOf(i));
-//                }
-//                return new ListValue(list);
-//            }
-//            
+//        reg(new GenericFunction2("remove_elem", "list", "index") {
+//        	@Override 
+//        	public Value execute(Value listValue, Value indexValue) throws Exception {
+//        		if(!(listValue instanceof ListValue)) {
+//        			return new ErrorValue(ErrorFactory.createInvalidParamsError("List expected."));
+//        		}
+//        		if(!(indexValue instanceof NumberValue)) {
+//        			return new ErrorValue(ErrorFactory.createInvalidParamsError("Number expected"));
+//        		}
+//        		Listable listable = (Listable) listValue;
+//        		Integer index = indexValue.asInteger();
+//        		listable.
+//        	}
 //        });
         reg(new GenericFunction2("concat", "list1", "list2") {
             @Override
@@ -88,24 +91,5 @@ public class ListableFunctionsRegister extends AbstractRegister {
                 return new StringValue(result);
             }
         });
-//        reg(new GenericFunction3("foreach1", "list", "varname", "code") {
-//            @Override
-//            public Value execute(Value list, Value varname, Value code) throws Exception {
-//                if(list instanceof Listable) {
-//                    ListValue listValue = (ListValue) list;
-//                    ListValue codeList = (ListValue) code;
-//                    ListToken codeTokens = codeList.getListToken();
-//                    Value result = null;
-//                    MemoryScope memory = runtime.getMemory();
-//                    for(Value value: listValue.getValue()) {
-//                        memory.push();
-//                        runtime.register(varname.asString(), value);
-//                        result = runtime.getInterpreter().eval(codeTokens.iterator());
-//                    }
-//                    return result;
-//                }
-//                return new NumberValue(Double.valueOf(0.0));
-//            }
-//        });
     }
 }

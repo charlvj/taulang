@@ -6,6 +6,7 @@
 package com.charlware.taulang.functions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -70,7 +71,7 @@ public class SystemFunctionsRegister extends AbstractRegister {
 				return BooleanValue.valueOf(f != null);
 			}
 		});
-		reg(new GenericFunction0("memory.all_functions") {
+		reg(new GenericFunction0("meta.all_functions") {
 			@Override
 			public Value execute() throws Exception {
 				MemoryScope scope = runtime.getMemory().getCurrentScope();
@@ -83,6 +84,22 @@ public class SystemFunctionsRegister extends AbstractRegister {
 						keys.stream()
 						.map(k -> Value.of(k))
 						.collect(Collectors.toList()));
+			}
+		});
+		reg(new GenericFunction1("meta.info", "function_name") {
+			@Override
+			public Value execute(Value functionName) throws Exception {
+				String name = functionName.asString();
+				Function f = runtime.getMemory().getCurrentScope().get(name);
+				if(f == null) {
+					return NullValue.NULL;
+				}
+				List<Value> info = new ArrayList<>();
+				info.add(Value.of(f.getName()));
+				for(String s: f.getParams()) {
+					info.add(Value.of(s));
+				}
+				return new ListValue(info);
 			}
 		});
 	}

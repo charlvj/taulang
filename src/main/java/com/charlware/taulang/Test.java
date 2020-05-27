@@ -35,7 +35,7 @@ public class Test {
         List<Value> searchPath = runtime.getSearchPath();
 //        searchPath.add(new StringValue("/scratch"));
         
-        String fileToRun = "scratch/mathguess.tau";
+        String fileToRun = "scratch/todo.tau";
         File file = new File(
                 com.charlware.taulang.Runtime.class.getResource("/tau/" + fileToRun).toURI()
         );
