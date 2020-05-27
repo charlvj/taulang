@@ -1,7 +1,11 @@
 
 to :for_each [:stream :code]
-[ while [has_next stream]
-  [ call code [next stream] ]
+[ make :s if is_list stream 
+          [ list_to_stream stream ] 
+          [ stream ]
+  require_stream s
+  while [has_next s]
+  [ call code [next s] ]
 ]
 expose :for_each
 
@@ -74,3 +78,16 @@ to :repeat [:times :code]
   lambda [:i] [ call code [i] ]
 ]
 expose :repeat
+
+
+to :stream_counter [:start :stream]
+[ new_stream_source [start]
+  lambda [:counter_value] [ has_next stream ]
+  lambda [:counter_value] 
+  [ 
+  	[ dict [:counter counter_value :value next stream] 
+  	  [inc counter_value]
+  	]
+  ]
+]
+expose :stream_counter

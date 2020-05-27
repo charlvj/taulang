@@ -24,10 +24,46 @@ expose :times
 
 to :required [:param]
   [ if is_null param
-    [ throwError "Parameter must be provided" ]
+    [ throw_error "Parameter must be provided" ]
     [ param ]
   ]
 expose :required
+
+to :require_integer [:param]
+  [ if is_integer param 
+    [ param ]
+    [ throw_error "Integer parameter is required" ]
+  ]
+expose :require_integer
+
+to :require_double [:param]
+  [ if is_double param 
+    [ param ]
+    [ throw_error "Double parameter is required" ]
+  ]
+expose :require_double
+
+to :require_logical [:param]
+  [ if is_logical param 
+    [ param ]
+    [ throw_error "Logical parameter is required" ]
+  ]
+expose :require_logical
+
+
+to :require_list [:param]
+  [ if is_list param 
+    [ param ]
+    [ throw_error "List parameter is required" ]
+  ]
+expose :require_list
+
+to :require_stream [:param]
+  [ if is_stream param 
+    [ param ]
+    [ throw_error "Stream parameter is required" ]
+  ]
+expose :require_stream
 
 to :ifnull [:param :default]
   [ if is_null param 
