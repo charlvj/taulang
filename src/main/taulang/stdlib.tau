@@ -1,3 +1,6 @@
+alias :add :plus
+expose :add
+
 to :printline
     [ :msg ] 
     [ if is_null msg

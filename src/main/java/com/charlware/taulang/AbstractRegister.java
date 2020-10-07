@@ -31,9 +31,13 @@ public abstract class AbstractRegister {
         reg(new ValueFunction(name, value));
     }
     
-    protected void alias(String newName, String existingName) throws Exception {
+    protected void alias(String newName, String existingName) {
         Function aliasFunction = runtime.getMemory().get("alias");
-        aliasFunction.execute(new StringValue[] {new StringValue(newName), new StringValue(existingName)});
+        try {
+			aliasFunction.execute(new StringValue[] {new StringValue(newName), new StringValue(existingName)});
+		} catch (Exception e) {
+			throw new RuntimeException("Alias could not complete from Register. ", e);
+		}
     }
     
     public abstract void registerAll();

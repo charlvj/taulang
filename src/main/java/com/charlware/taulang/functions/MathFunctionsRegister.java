@@ -62,6 +62,7 @@ public class MathFunctionsRegister extends AbstractRegister {
             	}
             }
         });
+        alias("add", "plus");
         reg(new GenericFunction2("minus", "value1", "value2") {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {

@@ -5,24 +5,22 @@
  */
 package com.charlware.taulang.values;
 
-import com.charlware.taulang.language.InvalidCastException;
-import com.charlware.taulang.language.ListToken;
-import com.charlware.taulang.language.Token;
-import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
+
+import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.language.Token;
+import com.charlware.taulang.values.abilities.Addable;
 
 /**
  *
  * @author charlvj
  */
-public class ListValue extends AbstractValue<List<Value>> implements Listable<Value> {
+public class ListValue extends AbstractValue<List<Value>> 
+	implements Listable<Value>,
+			   Addable<Value>{
 
 	public static final ListValue EMPTY_LIST = new ListValue(Collections.EMPTY_LIST);
 	
@@ -120,4 +118,12 @@ public class ListValue extends AbstractValue<List<Value>> implements Listable<Va
         	throw new NotComparableException();
         }
     }
+
+	@Override
+	public Value add(Value a) throws NotAddableException {
+		List<Value> oldList = getValueThrowing(NotAddableException.class);
+		List<Value> newList = new ArrayList<>(oldList);
+		newList.add(a);
+		return new ListValue(newList);
+	}
 }

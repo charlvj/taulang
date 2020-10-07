@@ -1,0 +1,146 @@
+/**
+ This is a simple "times-table" program to show the table and test you.
+ */
+ 
+make :menu 
+[ ["1. Test Me!" :run_test ]
+  ["2. Show Table" :show_table ]
+  ["3. Show Settings" :show_settings]
+  ["4. Change Topic" :change_topic]
+  ["5. Change Max" :change_max]
+  ["6. Quit" :quit]
+]
+
+to :initial_state []
+[ dict 
+  [ :quit false 
+    :topic 2
+    :max 12 
+  ]
+]
+
+
+
+to :get_command []
+[ print_menu
+  print " > "
+  make :choice readline
+  printline ["choice: |" choice "|"] 
+  make :command
+  	try_catch
+  	[ getelem menu dec as_integer choice ]
+    [ ["Invalid" :invalid_choice] ]
+  printline ""
+  command
+]
+
+
+to :run_test [:state]
+[ print "Test!"
+  make :topic get state :topic
+  for_each range_closed 0 get state :max
+  [ make :current $0
+    make :real_answer mult topic current
+    print [ current " x " topic " = " ]
+    make :answer readline
+    try_catch 
+    [ make :int_answer as_integer answer
+      if eq real_answer int_answer
+      [ printline "Correct!" ]
+      [ printline "Incorrect." ]
+    ]
+    [ printline "Invalid answer!" ]
+  ]
+  state
+]
+
+
+
+to :show_table [:state]
+[ printline "The Table!"
+  make :topic get state :topic
+  for_each range_closed 0 get state :max
+  [ 
+    printline [ $0 " x " topic " = " mult topic $0 ]
+  ]
+  state
+]
+
+
+to :show_settings [:state]
+[ printline "Current Settings"
+  printline "----------------"
+  printline ["Topic: " get state :topic]
+  printline ["Max:   " get state :max]
+  state
+]
+
+
+to :change_topic [:state]
+[ print "Please enter the new topic (times-table): "
+  try_catch
+  [ make :new_value as_integer readline
+    put state [:topic new_value]
+  ]
+  [ printline "Invalid: I expected a number"
+    state
+  ]
+]
+
+
+to :change_max [:state]
+[ print "Please enter the new max: "
+  try_catch
+  [ make :new_value as_integer readline
+    put state [:max new_value]
+  ]
+  [ printline "Invalid: I expected a number"
+    state
+  ]
+]
+
+
+to :quit [:state]
+[ put state [:quit true]
+]
+
+
+to :invalid_choice [:state]
+[ printline "Invalid Choice" 
+]
+
+
+to :print_menu [:state]
+[ printline "Menu"
+  printline "===="
+  for_each menu
+  [ printline menu_description $0 
+  ]
+]
+
+to :menu_description [:menu_item]
+[ getelem menu_item 0 
+]
+
+to :menu_command [:menu_item]
+[ getelem menu_item 1
+]
+
+make :app new_stream_source [initial_state]
+  lambda [:state] [ not get state :quit ]
+  lambda [:state]
+  [ make :command get_command
+    printline ["Choice was " menu_description command]
+    make :f menu_command command
+    make :new_state call f [state]
+    [ true [ new_state ] ]
+  ]
+
+
+for_each range 0 12 [ printline $0 ] 
+
+ 
+for_each app
+  [ printline "" ]
+
+
