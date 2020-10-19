@@ -27,6 +27,7 @@ public class TauMain {
             switch (opt.getOpt()) {
                 case "f":
                     String programFilename = opt.getValue(0);
+                    System.out.println("File: " + programFilename);
                     File programFile = new File(programFilename);
                     if(!programFile.exists()) {
                         System.out.println("File does not exist: " + programFile);
@@ -59,6 +60,8 @@ public class TauMain {
                 System.out.println(result);
             } catch (Exception ex) {
                 System.out.println("Runtime Error: " + ex);
+                System.out.println("Program: " + program);
+                ex.printStackTrace(System.out);
             }
         }
         

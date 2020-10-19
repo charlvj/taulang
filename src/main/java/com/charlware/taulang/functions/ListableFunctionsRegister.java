@@ -5,12 +5,11 @@
  */
 package com.charlware.taulang.functions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Listable;
@@ -25,6 +24,26 @@ import com.charlware.taulang.values.Value;
 public class ListableFunctionsRegister extends AbstractRegister {
     @Override
     public void registerAll() {
+    	reg(new GenericFunction1("head", "list") {
+            @Override
+            public Value execute(Value list) throws Exception {
+                if(list instanceof Listable) {
+                    Listable listable = (Listable) list;
+                    return Value.of(listable.head());
+                }
+                return new ErrorValue(ErrorFactory.createError("head expects a listable value."));
+            }
+        });
+    	reg(new GenericFunction1("tail", "list") {
+            @Override
+            public Value execute(Value list) throws Exception {
+            	if(list instanceof Listable) {
+                    Listable listable = (Listable) list;
+                    return (Value) listable.tail();
+                }
+                return new ErrorValue(ErrorFactory.createError("head expects a listable value."));
+            }
+        });
         reg(new GenericFunction1("size", "list") {
             @Override
             public Value execute(Value list) throws Exception {
@@ -63,18 +82,18 @@ public class ListableFunctionsRegister extends AbstractRegister {
         reg(new GenericFunction2("concat", "list1", "list2") {
             @Override
             public Value execute(Value list1, Value list2) throws Exception {
-                List<Value> l1 = ((ListValue) list1).getValue();
-                List<Value> l2 = ((ListValue) list2).getValue();
-                List<Value> newList = new ArrayList(l1.size() + l2.size());
-                newList.addAll(l1);
-                newList.addAll(l2);
-                return new ListValue(newList);
+                LinkedList<Value> l1 = ((ListValue) list1).getValue();
+                LinkedList<Value> l2 = ((ListValue) list2).getValue();
+//                List<Value> newList = new ArrayList(l1.size() + l2.size());
+//                newList.addAll(l1);
+//                newList.addAll(l2);
+                return new ListValue(l2.pushAll(l1));
             }
         });
         reg(new GenericFunction2("join", "list", "chars") {
             @Override
             public Value execute(Value list, Value chars) throws Exception {
-                List<Value> l1 = ((ListValue) list).getValue();
+                LinkedList<Value> l1 = ((ListValue) list).getValue();
                 String c = chars.asString();
                 String result = l1.stream()
                         .map(v -> {

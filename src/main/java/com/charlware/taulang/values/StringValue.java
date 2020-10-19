@@ -17,6 +17,8 @@ import com.charlware.taulang.values.abilities.Comparable.NotComparableException;
  * @author charlvj
  */
 public class StringValue extends AbstractValue<String> implements Listable<String>, Addable<String> {
+	public static final StringValue EMPTY_STRING = new StringValue(""); 
+	
     public StringValue(Token token) {
         super(token);
     }
@@ -70,6 +72,27 @@ public class StringValue extends AbstractValue<String> implements Listable<Strin
     public void set(int index, String elem) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public String head() {
+    	try {
+			return getValue().charAt(0)+"";
+		} catch (Exception e) {
+			return null;
+		}
+    }
+    
+    @Override
+    public Listable<String> tail() {
+    	try {
+			return new StringValue(getValue().substring(1));
+		} catch (Exception e) {
+			return EMPTY_STRING;
+		}
+    }
+    
+
+   
     
     @Override
     public String add(Value x) throws NotAddableException {

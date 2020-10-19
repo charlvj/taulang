@@ -1,0 +1,40 @@
+import "tau/test/tautest" ""
+
+test "List Size" 
+[ assert_equals 
+	3
+	size [1 2 3] 
+]
+
+test "Get Element"
+[ make :list [1 2 3 4]
+  assert_equals 
+  	1
+  	getelem list 0
+  assert_equals
+  	2
+  	getelem list 1
+  assert_equals
+  	3
+  	getelem list 2
+  assert_equals
+  	4
+  	getelem list 3
+]
+ 
+test "Concat Lists"
+[ assert_equals 
+    [1 2 3 4]
+    concat [1 2] [3 4]
+]
+ 
+test "Join lists"
+[ assert_equals
+	"1, 2, 3, 4"
+	join [1 2 3 4] ", "
+]
+
+test "Head and tail"
+[ assert_equals 2 head [2 4 6]
+  assert_equals [4 6] tail [2 4 6]
+]

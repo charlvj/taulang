@@ -7,6 +7,7 @@ package com.charlware.taulang.functions;
 
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Value;
@@ -26,10 +27,11 @@ public class ToFunction extends Function {
     public Value execute(Value[] params) throws Exception {
         String funcName = params[0].asString();
         ListValue funcParams = (ListValue) params[1];
-        Value[] values = funcParams.getValue().toArray(new Value[] {});
-        String[] funcParamArr = new String[values.length];
-        for(int i = 0; i < values.length; i++) {
-            funcParamArr[i] = values[i].asString();
+        LinkedList<Value> values = funcParams.getValue();
+        String[] funcParamArr = new String[values.size()];
+        int i = 0;
+        for(Value v : values) {
+            funcParamArr[i++] = v.asString();
         }
         ListValue funcCode = (ListValue) params[2];
         ListToken funcTokens = funcCode.getListToken();

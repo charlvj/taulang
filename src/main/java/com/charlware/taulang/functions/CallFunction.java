@@ -5,7 +5,6 @@
  */
 package com.charlware.taulang.functions;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.Symbol;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.ListValue;
@@ -63,19 +63,19 @@ public class CallFunction extends Function {
         if(callParams instanceof ListValue) 
             return call(function, (ListValue) callParams);
         else {
-            ListValue listValue = new ListValue(Arrays.asList(callParams));
+            ListValue listValue = new ListValue(LinkedList.of(callParams));
             return call(function, listValue);
         }
     }
 
     public Value call(Function function, ListValue callParams) throws Exception {
-        List<Value> callParamsList = callParams.getValue();
+        List<Value> callParamsList = callParams.getValue().asList();
         
         return function.execute(callParamsList);
     }
     
     public Value call(ListValue code, Value callParams) throws Exception {
-    	Value[] params = ((ListValue) callParams).getValue().toArray(new Value[] {});
+    	Value[] params = ((ListValue) callParams).getValue().asList().toArray(new Value[] {});
     	Iterator<Token> tokens = code.getListToken().iterator();
 
     	Memory memory = null;

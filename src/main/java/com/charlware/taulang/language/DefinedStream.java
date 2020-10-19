@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.ListValue;
@@ -19,7 +20,7 @@ import com.charlware.taulang.values.Value;
  * @author charlvj
  */
 public class DefinedStream implements IStream {
-    private Value[] state;
+    private LinkedList<Value> state;
     private Value hasNextCallable;
     private Value nextCallable;
     private com.charlware.taulang.Runtime runtime;
@@ -27,7 +28,7 @@ public class DefinedStream implements IStream {
     public DefinedStream(com.charlware.taulang.Runtime runtime, ListValue startingState, Value hasNextCallable, Value nextCallable) {
         try {
         	this.runtime = runtime;
-        	this.state = startingState.getValue().toArray(new Value[0]);
+        	this.state = startingState.getValue();
             this.hasNextCallable = hasNextCallable;
             this.nextCallable = nextCallable;
         } catch (Exception ex) {
@@ -36,7 +37,7 @@ public class DefinedStream implements IStream {
     }
     
     public DefinedStream(Value[] startingState, Value hasNextCallable, Value nextCallable) {
-        this.state = startingState;
+        this.state = LinkedList.of(startingState);
         this.hasNextCallable = hasNextCallable;
         this.nextCallable = nextCallable;
     }
@@ -57,7 +58,7 @@ public class DefinedStream implements IStream {
             Value result = runtime.callFunction.execute(nextCallable, new ListValue(state));
             if(result instanceof ListValue) {
                 ListValue resultList = (ListValue) result;
-                state = ((ListValue) resultList.get(1)).getValue().toArray(new Value[0]);
+                state = ((ListValue) resultList.get(1)).getValue();
                 return resultList.get(0);
             }
             else {

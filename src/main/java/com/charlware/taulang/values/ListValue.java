@@ -6,34 +6,40 @@
 package com.charlware.taulang.values;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import com.charlware.taulang.language.ListToken;
 import com.charlware.taulang.language.Token;
+import com.charlware.taulang.util.LinkedList;
+import com.charlware.taulang.util.LinkedListIterator;
+import com.charlware.taulang.util.NonEmptyLinkedList;
 import com.charlware.taulang.values.abilities.Addable;
 
 /**
  *
  * @author charlvj
  */
-public class ListValue extends AbstractValue<List<Value>> 
+public class ListValue extends AbstractValue<LinkedList<Value>> 
 	implements Listable<Value>,
 			   Addable<Value>{
 
-	public static final ListValue EMPTY_LIST = new ListValue(Collections.EMPTY_LIST);
+	public static final ListValue EMPTY_LIST = new ListValue(LinkedList.emptyList());
 	
     public ListValue(Token token) {
         super(token);
     }
     
-    public ListValue(List<Value> list) {
+    public ListValue(LinkedList<Value> list) {
         super(list);
     }
     
+    public ListValue(List<Value> list) {
+    	this(LinkedList.of(list));
+    }
+    
     public ListValue(Value[] list) {
-        this(List.of(list));
+        this(LinkedList.of(list));
     }
 
 //    public Iterator<Value> iterator() {
@@ -44,11 +50,12 @@ public class ListValue extends AbstractValue<List<Value>>
 //        return getValue().stream();
 //    }
 
-    public List<Value> processToken() throws Exception {
+    public LinkedList<Value> processToken() throws Exception {
         ListToken listToken = (ListToken) token;
-        List<Value> list = new ArrayList<>(listToken.size());
+        Value[] list = new Value[listToken.size()];
         Iterator<Token> iterator = listToken.iterator();
         Token tok;
+        int i = 0;
         while (iterator.hasNext()) {
             tok = iterator.next();
             Value v = getInterpreter().eval(tok, iterator);
@@ -56,9 +63,9 @@ public class ListValue extends AbstractValue<List<Value>>
             if(getInterpreter().getRuntime().getFlags().isTailCallOptimizationEnabled())
                 v = v.realize();
             
-            list.add(v);
+            list[i++] = v;
         }
-        return list;
+        return LinkedList.of(list);
     }
 
     @Override
@@ -78,6 +85,24 @@ public class ListValue extends AbstractValue<List<Value>>
         return (ListToken) token;
     }
 
+    @Override
+    public Value head() {
+    	try {
+            return getValue().head();
+        } catch (Exception ex) {
+            return new NullValue();
+        }
+    }
+    
+    @Override
+    public ListValue tail() {
+    	try {
+            return new ListValue(getValue().tail());
+        } catch (Exception ex) {
+            return EMPTY_LIST;
+        }
+    }
+    
     @Override
     public int size() {
         try {
@@ -121,9 +146,7 @@ public class ListValue extends AbstractValue<List<Value>>
 
 	@Override
 	public Value add(Value a) throws NotAddableException {
-		List<Value> oldList = getValueThrowing(NotAddableException.class);
-		List<Value> newList = new ArrayList<>(oldList);
-		newList.add(a);
-		return new ListValue(newList);
+		LinkedList<Value> list = getValueThrowing(NotAddableException.class);
+		return new ListValue(list.add(a));
 	}
 }

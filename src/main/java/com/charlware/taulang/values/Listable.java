@@ -10,6 +10,8 @@ package com.charlware.taulang.values;
  * @author charlvj
  */
 public interface Listable<T> {
+	public T head();
+	public Listable<T> tail();
     public int size();
     public T get(int i);
     public void set(int index, T elem);

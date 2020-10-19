@@ -8,6 +8,7 @@ import java.util.Map;
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Symbol;
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.DictValue;
 import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.ListValue;
@@ -25,7 +26,7 @@ public class DictFunctionRegister extends AbstractRegister {
 					return new ErrorValue(ErrorFactory.createInvalidParamsError("Dict requires a list of keys and values"));
 				}
 				Map<Symbol,Value> map = new HashMap<>();
-				List<Value> list = ((ListValue) dataValue).getValue();
+				LinkedList<Value> list = ((ListValue) dataValue).getValue();
 				Iterator<Value> it = list.iterator();
 				while(it.hasNext()) {
 					Value keyValue = it.next();
@@ -63,7 +64,7 @@ public class DictFunctionRegister extends AbstractRegister {
 				Map<Symbol,Value> map = new HashMap<>();
 				map.putAll(oldMap);
 				
-				List<Value> list = ((ListValue) dataValue).getValue();
+				LinkedList<Value> list = ((ListValue) dataValue).getValue();
 				Iterator<Value> it = list.iterator();
 				while(it.hasNext()) {
 					Value keyValue = it.next();

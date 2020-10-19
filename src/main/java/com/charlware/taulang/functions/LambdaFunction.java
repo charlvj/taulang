@@ -5,14 +5,11 @@
  */
 package com.charlware.taulang.functions;
 
-import com.charlware.taulang.Memory;
-import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.language.Function;
-import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.Value;
-import java.util.List;
 
 /**
  *
@@ -29,7 +26,7 @@ public class LambdaFunction extends Function {
     
     @Override
     public Value execute(Value[] params) throws Exception {
-        List<Value> paramNames = ((ListValue) params[0]).getValue();
+        LinkedList<Value> paramNames = ((ListValue) params[0]).getValue();
         String[] funcParamArr = new String[paramNames.size()];
         int i = 0;
         for(Value p: paramNames) {

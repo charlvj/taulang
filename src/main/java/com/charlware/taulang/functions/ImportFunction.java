@@ -5,19 +5,20 @@
  */
 package com.charlware.taulang.functions;
 
-import com.charlware.taulang.Memory;
-import com.charlware.taulang.MemoryScope;
-import com.charlware.taulang.language.Function;
-import com.charlware.taulang.values.BooleanValue;
-import com.charlware.taulang.values.ListValue;
-import com.charlware.taulang.values.Value;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.Callable;
+
+import com.charlware.taulang.Memory;
+import com.charlware.taulang.MemoryScope;
+import com.charlware.taulang.language.Function;
+import com.charlware.taulang.util.LinkedList;
+import com.charlware.taulang.values.BooleanValue;
+import com.charlware.taulang.values.ListValue;
+import com.charlware.taulang.values.Value;
 
 /**
  *
@@ -46,7 +47,7 @@ public class ImportFunction extends Function {
         } else {
             File file = new File(filename);
             if (!file.exists()) {
-                List<Value> searchPath = ((ListValue) runtime.getMemory().get("system.searchpath").execute()).getValue();
+                LinkedList<Value> searchPath = ((ListValue) runtime.getMemory().get("system.searchpath").execute()).getValue();
                 for (Value path : searchPath) {
                     file = new File(path.asString(), filename);
                     if (file.exists()) {
@@ -101,6 +102,7 @@ public class ImportFunction extends Function {
         }
         catch (Exception ex) {
             runtime.stdout.println("Error interpreting " + contextName + ": " + ex);
+            ex.printStackTrace(runtime.stdout);
             return BooleanValue.FALSE;
         }       
         finally {
