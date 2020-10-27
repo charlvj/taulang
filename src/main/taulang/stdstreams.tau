@@ -1,3 +1,17 @@
+to :indexed_stream [:stream]
+[ make :s if is_list stream 
+          [ list_to_stream stream ] 
+          [ stream ]
+  require_stream s
+  new_stream_source [0]
+    lambda [:index] [ has_next s ]
+    lambda [:index] 
+    [ [index next s]  /* value = [index, value] */
+      [ inc index]    /* next state */
+    ]
+]
+expose :indexed_stream
+
 
 to :for_each [:stream :code]
 [ make :s if is_list stream 
@@ -8,7 +22,6 @@ to :for_each [:stream :code]
   [ call code [next s] ]
 ]
 expose :for_each
-
 
 to :limit [:number :ds]
 [ new_stream_source [5] 

@@ -2,6 +2,8 @@
  This is a simple "times-table" program to show the table and test you.
  */
  
+import "basicapp.tau" ""
+ 
 make :menu 
 [ ["1. Test Me!" :run_test ]
   ["2. Show Table" :show_table ]
@@ -126,6 +128,7 @@ to :menu_command [:menu_item]
 [ getelem menu_item 1
 ]
 
+/*
 make :app new_stream_source [initial_state]
   lambda [:state] [ not get state :quit ]
   lambda [:state]
@@ -135,12 +138,20 @@ make :app new_stream_source [initial_state]
     make :new_state call f [state]
     [ true [ new_state ] ]
   ]
+*/
 
+app_loop
+  initial_state
+  lambda [:state]
+  [ make :command get_command
+    printline ["Choice was " menu_description command]
+    make :f menu_command command
+    make :new_state call f [state]
+    if get new_state :quit [false] [new_state]
+  ]
 
-for_each range 0 12 [ printline $0 ] 
-
- 
+/* 
 for_each app
   [ printline "" ]
-
+*/
 

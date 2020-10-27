@@ -1,0 +1,33 @@
+to :app_loop [:initial_state :app_code]
+[ make :app new_stream_source [initial_state]
+	  
+	  lambda [:state]  /* has_next if state = false */ 
+	  [ printline ["has_next. state: " state]
+	    if is_boolean state 
+	      [as_boolean state] 
+	      [true] 
+	  ]
+	  
+	  lambda [:state]  /* next: call app_code */
+	  [ make :new_state call app_code [state]
+	    printline ["next: " new_state]
+	    [true [new_state]]
+	  ]
+  for_each app []  /* iterate over the stream and do nothing in between */
+]
+expose :app_loop
+
+to :show_menu_item [:number :text]
+[ printline [number ":\t" text]
+]
+
+to :show_menu_items [:items]
+[ make :s indexed_stream items
+  for_each s [ show_menu_item $0 $1 ]
+]
+
+to :menu [:items]
+[ make :num_items size items
+  show_menu_items items
+]
+expose :menu

@@ -126,7 +126,7 @@ public class SystemFunctionsRegister extends AbstractRegister {
             }
         });
         
-        reg(new GenericFunction1("is_logical", "value") {
+        reg(new GenericFunction1("is_boolean", "value") {
             @Override
             public Value execute(Value value) throws Exception {
                 return (value instanceof BooleanValue ? trueValue() : falseValue());
