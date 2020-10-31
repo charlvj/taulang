@@ -26,7 +26,7 @@ A Tau program is a sequence of functions separated by spaces. That said, the fun
    * Symbols: :function_name, :or_something
    * Null: ?
 3) Square brackets - [ and ]. Anything enclosed by square brackets becomes a single value: list. Function inside a list is not executed until the list is _call_ ed.
-4) Comments. Comments are anything enclosed by /* ... */ and are ignored by the interpreter.
+4) Comments. Comments are anything enclosed by /* ... */ and are ignored by the interpreter. Line comments (//) are also supported.
 
 
 ## Functions
@@ -47,17 +47,20 @@ call lambda [:name] [ printline [ "Hello " name ] ] ["Llama"]
 
 ## Values
 A function returns a value. Tau supports the following value types:
-1) Number: any whole or decimal number. Examples include 1, 2, 4.3, -9.243
-2) String: anything enclosed with quotes. Examples include "blah", ""
-3) Logical: _true_ of _false_.
-4) List: a list of tokens enclosed in square brackets. Examples include [1 2 3], [2 "hello" ["a" "nested" "list"]]
-5) Null: denotes no specific value. It is represented by ?.
-6) Symbol: used to identify a function without evaluating it. It is any identifier prefixed by a colon. Examples include :my_function, :your_function.
-7) Function: This is essentially an anonymous function, created by the lambda function.
-8) Error: This is a special value that has some information about an error, but also causes the execution of a function to stop immediately, returning the error. This can create a chain reaction that will last until the error is handled and a non-error can be returned.
+1) Integer: Whole numbers. Examples include 1, 2, -9382
+2) Double: Decimal numbers. Examples include 1.2, 54.2, -0.231
+3) String: anything enclosed with quotes. Examples include "blah", ""
+4) Boolean: _true_ of _false_.
+5) List: a list of tokens enclosed in square brackets. Examples include [1 2 3], [2 "hello" ["a" "nested" "list"]]
+6) Null: denotes no specific value. It is represented by ?.
+7) Symbol: used to identify a function without evaluating it. It is any identifier prefixed by a colon. Examples include :my_function, :your_function.
+8) Function: This is essentially an anonymous function, created by the lambda function.
+9) Error: This is a special value that has some information about an error, but also causes the execution of a function to stop immediately, returning the error. This can create a chain reaction that will last until the error is handled and a non-error can be returned.
+10) Dict: A list of key/value pairs.
+11) Stream: A stream of anything - lists, generated values, I/O, etc.
 
 ## Memory
-The memory is implemented as a tree structure of scopes. A new scope is created as a child of the existing one at various points, including importing a file, defining a function and running a function. When a new function is defined, it carries with it the scope in which it was defined such that when it is called, it has visibility to those functions that were defined in its original scope. For example, when a new function is defined in a file called helpers.tau, and this file is imported into a main.tau, that file is only available the contents of helpers.tau. If you want to be able to call a function defined in helpers.tau from main.tau, that function must be _exposed_. Exposing a function will elevate it to the top-level scope, thus making it available to all other scopes.
+The memory is implemented as a tree structure of scopes. A new scope is created as a child of the existing one at various points, including importing a file, defining a function and running a function. When a new function is defined, it carries with it the scope in which it was defined such that when it is called, it has visibility to those functions that were defined in its original scope. For example, when a new function is defined in a file called helpers.tau, and this file is imported into a main.tau, that file is only available to the functions in helpers.tau. If you want to be able to call a function defined in helpers.tau from main.tau, that function must be _exposed_. 
 ### Example:
 ```
 /* helpers.tau */
@@ -83,6 +86,13 @@ In public_function
 private_function
 /* The above will not be found, a null will be returned. */
 ```
+## Streams
+Streams turned out to be a pretty important element of Tau. It is similar to Java's functional streams as defined in java.util.stream, or perhaps like a monad in Haskell. A stream essentially represents a sequential stream of values. Common uses for streams include:
+1) A list can be streamed to iterate over the contents.
+2) Undeterministic functions are implemented as streams, like randomizer.
+3) I/O is handled with streams, like reading / writing a file.
+4) A stream can be defined and used as a "generator".
+5) A stream can be defined such that it provides an event loop, like in basicapp.tau.
 
 ## Summary
 That is pretty much it. The language is rather simple, with a lot of potential.
