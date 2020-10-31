@@ -16,6 +16,7 @@ public enum TokenType {
     STRING,
     BOOLEAN,
     IDENTIFIER,
+    IDENTIFIER_NO_EVAL,
     LEFT_BRACKET,
     RIGHT_BRACKET,
     LIST,

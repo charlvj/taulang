@@ -10,11 +10,13 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.TailCallValue;
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.values.DoubleValue;
 import com.charlware.taulang.values.ErrorValue;
+import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.ListValue;
 import com.charlware.taulang.values.NullValue;
@@ -50,7 +52,7 @@ public class Interpreter {
 
     public Value interpret(Path file) throws Exception {
         final StringBuilder sb = new StringBuilder();
-        Files.lines(file).forEach(line -> sb.append(line).append(" "));
+        Files.lines(file).forEach(line -> sb.append(line).append("\n"));
         return interpret(sb.toString());
     }
 
@@ -90,11 +92,15 @@ public class Interpreter {
             case SYMBOL:
                 result = new SymbolValue(token);
                 break;
+            case IDENTIFIER_NO_EVAL:
+            	Function functionValue = runtime.getMemory().get(token.getSource());
+            	result = new FunctionValue(functionValue);
+            	break;
             case IDENTIFIER:
                 Function function = runtime.getMemory().get(token.getSource());
 
                 if(function == null) {
-//                    result = new ErrorValue(ErrorFactory.createError("Function not defined: " + token.getSource()));
+                    result = new ErrorValue(ErrorFactory.createError("Function not defined: " + token.getSource()));
                 }
                 else {
                     int numParams = function.getNumParams();

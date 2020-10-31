@@ -10,13 +10,13 @@ test "An error is an error"
 [ assert_true is_error throw_error "test error" ]
 
 test "is_logical"
-[ assert_true is_logical true
-  assert_true is_logical false
-  assert_false is_logical 1
-  assert_false is_logical "s"
-  assert_false is_logical ?
-  assert_false is_logical [1 2]
-  assert_false is_logical :a_symbol ]
+[ assert_true is_boolean true
+  assert_true is_boolean false
+  assert_false is_boolean 1
+  assert_false is_boolean "s"
+  assert_false is_boolean ?
+  assert_false is_boolean [1 2]
+  assert_false is_boolean :a_symbol ]
 
 test "is_number"
 [ assert_true is_number 1

@@ -56,6 +56,7 @@ public class Tokenizer {
 				case Character.LINE_SEPARATOR: currentLine++; break;
 				case '"': string(); break;
 				case ':': symbol(); break;
+				case '@': noEvalIdentifier(); break;
 				default:
 					if(Character.isDigit(currentChar) || currentChar == '-') {
 						number();
@@ -213,9 +214,20 @@ public class Tokenizer {
 	private void identifier() {
 		int pos = currentPos;
 		String symbolName = readUntilSeparator();
-//		System.out.println("identifier: " + symbolName);
 		tokens.add(new Token(symbolName, 
 				TokenType.IDENTIFIER, 
+				currentLine, 
+				pos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	private void noEvalIdentifier() {
+		int pos = currentPos;
+		next();
+		String symbolName = readUntilSeparator();
+		tokens.add(new Token(symbolName, 
+				TokenType.IDENTIFIER_NO_EVAL, 
 				currentLine, 
 				pos, 
 				currentLine, 

@@ -48,11 +48,14 @@ public class PreProcessor implements Iterator<Token>, Iterable<Token> {
         list.setStartLine(currentToken.getStartLine());
         
         Token token;
+        boolean closed = false;
         while(hasNext()) {
         	token = next();
             
-            if(token.isType(TokenType.RIGHT_BRACKET))
+            if(token.isType(TokenType.RIGHT_BRACKET)) {
+            	closed = true;
                 break;
+            }
             
             if(token.isType(TokenType.LEFT_BRACKET)) 
                 token = processList();
@@ -60,7 +63,7 @@ public class PreProcessor implements Iterator<Token>, Iterable<Token> {
             list.add(token);
         }
         
-        if(!hasNext()) {
+        if(!closed && !hasNext()) {
             throw new TauSyntaxError("Reached EOF before the end of a list!", list);
         }
         
@@ -71,7 +74,7 @@ public class PreProcessor implements Iterator<Token>, Iterable<Token> {
     }
     
     public static void main(String[] args) throws IOException {
-        Tokenizer tokenizer = new Tokenizer("test [ 1 2 ] \"Blah\"");
+        Tokenizer tokenizer = new Tokenizer("test [ 1 2 ] \"Blah\" [1 [\"a\" \"b\"] 4]");
         Iterator<Token> tokens = tokenizer.parseTokens();
         PreProcessor pp = new PreProcessor(tokens);
         for(Token token: pp) {

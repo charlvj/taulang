@@ -35,7 +35,7 @@ public class TauMain {
                     }
                     StringBuilder sb = new StringBuilder();
                     Files.lines(programFile.toPath())
-                            .forEach(line -> sb.append(line).append(" "));
+                            .forEach(line -> sb.append(line).append("\n"));
                     program = sb.toString();
                     break;
                 case "c":
