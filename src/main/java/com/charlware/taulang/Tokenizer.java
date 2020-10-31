@@ -1,221 +1,234 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.charlware.taulang;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.language.TokenType;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import org.apache.commons.lang3.math.NumberUtils;
 
-/**
- *
- * @author charlvj
- */
 public class Tokenizer {
-
-    protected Token[] tokens;
-    
-    protected int currentToken = -1;
-    
-    protected Deque<Integer> stack = new ArrayDeque<>();
-    
-    public Token getCurrentToken() {
-        return currentToken >= 0 && currentToken < tokens.length ? tokens[currentToken] : null;
-    }
-    
-    public boolean advance() {
-        if(currentToken < 0) {
-            currentToken = -1;
-        } 
-
-        currentToken++;
-        return currentToken < tokens.length;
-    }
-    
-    public boolean retreat() {
-        if(currentToken >= tokens.length) {
-            currentToken = tokens.length;
-        } 
-        
-        currentToken--;
-        return currentToken >= 0;
-    }
-    
-    public boolean hasNextToken() {
-        return currentToken < tokens.length - 1;
-    }
-    
-    public boolean eof() {
-        return currentToken >= tokens.length;
-    }
-    
-    public Object peekNextToken() {
-        if(hasNextToken())
-            return tokens[currentToken + 1];
-        else
-            return null;
-    }
-    
-    public void push() {
-        stack.push(currentToken);
-    }
-    
-    public void pop() {
-        stack.pop();
-    }
-    
-    public Tokenizer parseTokens(String code) throws IOException {
-        List<Token> result = new ArrayList<>();
-        Reader reader = new StringReader(code);
-        StreamTokenizer tokenizer = new StreamTokenizer(reader);
-        tokenizer.wordChars(':', ':');
-        tokenizer.wordChars('?', '?');
-        tokenizer.wordChars('$', '$');
-        tokenizer.wordChars('_', '_');
-        tokenizer.slashStarComments(true);
-        
-        boolean eof = false;
-        do {
-            int tt = tokenizer.nextToken();
-            String tokStr = tokenizer.sval;
-            switch(tt) {
-                case StreamTokenizer.TT_EOF:
-                    eof = true;
-                    break;
-                case StreamTokenizer.TT_NUMBER:
-                	double d = tokenizer.nval;
-                	if ((d == Math.floor(d)) && !Double.isInfinite(d)) {
-                	    result.add(new Token(""+Math.floor(d), TokenType.INTEGER));
-                	}
-                	else {
-                		result.add(new Token(""+tokenizer.nval, TokenType.DOUBLE));
-                	}
-                    break;
-                case StreamTokenizer.TT_WORD:
-                    if(tokStr.startsWith(":")) 
-                        result.add(new Token(tokStr, TokenType.SYMBOL));
-                    else
-                        result.add(new Token(tokStr, TokenType.IDENTIFIER));
-                    break;
-                case '[':
-                    result.add(new Token("[", TokenType.LEFT_BRACKET));
-                    break;
-                case ']':
-                    result.add(new Token("]", TokenType.RIGHT_BRACKET));
-                    break;
-                case '"':
-                    result.add(new Token(tokStr, TokenType.STRING));
-                    break;
-                default:
-//                    result.add(new Token("" + ((char) tt), TokenType.IDENTIFIER));
-                    break;
-            }
-        } while(!eof);
-        tokens = result.toArray(new Token[] {});
-        return this;
-    }
-    
-    public Tokenizer parseTokens1(String code) {
-        String[] splits = code.split("\\s");
-        List<Token> result = new ArrayList<>(splits.length);
-
-        boolean inString = false;
-        boolean inComment = false;
-
-        StringBuilder currentString = new StringBuilder();
-        for (String tok : splits) {
-            /* ====== Comments ======= */
-            if (!inString && inComment && ("\n".equals(tok) || "%".equals(tok))) {
-                // End of a comment.
-                inComment = false;
-                continue;
-            }
-            if (!inString && inComment) {
-                // In a  comment, so ignore
-                continue;
-            }
-            if (!inString && "%".equals(tok)) {
-                // Comment is starting.
-                inComment = true;
-                continue;
-            }
-
-            /* ====== Strings ======= */
-            if ("\"".equals(tok)) {
-                if (inString) {
-                    // End of the string is reached
-                    result.add(new Token(currentString.toString(), TokenType.STRING));
-                    currentString = new StringBuilder();
-                }
-                inString = !inString;
-                continue;
-            }
-            if (tok.startsWith("\"")) {
-                if (tok.endsWith("\"")) {
-                    result.add(new Token(tok.substring(1, tok.length() - 1), TokenType.STRING));
-                } else {
-                    currentString.append(tok.substring(1));
-                    inString = true;
-                }
-                continue;
-            }
-            if (tok.endsWith("\"")) {
-                currentString.append(" ").append(tok.substring(0, tok.length() - 1));
-                result.add(new Token(currentString.toString(), TokenType.STRING));
-                currentString = new StringBuilder();
-                inString = false;
-                continue;
-            }
-            if (inString) {
-                currentString.append(" ").append(tok);
-                continue;
-            }
-
-            if ("".equals(tok)) {
-                continue;
-            }
-
-            if(NumberUtils.isParsable(tok)) {
-                result.add(new Token(tok, TokenType.DOUBLE));
-            } 
-            else if(tok.equals("[")) {
-                result.add(new Token(tok, TokenType.LEFT_BRACKET));
-            }
-            else if(tok.equals("]")) {
-                result.add(new Token(tok, TokenType.RIGHT_BRACKET));
-            }
-            else if(tok.startsWith(":")) {
-                result.add(new Token(tok, TokenType.SYMBOL));
-            }
-//            else if(tok.equals("true") || tok.equals("false")) {
-//                result.add(new Token(tok, TokenType.BOOLEAN));
-//            }
-            else {
-                result.add(new Token(tok, TokenType.IDENTIFIER));
-            }
-            
-        }
-        tokens = result.toArray(new Token[] {});
-        return this;
-    }
-
-    public static void main(String[] args) throws IOException {
-        Tokenizer tokenizer = new Tokenizer();
-        tokenizer.parseTokens("to :printline [:msg] [ print [msg newline] ] printline [ \"Hello World! \" 1 \" Time\" ]");
-        for(Token token: tokenizer.tokens) {
-            System.out.println(token);
-        }
-    }
-    
+	private final char[] code;
+	private final int numChars;
+	
+	private int currentPos = 0;
+	private char currentChar = 0;
+	private int currentLine = 0;
+	
+	private List<Token> tokens = new ArrayList<>();
+	
+	public Tokenizer(String code) {
+		this.code = code.toCharArray();
+		numChars = this.code.length;
+	}
+	
+	private boolean isEOF() {
+		return currentPos >= numChars;
+	}
+	
+	private char next() {
+		currentPos++;
+		if(!isEOF())
+			currentChar = code[currentPos];
+		return currentChar;
+	}
+	
+	private void setCurrentPos(int newPos) {
+		currentPos = newPos;
+		currentChar = code[currentPos];
+	}
+	
+	public Iterator<Token> parseTokens() {
+		setCurrentPos(0);
+		while(!isEOF()) {
+			if(currentChar == '/' && code[currentPos + 1] == '/') {
+				lineComment();
+			}
+			else if(currentChar == '/' && code[currentPos + 1] == '*') {
+				blockComment();
+			}
+			else {
+				switch(code[currentPos]) {
+				case '[': openBracket(); break;
+				case ']': closeBracket(); break;
+				case Character.LINE_SEPARATOR: currentLine++; break;
+				case '"': string(); break;
+				case ':': symbol(); break;
+				default:
+					if(Character.isDigit(currentChar) || currentChar == '-') {
+						number();
+					}
+					else if(!Character.isWhitespace(currentChar)){
+						identifier();
+					}
+				}
+			}
+			next();
+		}
+		
+		return tokens.iterator();
+	}
+	
+	private void openBracket() {
+		tokens.add(new Token(""+code[currentPos], 
+				TokenType.LEFT_BRACKET, 
+				currentLine, 
+				currentPos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	private void closeBracket() {
+		tokens.add(new Token(""+code[currentPos], 
+				TokenType.RIGHT_BRACKET, 
+				currentLine, 
+				currentPos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	private void string() {
+		int startLine = currentLine;
+		int startPos = currentPos;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		/* String is all characters until the next " */
+		/* Escape char is \ */
+		next();
+		loop:
+		while(!isEOF()) {
+			switch(currentChar) {
+			case '"': break loop;
+			case '\\': 
+				char c = escapeChar(next());
+				sb.append(c);
+				break;
+			default:
+				sb.append(currentChar);
+			}
+			next();
+		}
+		tokens.add(new Token(sb.toString(), 
+				TokenType.STRING, 
+				startLine, 
+				startPos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	private char escapeChar(char c) {
+		switch(c) {
+		case 'n': return Character.LINE_SEPARATOR;
+		case 't': return '\t';
+		case '\\': return '\\';
+		default: return c;
+		}
+	}
+	
+	private boolean isSeparator(char c) {
+		return Character.isWhitespace(c) || c == ']';
+	}
+	
+	private int findNextSeparator() {
+		int i;
+		for(i = currentPos; i < numChars; i++) {
+			if(isSeparator(code[i]))
+				break;
+		}
+		return i;
+	}
+	
+	private String readUntilSeparator() {
+		int lastCharPos = findNextSeparator() -1;
+		String s = String.copyValueOf(code, currentPos, lastCharPos - currentPos + 1);
+		setCurrentPos(lastCharPos);
+		return s;
+	}
+	
+	private void symbol() {
+		int pos = currentPos;
+		next();
+		String symbolName = readUntilSeparator();
+		tokens.add(new Token(symbolName, 
+				TokenType.SYMBOL, 
+				currentLine, 
+				pos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	private void lineComment() {
+		next();
+		next();  // Two chars were matched.
+		while(!isEOF()) {
+			if(Character.LINE_SEPARATOR == currentChar)
+				break;
+			next();
+		}
+	}
+	
+	private void blockComment() {
+		next();
+		next();  // Two chars were matched.
+		while(!isEOF()) {
+			if(currentChar == '*' && code[currentPos + 1] == '/')
+				break;
+			next();
+		}
+		next();
+	}
+	
+	private void number() {
+		int pos = currentPos;
+		String value = readUntilSeparator();
+		if(NumberUtils.isParsable(value)) {
+			double d = NumberUtils.createDouble(value);
+			if ((d == Math.floor(d)) && !Double.isInfinite(d)) {
+				tokens.add(
+						new Token(value, 
+							TokenType.INTEGER, 
+							currentLine, 
+							pos, 
+							currentLine, 
+							currentPos));
+        	}
+        	else {
+        		tokens.add(
+        				new Token(value, 
+        					TokenType.DOUBLE, 
+        					currentLine, 
+        					pos, 
+        					currentLine, 
+        					currentPos));
+        	}
+		}
+		else {
+			throw new TauSyntaxError("Expected a number, got '" + value + "'", value, pos, currentLine);
+		}
+	}
+	
+	private void identifier() {
+		int pos = currentPos;
+		String symbolName = readUntilSeparator();
+//		System.out.println("identifier: " + symbolName);
+		tokens.add(new Token(symbolName, 
+				TokenType.IDENTIFIER, 
+				currentLine, 
+				pos, 
+				currentLine, 
+				currentPos));
+	}
+	
+	
+	public static void main(String[] args) {
+		String code = "to :greet_me [:name] /* comment */ [ printline [ \"Hello \" name ] add -3d -2.3";
+		Tokenizer tokenizer = new Tokenizer(code);
+		Iterator<Token> tokens = tokenizer.parseTokens();
+		while(tokens.hasNext()) {
+			System.out.println(tokens.next());
+		}
+	}
 }

@@ -19,5 +19,6 @@ public enum TokenType {
     LEFT_BRACKET,
     RIGHT_BRACKET,
     LIST,
-    SYMBOL
+    SYMBOL,
+    UNKNOWN
 }

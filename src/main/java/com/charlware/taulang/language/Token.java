@@ -29,6 +29,15 @@ public class Token {
         this.type = type;
     }
     
+    public Token(String source, TokenType type, int startLine, int startCol, int endLine, int endCol) {
+    	this.source = source;
+    	this.type = type;
+    	this.startLine = startLine;
+    	this.startCol = startCol;
+    	this.endLine = endLine;
+    	this.endCol = endCol;
+    }
+    
     @Override
     public String toString() {
         return "Token{" + "source=" + source + ", type=" + type + ", startLine=" + startLine + ", startCol=" + startCol + ", endLine=" + endLine + ", endCol=" + endCol + ", nextToken=" + nextToken + '}';

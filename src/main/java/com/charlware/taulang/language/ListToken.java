@@ -19,7 +19,7 @@ public class ListToken extends Token implements Iterable<Token> {
 
     public ListToken() {
         super();
-        setSource("<array>");
+        setSource("[...]");
         setType(TokenType.LIST);
     }
     

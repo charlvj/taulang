@@ -30,6 +30,8 @@ public class Interpreter {
 
     protected final Runtime runtime;
     
+    protected InterpreterHook hook = null;
+    
     private AtomicInteger stepCounter = new AtomicInteger(0);
 
     public Interpreter(Runtime runtime) {
@@ -38,15 +40,14 @@ public class Interpreter {
     }
 
     public Value interpret(String code) throws Exception {
-        Tokenizer tokenizer = new Tokenizer();
-        tokenizer.parseTokens(code);
-        return interpret(tokenizer);
-    }
-
-    public Value interpret(Tokenizer tokens) throws Exception {
+        Tokenizer tokenizer = new Tokenizer(code);
+        Iterator<Token> tokens = tokenizer.parseTokens();
+//        while(tokens.hasNext()) {
+//			System.out.println(tokens.next());
+//		}
         return interpret(new PreProcessor(tokens));
     }
-    
+
     public Value interpret(Path file) throws Exception {
         final StringBuilder sb = new StringBuilder();
         Files.lines(file).forEach(line -> sb.append(line).append(" "));
@@ -68,6 +69,9 @@ public class Interpreter {
         if(runtime.flags.isEnableTracer()) {
         	runtime.tracer.println("Token: " + stepCounter.getAndIncrement() + " - " + token.toStringShort());
         	runtime.memory.getCurrentScope().printKeys(runtime.tracer);
+        }
+        if(hook != null) {
+        	hook.aboutToEval(token);
         }
     	Value result = null;
         switch (token.getType()) {
@@ -121,6 +125,11 @@ public class Interpreter {
             result = NullValue.NULL;
         
         result.setMemoryScope(runtime.getMemory().getCurrentScope());
+        
+        if(hook != null) {
+        	hook.evaluated(token, result);
+        }
+        
         return result;
     }
 
@@ -141,5 +150,9 @@ public class Interpreter {
 
     public Runtime getRuntime() {
         return runtime;
+    }
+    
+    public void setInterpreterHook(InterpreterHook hook) {
+    	this.hook = hook;
     }
 }

@@ -16,25 +16,25 @@ import java.util.Iterator;
  * @author charlvj
  */
 public class PreProcessor implements Iterator<Token>, Iterable<Token> {
-    protected Tokenizer tokens;
+    protected Iterator<Token> tokens;
+    protected Token currentToken;
     
-    public PreProcessor(Tokenizer tokenizer) {
-        this.tokens = tokenizer;
+    public PreProcessor(Iterator<Token> tokens) {
+        this.tokens = tokens;
     }
 
     @Override
     public boolean hasNext() {
-        return tokens.hasNextToken();
+        return tokens.hasNext();
     }
 
     @Override
     public Token next() {
-        tokens.advance();
-        Token token = tokens.getCurrentToken();
-        if(token.isType(TokenType.LEFT_BRACKET)) {
-            token = processList();
+        currentToken = tokens.next();
+        if(currentToken.isType(TokenType.LEFT_BRACKET)) {
+        	currentToken = processList();
         }
-        return token;
+        return currentToken;
     }
 
     @Override
@@ -44,9 +44,12 @@ public class PreProcessor implements Iterator<Token>, Iterable<Token> {
     
     protected Token processList() {
         ListToken list = new ListToken();
+        list.setStartCol(currentToken.getStartCol());
+        list.setStartLine(currentToken.getStartLine());
+        
         Token token;
-        while(tokens.advance()) {
-            token = tokens.getCurrentToken();
+        while(hasNext()) {
+        	token = next();
             
             if(token.isType(TokenType.RIGHT_BRACKET))
                 break;
@@ -57,18 +60,20 @@ public class PreProcessor implements Iterator<Token>, Iterable<Token> {
             list.add(token);
         }
         
-        if(tokens.eof()) {
-            // Reached the end of the code without a right bracket
-            // TODO!!
+        if(!hasNext()) {
+            throw new TauSyntaxError("Reached EOF before the end of a list!", list);
         }
+        
+        list.setEndCol(currentToken.getEndCol());
+        list.setEndLine(currentToken.getEndLine());
         
         return list;
     }
     
     public static void main(String[] args) throws IOException {
-        Tokenizer tokenizer = new Tokenizer();
-        PreProcessor pp = new PreProcessor(tokenizer);
-        tokenizer.parseTokens("test [ 1 2 ] \"Blah\"");
+        Tokenizer tokenizer = new Tokenizer("test [ 1 2 ] \"Blah\"");
+        Iterator<Token> tokens = tokenizer.parseTokens();
+        PreProcessor pp = new PreProcessor(tokens);
         for(Token token: pp) {
             System.out.println(token);
         }

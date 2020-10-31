@@ -5,7 +5,7 @@
  */
 package com.charlware.taulang;
 
-import com.charlware.taulang.Tokenizer;
+import com.charlware.taulang.OldTokenizer;
 import com.charlware.taulang.language.Token;
 import com.charlware.taulang.language.TokenType;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.junit.Test;
  *
  * @author charlvj
  */
-public class TokenizerTest extends Tokenizer {
+public class TokenizerTest extends OldTokenizer {
     
     public TokenizerTest() {
     }
