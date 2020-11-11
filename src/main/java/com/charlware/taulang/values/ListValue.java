@@ -52,10 +52,10 @@ public class ListValue extends AbstractValue<LinkedList<Value>>
 
     public LinkedList<Value> processToken() throws Exception {
         ListToken listToken = (ListToken) token;
-        Value[] list = new Value[listToken.size()];
+        LinkedList<Value> list = LinkedList.emptyList();
         Iterator<Token> iterator = listToken.iterator();
         Token tok;
-        int i = 0;
+
         while (iterator.hasNext()) {
             tok = iterator.next();
             Value v = getInterpreter().eval(tok, iterator);
@@ -63,9 +63,9 @@ public class ListValue extends AbstractValue<LinkedList<Value>>
             if(getInterpreter().getRuntime().getFlags().isTailCallOptimizationEnabled())
                 v = v.realize();
             
-            list[i++] = v;
+            list = list.push(v);
         }
-        return LinkedList.of(list);
+        return list.reverse();
     }
 
     @Override
