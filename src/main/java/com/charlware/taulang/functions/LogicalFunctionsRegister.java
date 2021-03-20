@@ -45,7 +45,7 @@ public class LogicalFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value param1, Value param2) throws Exception {
                 if(!(param1 instanceof BooleanValue) || !(param2 instanceof BooleanValue))
-                	return new ErrorValue(ErrorFactory.createInvalidParamsError("or requires logical parameters"));
+                	return new ErrorValue(ErrorFactory.createInvalidParamsError("and requires logical parameters"));
                 boolean b1 = ((BooleanValue) param1).getValue();
                 if(!b1)
                 	return BooleanValue.FALSE;

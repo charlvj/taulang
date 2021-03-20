@@ -60,5 +60,5 @@ test "is_list"
   assert_false is_list true
   assert_false is_list 1.2
   assert_false is_list ?
-  assert_true is_list "asd"
+  assert_false is_list "asd"
   assert_false is_list :a_symbol ]

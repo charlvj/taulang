@@ -11,9 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.charlware.taulang.AbstractRegister;
+import com.charlware.taulang.functions.streams.TextIOStream;
 import com.charlware.taulang.language.DefinedStream;
 import com.charlware.taulang.language.ErrorFactory;
-import com.charlware.taulang.language.FileInputStream;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.GenericStream;
 import com.charlware.taulang.language.IStream;
@@ -184,7 +184,7 @@ public class StreamFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value uriValue) throws Exception {
                 String uri = uriValue.asString();
-                FileInputStream stream = new FileInputStream(uri);
+                TextIOStream stream = new TextIOStream(uri);
                 try {
                     stream.open();
                     return new StreamValue(stream);

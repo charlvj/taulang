@@ -71,6 +71,7 @@ public class Interpreter {
         if(runtime.flags.isEnableTracer()) {
         	runtime.tracer.println("Token: " + stepCounter.getAndIncrement() + " - " + token.toStringShort());
         	runtime.memory.getCurrentScope().printKeys(runtime.tracer);
+        	runtime.tracer.println("---");
         }
         if(hook != null) {
         	hook.aboutToEval(token);
