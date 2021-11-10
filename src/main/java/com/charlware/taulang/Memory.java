@@ -34,6 +34,7 @@ public class Memory {
     
     public void popScope() {
         MemoryScope scope = currentScope.pop();
+        currentScope.closeResources();
         if(scope != null)
             currentScope = scope;
     }
@@ -45,4 +46,6 @@ public class Memory {
     public Function get(String name) {
         return currentScope.get(name);
     }
+    
+    
 }

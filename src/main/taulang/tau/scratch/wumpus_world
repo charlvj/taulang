@@ -1,0 +1,151 @@
+import "basicapp.tau" ""
+
+
+make :map_dimension 4
+make :max_dimension dec sqr map_dimension
+
+
+to :generate_a_state []
+[ make :pit    inc random_int max_dimension
+  make :gold   inc random_int max_dimension
+  make :wumpus inc random_int max_dimension
+  dict
+  [ :start_pos  0
+    :pit_pos    pit
+    :gold_pos   gold
+    :wumpus_pos wumpus
+  ]
+]
+
+to :all_true [:preds]
+[ if eq 1 size preds 
+  [ head preds ]
+  [ if head preds
+    [ all_true tail preds ]
+    [ false ]
+  ]
+]
+
+to :valid_state [:state]
+[ make :pit    get state :pit_pos
+  make :gold   get state :gold_pos
+  make :wumpus get state :wumpus_pos
+  all_true 
+  [ ne pit gold
+    ne gold wumpus
+    ne pit wumpus
+  ]
+]
+
+to :initial_state []
+[ make :s generate_a_state
+  if valid_state s
+  [ s ]
+  [ initial_state ]
+]
+
+to :print_state [:state]
+[ printline [ "Starting Pos: " get state :start_pos ]
+  printline [ "Pit Pos     : " get state :pit_pos ]
+  printline [ "Gold Pos    : " get state :gold_pos ]
+  printline [ "Wumpus Pos  : " get state :wumpus_pos ]
+]
+
+
+to :move [:direction :state]
+[
+]
+
+
+make :pos_modifier
+  dict
+  [ :north 4
+    :east 1
+    :south -4
+    :west -1
+  ]
+  
+to :get_pos [:direction :state]
+[ make :modifier get pos_modifier direction
+  make :current_pos get state :start_pos
+  make :new_direction add modifier current_pos
+  
+  new_direction
+]
+
+to :is_valid_pos [:pos]
+[ and 
+    ge pos 0
+    lt pos max_dimension
+]
+
+
+to :move_to [:direction :state]
+[ make :new_pos get_pos direction state
+  put state [ :start_pos new_pos ]
+]
+
+
+
+to :direction_from_text [:text]
+[ case text
+  ["n" :north
+   "e" :east
+   "s" :south
+   "w" :west
+   "north" :north
+   "east"  :east
+   "south" :south
+   "west"  :west
+   ?]
+]
+
+
+to :read_command []
+[ print "What do you want to do? "
+  readline
+]
+
+
+make :state initial_state
+print_state state
+
+printline "-------"
+
+printline [ "pos north? " get_pos :north state ]
+printline [ "pos south? " get_pos :south state ]
+printline [ "pos east?  " get_pos :east state ]
+printline [ "pos west?  " get_pos :west state ]
+
+printline "-------"
+
+printline [ "valid move: north? " is_valid_pos get_pos :north state ]
+printline [ "valid move: south? " is_valid_pos get_pos :south state ]
+printline [ "valid move: east?  " is_valid_pos get_pos :east state ]
+printline [ "valid move: west?  " is_valid_pos get_pos :west state ]
+
+printline "-------"
+
+make :state move_to :north state
+printline [ "north to: " get state :start_pos ]
+
+make :state move_to :east state
+printline [ "east to: " get state :start_pos ]
+
+make :state move_to :north state
+printline [ "north to: " get state :start_pos ]
+
+make :state move_to :west state
+printline [ "west to: " get state :start_pos ]
+
+
+app_loop
+  state
+  lambda [:state]
+  [ make :command_text read_command
+    make :command 
+    make :f menu_command command
+    make :new_state call f [state]
+    if get new_state :quit [false] [new_state]
+  ]
+  

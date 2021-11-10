@@ -1,12 +1,20 @@
 alias :add :plus
 expose :add
 
+to :print [:msg]
+[ if is_null msg
+  [ write stdio "<null>" ]
+  [ if is_list msg
+    [ for_each msg @print ]
+    [ write stdio msg ]
+  ]
+  true
+]
+expose :print
+
 to :printline
     [ :msg ] 
-    [ if is_null msg
-      [ print "<null>" ]
-      [ print msg ]
-      print newline
+    [ print [ msg newline ]
     ] 
 expose :printline
 
@@ -17,7 +25,7 @@ expose :calllist
 
 to :times
     [ :i :code ]
-    [ print [ "i=" i " " ]
+    [ /* print [ "i=" i " " ] */
       if eq i 1 
         [ call code [] ]
         [ call code []
@@ -94,3 +102,36 @@ expose :appendelem
 to :ne [:a :b]
 [ not eq a b ]
 expose :ne
+
+to :ge [:a :b]
+[ or gt a b eq a b ]
+expose :ge 
+
+to :le [:a :b]
+[ or lt a b eq a b ]
+expose :le 
+
+to :is_empty [:l]
+[ eq 0 size l ]
+expose :is_empty
+
+
+to :remove_head [:list]
+[ tail list ]
+expose remove_head
+
+to :remove_2_heads [:list]
+[ tail tail list ]
+expose :remove_2_heads
+
+to :case [:val :options]
+[ require_list options
+  if eq 1 size options
+  [ head options ]
+  [ if eq val head options
+    [ head tail options ]
+    [ case val tail tail options ]
+  ]
+]
+expose :case
+

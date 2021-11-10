@@ -11,7 +11,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.charlware.taulang.functions.ValueFunction;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.IStream;
+import com.charlware.taulang.values.StreamValue;
 
 /**
  *
@@ -164,5 +167,27 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     		out.print("  -> ");
     		parent.printKeys(out);
     	}
+    }
+    
+    public void closeResources() {
+    	functions.values()
+    		.parallelStream()
+    		.filter(f -> f instanceof ValueFunction)
+    		.map(f -> {
+    			try {
+					return ((ValueFunction) f).execute();
+				} catch (Exception e) {
+					return null;
+				}
+    		})
+    		.filter(val -> val instanceof StreamValue)
+    		.map(val -> (StreamValue) val)
+    		.forEach(val -> {
+    			try {
+					val.getValue().close();
+				} catch (Exception e) {
+					// Don't care.
+				}
+    		});
     }
 }

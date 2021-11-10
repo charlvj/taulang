@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.functions.streams.RandomStream;
+import com.charlware.taulang.functions.streams.TextIOStream;
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.DoubleValue;
@@ -51,10 +52,15 @@ public class SystemFunctionsRegister extends AbstractRegister {
             }
         });
 
+        registerStreams();
 		registerMeta();
         registerTypes();
         registerControl();
     }
+	
+	public void registerStreams() {
+		reg("stdio", new StreamValue(new TextIOStream(System.in, System.out)));
+	}
 	
 	public void registerMeta() {
 		reg(new GenericFunction0("dev.breakpoint") {
@@ -136,7 +142,7 @@ public class SystemFunctionsRegister extends AbstractRegister {
         reg(new GenericFunction1("is_list", "value") {
             @Override
             public Value execute(Value value) throws Exception {
-                return (value instanceof Listable ? trueValue() : falseValue());
+                return (value instanceof Listable && !(value instanceof StringValue) ? trueValue() : falseValue());
             }
         });
         

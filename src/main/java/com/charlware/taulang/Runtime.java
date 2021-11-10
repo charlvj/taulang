@@ -145,7 +145,7 @@ public class Runtime {
         register("system.searchpath", new ListValue(searchPath));
 
         register("?", new NullValue());
-        register(new PrintFunction());
+//        register(new PrintFunction());
         register("newline", new StringValue("\n"));
         register(new ReadlineFunction());
         register(new MakeFunction());

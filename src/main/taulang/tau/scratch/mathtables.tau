@@ -18,6 +18,8 @@ to :initial_state []
   [ :quit false 
     :topic 2
     :max 12 
+    :operator @mult
+    :operator_descr "x"
   ]
 ]
 
@@ -25,7 +27,7 @@ to :initial_state []
 
 to :get_command []
 [ print_menu
-  print " > "
+  print ""
   make :choice readline
   printline ["choice: |" choice "|"] 
   make :command
@@ -40,8 +42,9 @@ to :get_command []
 to :run_test [:state]
 [ print "Test!"
   make :topic get state :topic
-  for_each range_closed 0 get state :max
-  [ make :current $0
+  /* for_each range_closed 0 get state :max */
+  times get state :max
+  [ make :current random_int get state :max
     make :real_answer mult topic current
     print [ current " x " topic " = " ]
     make :answer readline
@@ -62,18 +65,22 @@ to :show_table [:state]
 [ printline "The Table!"
   make :topic get state :topic
   for_each range_closed 0 get state :max
-  [ 
-    printline [ $0 " x " topic " = " mult topic $0 ]
+  [ make :op get state :operator
+    make :answer call op [topic $0]
+    printline [ $0 " x " topic " = " answer ]
   ]
   state
 ]
 
 
 to :show_settings [:state]
-[ printline "Current Settings"
+[ make :topic get state :topic
+  make :max   get state :max
+  
+  printline "Current Settings"
   printline "----------------"
-  printline ["Topic: " get state :topic]
-  printline ["Max:   " get state :max]
+  printline ["Topic: " topic]
+  printline ["Max:   " max]
   state
 ]
 
@@ -102,6 +109,13 @@ to :change_max [:state]
 ]
 
 
+to :change_operator [:state]
+[ print "Please enter the operator to use (+ - x /) : "
+  make :op_descr readline
+  state
+]
+
+
 to :quit [:state]
 [ put state [:quit true]
 ]
@@ -113,11 +127,14 @@ to :invalid_choice [:state]
 
 
 to :print_menu [:state]
-[ printline "Menu"
-  printline "===="
+[ printline 
+  [ newline 
+    "    Menu    " newline 
+    "============" ]
   for_each menu
   [ printline menu_description $0 
   ]
+  print " > "
 ]
 
 to :menu_description [:menu_item]
@@ -128,30 +145,16 @@ to :menu_command [:menu_item]
 [ getelem menu_item 1
 ]
 
-/*
-make :app new_stream_source [initial_state]
-  lambda [:state] [ not get state :quit ]
-  lambda [:state]
-  [ make :command get_command
-    printline ["Choice was " menu_description command]
-    make :f menu_command command
-    make :new_state call f [state]
-    [ true [ new_state ] ]
-  ]
-*/
+
+
 
 app_loop
   initial_state
   lambda [:state]
   [ make :command get_command
-    printline ["Choice was " menu_description command]
     make :f menu_command command
     make :new_state call f [state]
     if get new_state :quit [false] [new_state]
   ]
 
-/* 
-for_each app
-  [ printline "" ]
-*/
 
