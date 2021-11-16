@@ -95,7 +95,7 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     	Function f = get(name);
     	if(f != null) {
     		MemoryScope importSourceScope = findImportSource();
-        	importSourceScope.put(f);
+        	importSourceScope.put(name, f);
         	return true;
     	}
     	else

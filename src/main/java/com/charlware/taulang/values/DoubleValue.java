@@ -186,7 +186,6 @@ public class DoubleValue extends NumberValue<Double>
     			return null;
     		}
     		
-    		// Addition can result in a Double iff double + double or double + int.
     		try {
     			Double xDouble = x.asDouble();
 	    		return thisValue / xDouble;

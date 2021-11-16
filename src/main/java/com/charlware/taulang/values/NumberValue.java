@@ -18,7 +18,8 @@ import com.charlware.taulang.values.abilities.Subtractable;
 public abstract class NumberValue<NumberType> extends AbstractValue<NumberType> 
 	implements Addable<NumberType>, 
 			   Subtractable<NumberType>,
-			   Multiplyable<NumberType> {
+			   Multiplyable<NumberType>,
+			   Divisible<NumberType> {
     
 	public static IntegerValue valueOf(Integer i) {
 		return new IntegerValue(i);

@@ -104,4 +104,22 @@ public class IntegerValue extends NumberValue<Integer> {
 	public Double asDouble() throws Exception {
 		return Double.valueOf(getValue());
 	}
+
+	@Override
+	public Integer divide(Value x) throws NotDivisibleException {
+		if(x == null || x == NullValue.NULL) 
+    		return null;
+    	else if(x instanceof IntegerValue) {
+    		try {
+    			Integer thisValue = getValue();
+	    		Integer xInt = x.asInteger();
+	    		return thisValue / xInt;
+    		} catch(Exception e) {
+    			// Integer multiplication is the only thing that produces an integer.
+    			throw new NotDivisibleException();
+    		}
+    	}
+    	else
+    		throw new NotDivisibleException();
+	}
 }
