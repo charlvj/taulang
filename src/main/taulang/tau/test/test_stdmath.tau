@@ -17,7 +17,9 @@ test "mult"
   
 test "div"
 [ assert_equals 2 div 8 4
-  assert_equals 1.5 div 3.0 2
+  assert_equals 1 div 3 2  /* integer division */
+  assert_equals 0.25 div 0.5 2
+  assert_equals 4 div 2 0.5
 ]
 
 test "inc"

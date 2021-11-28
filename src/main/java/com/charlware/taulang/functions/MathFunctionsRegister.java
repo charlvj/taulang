@@ -126,6 +126,10 @@ public class MathFunctionsRegister extends AbstractRegister {
 	            	Value result = null;
 	            	if(param1 instanceof Divisible) {
 	            		try {
+	            			// If param2 is double we want to do double division
+	            			if(param1 instanceof IntegerValue && param2 instanceof DoubleValue) {
+	            				param1 = Value.of(param1.asDouble());
+	            			}
 	            			Divisible p1 = (Divisible) param1;
 	            			result = Value.of(p1.divide(param2));
 	            		} 
@@ -177,11 +181,34 @@ public class MathFunctionsRegister extends AbstractRegister {
                     });
                 });
         
-        reg(new GenericFunction2("atan2", "x", "y") {
-            @Override
-            public Value execute(Value x, Value y) throws Exception {
-                return new DoubleValue(Math.atan2(x.asDouble(), y.asDouble()));
-            }
+        Arrays.asList("pow", "atan2")
+                .stream()
+                .forEach(fname -> {
+                    reg(new GenericFunction2(fname, "x", "y") {
+                       @Override
+                       public Value execute(Value x, Value y) {
+                           Double d;
+                           try {
+                               d = (Double) MethodUtils.invokeStaticMethod(Math.class, fname, x.asDouble(), y.asDouble());
+                               return new DoubleValue(d);
+                           } catch (Exception ex) {
+                               return new ErrorValue(ErrorFactory.createError("Error executing " + fname + " : " + ex));
+                           }
+                       }
+                    });
+                });
+        
+        reg(new GenericFunction1("inverse", "x") {
+        	@Override
+        	public Value execute(Value x) throws Exception {
+        		return new DoubleValue(1.0 / x.asDouble());
+        	}
         });
+//        reg(new GenericFunction2("atan2", "x", "y") {
+//            @Override
+//            public Value execute(Value x, Value y) throws Exception {
+//                return new DoubleValue(Math.atan2(x.asDouble(), y.asDouble()));
+//            }
+//        });
     }
 }
