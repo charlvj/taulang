@@ -26,6 +26,7 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     final Map<String,Function> functions = new HashMap();
     boolean importSource = false;
     boolean importScope = false;
+    String namespace = null;
     
     public MemoryScope(MemoryScope parent) {
         this.parent = parent;
@@ -34,6 +35,15 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     
     public MemoryScope getParent() {
     	return parent;
+    }
+
+    public String getNamespace() {
+    	return namespace;
+    }
+    
+    public void setNamespace(String namespace) {
+    	if(namespace != null && !namespace.isEmpty())
+    		this.namespace = namespace;
     }
     
     public void put(String name, Function function) {
@@ -73,6 +83,8 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     }
     
     public void elevate(String name) {
+    	if(namespace != null)
+    		name = namespace + "." + name;
         if(parent != null) {
             Function function = functions.remove(name);
             if(function != null) 
@@ -81,6 +93,8 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     }
     
     public void elevateToSystem(String name) {
+    	if(namespace != null)
+    		name = namespace + "." + name;
         if(parent != null) {
             if(parent.parent == null) {
                 elevate(name);
@@ -92,9 +106,11 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
     }
     
     public boolean exportToImportSource(String name) {
-    	Function f = get(name);
+        Function f = get(name);
     	if(f != null) {
     		MemoryScope importSourceScope = findImportSource();
+        	if(namespace != null)
+        		name = namespace + "." + name;
         	importSourceScope.put(name, f);
         	return true;
     	}

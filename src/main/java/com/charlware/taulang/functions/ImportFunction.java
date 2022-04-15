@@ -36,14 +36,18 @@ public class ImportFunction extends Function {
         String filename = params[0].asString();
         String namespace = params[1].asString();
 
-        return execute(filename);
+        return execute(filename, namespace);
     }
 
     public Value execute(String filename) throws Exception {
+    	return execute(filename, null);
+    }
+    
+    public Value execute(String filename, String namespace) throws Exception {
         Value result = null;
         InputStream stream = System.class.getResourceAsStream("/" + filename);
         if (stream != null) {
-            result = execute(filename, stream);
+            result = execute(filename, stream, namespace);
         } else {
             File file = new File(filename);
             if (!file.exists()) {
@@ -55,12 +59,12 @@ public class ImportFunction extends Function {
                     }
                 }
             }
-            result = execute(file);
+            result = execute(file, namespace);
         }
         return result;
     }
 
-    public Value execute(String filename, InputStream stream) throws Exception {
+    public Value execute(String filename, InputStream stream, String namespace) throws Exception {
         String code = null;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             StringBuilder out = new StringBuilder();
@@ -72,17 +76,17 @@ public class ImportFunction extends Function {
         }
         final String s = code;
         if (code != null) {
-            return interpretWrapped(filename, () -> runtime.getInterpreter().interpret(s));
+            return interpretWrapped(filename, namespace, () -> runtime.getInterpreter().interpret(s));
         }
         else
             return BooleanValue.FALSE;
     }
 
-    public Value execute(File file) throws Exception {
+    public Value execute(File file, String namespace) throws Exception {
         Value result = null;
         if (file.exists()) {
             Path p = file.toPath();
-            result = interpretWrapped(file.getAbsolutePath(), 
+            result = interpretWrapped(file.getAbsolutePath(), namespace,
                                       () -> runtime.getInterpreter().interpret(p));
         } else {
             runtime.stdout.println("Could not find file");
@@ -91,10 +95,11 @@ public class ImportFunction extends Function {
         return result;
     }
     
-    protected BooleanValue interpretWrapped(String contextName, Callable callable) {
+    protected BooleanValue interpretWrapped(String contextName, String namespace, Callable callable) {
         Memory memory = runtime.getMemory();
         memory.getCurrentScope().setImportSource(true);
         MemoryScope scope = memory.pushScope();
+        scope.setNamespace(namespace);
         scope.setImportScope(true);
         try {
             callable.call();
