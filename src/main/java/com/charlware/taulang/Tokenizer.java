@@ -187,7 +187,7 @@ public class Tokenizer {
 		String value = readUntilSeparator();
 		if(NumberUtils.isParsable(value)) {
 			double d = NumberUtils.createDouble(value);
-			if ((d == Math.floor(d)) && !Double.isInfinite(d)) {
+			if ((!value.contains(".")) && !Double.isInfinite(d)) {
 				tokens.add(
 						new Token(value, 
 							TokenType.INTEGER, 
