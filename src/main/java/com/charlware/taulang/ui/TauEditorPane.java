@@ -37,7 +37,7 @@ public class TauEditorPane extends javax.swing.JPanel {
     }
     
     public boolean isNew() {
-        return file == null;
+        return newFile;
     }
     
     public File getFile() {
@@ -66,6 +66,10 @@ public class TauEditorPane extends javax.swing.JPanel {
     }
     
     public void saveFile() throws FileNotFoundException {
+    	saveFile(false);
+    }
+    
+    public void saveFile(boolean keepNew) throws FileNotFoundException {
 //        if(newFile) {
 //            int res = getFileChooser().showSaveDialog(this);
 //            if(res == JFileChooser.APPROVE_OPTION)  {
@@ -74,8 +78,10 @@ public class TauEditorPane extends javax.swing.JPanel {
 //        }
         try(PrintStream stream = new PrintStream(file)) {
             stream.print(txContents.getText());
-            saved = true;
-            newFile = false;
+            if(!keepNew) {
+	            saved = true;
+	            newFile = false;
+            }
         }
     }
     

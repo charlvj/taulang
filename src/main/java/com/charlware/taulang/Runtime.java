@@ -7,8 +7,10 @@ package com.charlware.taulang;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,6 @@ import com.charlware.taulang.functions.LogicalFunctionsRegister;
 import com.charlware.taulang.functions.MakeFunction;
 import com.charlware.taulang.functions.MathFunctionsRegister;
 import com.charlware.taulang.functions.ObjectFunctionsRegister;
-import com.charlware.taulang.functions.PrintFunction;
 import com.charlware.taulang.functions.ReadlineFunction;
 import com.charlware.taulang.functions.RepeatFunction;
 import com.charlware.taulang.functions.StreamFunctionsRegister;
@@ -58,12 +59,12 @@ public class Runtime {
     public CallFunction callFunction = null;
     public final FunctionCaller functionCaller;
 
+    public final List<String> STANDARD_LIBS = List.of("stdlib", "stdmath", "stdstreams", "basicapp", "tautest");
+    
     public Runtime() {
     	functionCaller = new FunctionCaller(this);
         interpreter = new Interpreter(this);
         
-        addDefaultSearchPath();
-
         addRegister(new SystemFunctionsRegister());
         addRegister(new ErrorFunctionRegister());
         addRegister(new ListableFunctionsRegister());
@@ -108,18 +109,6 @@ public class Runtime {
         return searchPath;
     }
 
-    private void addDefaultSearchPath() {
-    	try {
-	    	Path path= new File(
-	                com.charlware.taulang.Runtime.class.getResource("/tau").toURI()
-	        ).getParentFile().toPath();
-			searchPath.add(new StringValue(path.toFile().getAbsolutePath()));
-    	}
-    	catch(Exception e) {
-    		System.out.println("Could not find default search path.");
-    	}
-    }
-    
     public void register(String name, Function function) {
         memory.getSystemScope().put(name, function);
         function.setRuntime(this);
@@ -183,12 +172,32 @@ public class Runtime {
         callFunction = (CallFunction) memory.getCurrentScope().get("call");
     }
 
+    private InputStream stdlibStream(String libname) throws IOException {
+    	URL url = com.charlware.taulang.Runtime.class.getResource("/" + libname);
+//    	System.out.println("file: " + url);
+    	return url.openStream();
+    }
+    
+    public void importStandardLib(ImportFunction importFunc, String filename) throws Exception {
+    	if(!filename.endsWith(".tau")) {
+    		filename = filename + ".tau";
+    	}
+    	importFunc.execute(filename, stdlibStream(filename), null);
+    }
+    
     private void importStdLibs() throws Exception {
         ImportFunction importFunc = new ImportFunction();
         importFunc.setRuntime(this);
-        importFunc.execute("stdlib.tau");
-        importFunc.execute("stdmath.tau");
-        importFunc.execute("stdstreams.tau");
+        importStandardLib(importFunc, "stdlib");
+        importStandardLib(importFunc, "stdmath");
+        importStandardLib(importFunc, "stdstreams");
+//        importFunc.execute("stdlib.tau");
+//        importFunc.execute("stdmath.tau");
+//        importFunc.execute("stdstreams.tau");
+    }
+    
+    public boolean isStandardLib(String filename) {
+    	return STANDARD_LIBS.contains(filename); 
     }
 
 }

@@ -1,4 +1,5 @@
 /*
+2Tim2v15
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -67,6 +68,11 @@ public class TauIDE extends javax.swing.JFrame {
         List<File> files = new ArrayList();
         for(JComponent comp: tabs.values()) {
             TauEditorPane p = (TauEditorPane) comp;
+            try {
+                p.saveFile(true);
+            } catch (FileNotFoundException ex) {
+                System.out.println("Trouble loading a file: " + ex);
+            }
             files.add(p.getFile());
         }
         return files;

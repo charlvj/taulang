@@ -124,6 +124,14 @@ to :remove_2_heads [:list]
 [ tail tail list ]
 expose :remove_2_heads
 
+alias :first :head
+expose :first
+
+to :second [:list]
+[ head tail list ]
+expose :second
+
+
 to :case [:val :options]
 [ require_list options
   if eq 1 size options

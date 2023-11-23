@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 test "Able to update memory in same scope"
 [ make :s "Hello"

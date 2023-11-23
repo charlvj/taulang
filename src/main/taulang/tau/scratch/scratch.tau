@@ -5,3 +5,32 @@ make :d dict [:a 1 :b inc 1 :c 3]
 printline [ "a = " get d :a ]
 printline [ "b = " get d :b ]
 printline [ "c = " get d :c ]
+
+
+to :name [:firstname :lastname]
+[ [ firstname lastname ] ]
+
+to :name_get_firstname [:name]
+[ first name ]
+
+to :name_get_lastname [:name]
+[ second name ]
+
+
+make :me name "John" "Smith"
+printline [ name_get_lastname me ", " name_get_firstname me ]
+
+
+to :_inc [:i]
+[ printline "_inc" 
+  inc i
+]
+
+to :inc2 [] [ _inc 2 ]
+
+make :o [ add _inc 2 _inc 3 ]
+
+printline "----"
+make :res call o []
+
+printline res

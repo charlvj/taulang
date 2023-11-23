@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 test "list_to_stream" 
 [ make :list [1 2 3 4]

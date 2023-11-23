@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 test "List Size" 
 [ assert_equals 

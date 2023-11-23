@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
@@ -44,6 +45,11 @@ public class ImportFunction extends Function {
     }
     
     public Value execute(String filename, String namespace) throws Exception {
+    	if(runtime.isStandardLib(filename)) {
+    		runtime.importStandardLib(this, filename);
+    		return BooleanValue.TRUE;
+    	}
+    	
         Value result = null;
         InputStream stream = System.class.getResourceAsStream("/" + filename);
         if (stream != null) {
@@ -94,6 +100,10 @@ public class ImportFunction extends Function {
         }
         return result;
     }
+    
+//    public Value execute(URL resource) {
+//    		
+//    }
     
     protected BooleanValue interpretWrapped(String contextName, String namespace, Callable callable) {
         Memory memory = runtime.getMemory();

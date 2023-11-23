@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 to :faculty [:n]
 [ if eq 2 n 

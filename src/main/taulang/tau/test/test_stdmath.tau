@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 test "plus" 
   [ assert_equals 4 plus 1 3

@@ -1,4 +1,4 @@
-import "tau/test/tautest" ""
+import "tautest" ""
 
 test "True means tue" 
 [ assert_true true ]
