@@ -10,7 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+
 import javax.swing.JFileChooser;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -30,6 +32,7 @@ public class TauEditorPane extends javax.swing.JPanel {
      */
     public TauEditorPane() {
         initComponents();
+        ((AbstractDocument) txContents.getDocument()).setDocumentFilter(new AutoIndentFilter());
     }
 
     public boolean isSaved() {
