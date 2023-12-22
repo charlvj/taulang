@@ -62,3 +62,9 @@ test "throw error"
   assert_true is_error r
   assert_equals "Test" error_message r
 ]
+
+test "modify_var"
+[ make :v "One"
+  modify_var :v "Two"
+  assert_equals "Two" v
+]

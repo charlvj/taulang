@@ -131,6 +131,19 @@ to :second [:list]
 [ head tail list ]
 expose :second
 
+to :third [:list]
+[ head tail tail list ]
+expose :third
+
+to :reverse [:list]
+[ make :revlist [head list]
+  for_each tail list
+  [ modify_var :revlist 
+  		push $0 revlist ]
+  revlist
+]
+expose :reverse
+
 
 to :case [:val :options]
 [ require_list options

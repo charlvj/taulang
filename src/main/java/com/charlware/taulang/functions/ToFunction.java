@@ -7,9 +7,11 @@ package com.charlware.taulang.functions;
 
 import com.charlware.taulang.language.Function;
 import com.charlware.taulang.language.ListToken;
+import com.charlware.taulang.language.Symbol;
 import com.charlware.taulang.util.LinkedList;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.ListValue;
+import com.charlware.taulang.values.SymbolValue;
 import com.charlware.taulang.values.Value;
 
 /**
@@ -39,7 +41,7 @@ public class ToFunction extends Function {
         Function function = new DefinedFunction(funcName, funcParamArr, funcTokens);
         function.setRuntime(runtime);
         runtime.getMemory().getCurrentScope().put(function);
-        return BooleanValue.TRUE;
+        return new SymbolValue(Symbol.of(funcName));
     }
     
 }

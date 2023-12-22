@@ -66,3 +66,12 @@ test "is_list"
   assert_false is_list ?
   assert_false is_list "asd"
   assert_false is_list :a_symbol ]
+  
+  
+test "as_symbol"
+[ make :var as_symbol "a"
+  assert_true is_symbol var
+  assert_equals :a var
+]   
+
+  

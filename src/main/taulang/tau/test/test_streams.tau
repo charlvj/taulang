@@ -6,3 +6,9 @@ test "list_to_stream"
   assert_true is_stream list_to_stream list
 ]
 
+test "fold"
+[ make :list [1 2 3 4]
+  assert_equals 
+  	10
+  	fold @plus 0 list
+]

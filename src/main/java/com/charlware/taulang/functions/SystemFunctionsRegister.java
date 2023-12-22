@@ -15,9 +15,12 @@ import com.charlware.taulang.AbstractRegister;
 import com.charlware.taulang.MemoryScope;
 import com.charlware.taulang.functions.streams.RandomStream;
 import com.charlware.taulang.functions.streams.TextIOStream;
+import com.charlware.taulang.language.ErrorFactory;
 import com.charlware.taulang.language.Function;
+import com.charlware.taulang.language.Symbol;
 import com.charlware.taulang.values.BooleanValue;
 import com.charlware.taulang.values.DoubleValue;
+import com.charlware.taulang.values.ErrorValue;
 import com.charlware.taulang.values.FunctionValue;
 import com.charlware.taulang.values.IntegerValue;
 import com.charlware.taulang.values.ListValue;
@@ -49,6 +52,15 @@ public class SystemFunctionsRegister extends AbstractRegister {
                 Function func = memory.get(existingFunc.asString());
                 memory.put(aliasName.asString(), func);
                 return aliasName;
+            }
+        });
+        reg(new GenericFunction2("modify_var", "var_name", "new_value") {
+            @Override
+            public Value execute(Value varNameVal, Value newValue) throws Exception {
+            	String varName = varNameVal.asString();
+                MemoryScope memory = runtime.getMemory().getCurrentScope();
+                memory.replace(varName, new ValueFunction(varName, newValue));
+                return new SymbolValue(Symbol.of(varName));
             }
         });
 
@@ -213,6 +225,19 @@ public class SystemFunctionsRegister extends AbstractRegister {
             @Override
             public Value execute(Value value) throws Exception {
                 return new BooleanValue(value.asBoolean());
+            }
+        });
+        
+        reg(new GenericFunction1("as_symbol", "value") {
+            @Override
+            public Value execute(Value value) throws Exception {
+            	if(value instanceof StringValue) {
+            		String s = value.asString();
+            		return new SymbolValue(Symbol.of(s));
+            	}
+            	else {
+            		return new ErrorValue(ErrorFactory.createError("Cannot convert to symbol: " + value));
+            	}
             }
         });
     }

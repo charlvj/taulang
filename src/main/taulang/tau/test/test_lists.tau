@@ -38,3 +38,11 @@ test "Head and tail"
 [ assert_equals 2 head [2 4 6]
   assert_equals [4 6] tail [2 4 6]
 ]
+
+test "Push"
+[ assert_equals [1 2 3 4] push 1 [2 3 4]
+]
+
+test "Reverse List"
+[ assert_equals [4 3 2 1] reverse [1 2 3 4]
+]

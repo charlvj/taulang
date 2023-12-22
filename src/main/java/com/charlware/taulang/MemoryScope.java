@@ -60,6 +60,11 @@ public class MemoryScope implements Iterable<Map<String,Function>> {
         functions.putAll(scope.functions);
     }
     
+    public void replace(String name, Function function) {
+    	Function f = get(name);
+    	f.getMemory().put(name, function);
+    }
+    
     public Function get(String name) {
         Function function = functions.get(name);
         if(function == null && parent != null)

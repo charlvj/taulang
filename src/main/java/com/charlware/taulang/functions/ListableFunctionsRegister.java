@@ -44,6 +44,16 @@ public class ListableFunctionsRegister extends AbstractRegister {
                 return new ErrorValue(ErrorFactory.createError("head expects a listable value."));
             }
         });
+    	reg(new GenericFunction2("push", "value", "list") {
+            @Override
+            public Value execute(Value val, Value list) throws Exception {
+                if(list instanceof ListValue) {
+					LinkedList<Value> linkedList = ((ListValue) list).getValue();
+                    return new ListValue(linkedList.push(val));
+                }
+                return new ErrorValue(ErrorFactory.createError("Not a list: " + list.asString()));
+            }
+        });
         reg(new GenericFunction1("size", "list") {
             @Override
             public Value execute(Value list) throws Exception {

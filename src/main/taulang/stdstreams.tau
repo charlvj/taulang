@@ -104,3 +104,15 @@ to :stream_counter [:start :stream]
   ]
 ]
 expose :stream_counter
+
+
+to :fold [:f :initial :stream]
+[ make :s if is_list stream 
+          [ list_to_stream stream ] 
+          [ stream ]
+  require_stream s
+  while [has_next s]
+  [ modify_var :initial call f [initial next s] ]
+  initial
+]
+expose :fold
